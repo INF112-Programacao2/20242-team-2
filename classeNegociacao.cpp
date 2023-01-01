@@ -88,7 +88,7 @@ negociacao::negociacao() {
     }
 }
 
-void negociacao::registrarNegociacao(lote* lote, area_plantio* area, float quantidade_semente_negociada, std::string data) {
+void negociacao::registrarNegociacao(Lote* lote, area_plantio* area, float quantidade_semente_negociada, std::string data) {
     if (lote == nullptr || area == nullptr) {
         throw std::invalid_argument("Lote ou área inválidos");
     }

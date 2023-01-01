@@ -27,11 +27,12 @@ private:
     void excluirUsuario();                          //ok
 
 
-    void atividadesGestor(int opcao_menu);     //necessario para o menu -julia
+
 
     public:
 
     virtual int acessarInterface()override;   //abre o menu dos gestores -julia
+    void atividade(int opcao_menu) override;     //necessario para o menu -julia
 
 };
 #endif

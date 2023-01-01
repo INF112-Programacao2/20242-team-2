@@ -10,7 +10,7 @@ class negociacao {
 private:
     // adicionar atributo como a quantidade de sementes a serem negociadas(kg)
     int _id_negociacao;
-    lote* _lote;
+    Lote* _lote;
     area_plantio* _area;
     std::string _data_negociacao;
     float _valor_negociado;
@@ -24,7 +24,7 @@ private:
     
 public:
     negociacao();
-    void registrarNegociacao(lote* lote, area_plantio* area, float quantidade_semente_negociada, std::string data);
+    void registrarNegociacao(Lote* lote, area_plantio* area, float quantidade_semente_negociada, std::string data);
     void finalizarNegociacao();
     void cancelarNegociacao();
     int get_id_lote_associado();

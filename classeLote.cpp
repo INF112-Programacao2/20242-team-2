@@ -5,7 +5,7 @@ Lote::Lote(){
 
     _statusDisponibilidade="estoque"; 
     int _id_lote=0;
-    semente* _ptr_semente=nullptr;
+    Semente* _ptr_semente=nullptr;
     int _id_sementeAssociada=0;
     std::string _nome_cientifico="";
     std::string _geneIntroduzido="";
@@ -51,7 +51,7 @@ Lote::Lote(int id_lote){                         //aloca um lote que ja esta reg
     arquivoLotes.close();
 
     try{
-    _ptr_semente=new semente(_id_sementeAssociada);
+    _ptr_semente=new Semente(_id_sementeAssociada);
     }catch(const std::bad_alloc& e){
         throw std::runtime_error("Erro na alocacao de memoria para semente.");
     }
@@ -74,7 +74,7 @@ void Lote::registrarNovoLote(int id_semente){
     arquivoLotes>>contadorDeLotes; contadorDeLotes++;     //le o contador do arquivo e adiciona
  
     //____________________________________________//
-    _ptr_semente=new semente(id_semente);
+    _ptr_semente=new Semente(id_semente);
     _id_sementeAssociada=_ptr_semente->get_id_tipo();
     
     std::cin.ignore();

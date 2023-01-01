@@ -35,5 +35,6 @@ public:
     // Métodos relacionados à segurança
     void realizarLogin();       //ok                                 // Metodos relacionados a parte visual  
     virtual int acessarInterface();    //NOVA FUNCAO!!
+    virtual void atividade(int opcao_selecionada);         //NOVA FUNCAO!!
 };
 #endif

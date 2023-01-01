@@ -403,42 +403,46 @@ int Gestor::acessarInterface() {
    int opcao_selecionada;
 
 
-   std::cout<<"-------------------------MENU DO GESTOR-------------------------\n";
+   std::cout<<"-------------------------MENU DO GESTOR--------------------------\n";
    std::cout<<"1- Registrar uma nova semente\n2- Visualizar dados de uma semente\n";
    std::cout<<"3- Registrar um novo lote\n4-Visualizar dados de um lote\n";
    std::cout<<"5-Visualizar relatórios\n";
-   std::cout<<"-----------------------------------------------------------------\n";
+   std::cout<<"------------------------------------------------------------------\n";
 
    std::cin>>opcao_selecionada;
    if(opcao_selecionada!=1&&opcao_selecionada!=2&&opcao_selecionada!=3
        &&opcao_selecionada!=4&&opcao_selecionada!=5){
        throw std::invalid_argument("Opção inválida! Por favor, selecione uma opção válida.");
    }
-   return opcao_selecionada;
+    return opcao_selecionada;
 }
 
-void Gestor::atividadesGestor(int opcao_menu){
-   //registrar uma nova semente
-   try {
-       semente *semente_nova = new semente();
-       semente_nova->registrarNovaSemente();
-       semente_nova->exibirDetalhes();
+void Gestor::atividade(int opcao_menu){
 
-       delete semente_nova;
-   } catch (const std::bad_alloc& e) {
-       std::cerr << "Erro de alocação de memória: " << e.what() << std::endl;
-   } catch (const std::exception& e) {
+    if(opcao_menu==1){
+    //registrar uma nova semente
+    try {
+        Semente *semente_nova = new Semente();
+        semente_nova->registrarNovaSemente();
+        semente_nova->exibirDetalhes();
+
+        delete semente_nova;
+    }catch (const std::bad_alloc& e) {
+        std::cerr << "Erro de alocação de memória. " << e.what() << std::endl;
+    }catch (const std::exception& e) {
        std::cerr << "Erro: " << e.what() << std::endl;
-   } catch (...) {
+    }catch (...) {
        std::cerr << "Erro desconhecido!" << std::endl;
    }
+    }
+
    //visualizar dados de uma semente
-   if(opcao_menu==2){
+   else if(opcao_menu==2){
        std::cout<<"Deseja visualizar dados de qual semente?\n ID: ";
        int id;
        std::cin>>id;
 
-       semente *semente_visualizada=new semente(id);
+       Semente *semente_visualizada=new Semente(id);
        semente_visualizada->exibirDetalhes();
        delete semente_visualizada;
    }

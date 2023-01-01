@@ -15,7 +15,7 @@ class Lote{
     //atributos:
 
     int _id_lote; //identificador unico do lote de sementes
-    semente* _ptr_semente;  //apontador para o objeto semente correspondente
+    Semente* _ptr_semente;  //apontador para o objeto semente correspondente
     int _id_sementeAssociada;
     std::string _nome_cientifico; //nome cientifico da semente
     std::string _geneIntroduzido;

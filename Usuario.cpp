@@ -63,18 +63,19 @@ void Usuario::realizarLogin(){
 Usuario::Usuario() : _id(0), _nome(""), _email(""), _tipoUsuario(""), _senha("") {}
 
 int Usuario::acessarInterface(){
-   //aqui sera feito a pagina de login - pedro
+   //aqui sera feito a pagina de login            - pedro
 
    //qualquer coisa aqui so pra ver funcionar:
-   int x;
-   std::cout<<"1 pra gestor, 2 pra vendedor,3 pra analista\n";       //TESTE!!!
-   std::cin>>x;
-   return x;
+   std::cout<<"login aqui";
 
 }
 
 
 void Usuario::visualizarRelatorio(){
     //metodo a ser implementado futuramente
+}
+
+void Usuario::atividade(int opcao_selecionada){
+    std::cout<<"Se chegou aqui é porque teve erro na alocacao do usuario especifico!!!" ; //mudar
 }
 
