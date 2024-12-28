@@ -1,3 +1,6 @@
+#ifndef CLASSE_AREA_PLANTIO_HPP
+#define CLASSE_AREA_PLANTIO_HPP
+
 #include <iostream>
 #include <string>
 #include "classeSemente.hpp"
@@ -25,3 +28,5 @@ public:
     void liberarArea();
     void gerar_relatorioArea();
 };
+
+#endif
