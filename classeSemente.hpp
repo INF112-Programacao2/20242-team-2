@@ -17,14 +17,23 @@ class semente{
 
     //metodos:
 
-    semente::semente();  //construtor
-    semente::~semente(); //destrutor
+ semente();   //construtor (em teoria, todos os atributos serao definidos aqui)
+    ~semente();  //destrutor
 
-    void semente::exibirDetalhes();
-    void semente::atualizaStatus();  //ou set_statusDisponibilidade
-    void semente::atualizaPreco();  //ou set_preco
-    float semente::verificarCompatibilidade(); //% devemos atribuir pesos
-    void semente::consumirSementes(); //diminuir ou zerar a quantidade disponivel no lote
-    void semente::adicionarSementes(); //aumentar o num de lotes ou num de sementes no lote
-    void semente::gerarRelatorioSementes();
+    void exibirDetalhes();   // Exibe todas as informações da semente
+    
+    //de inicio, nao faz sentido ter seteres dos atributos dessa classe
+
+    static int _contador_tipo; //controla a quantidade de tipos
+
+    //gets:
+    int get_tempo_colheita();
+    std::string get_clima_ideal();
+    std::string get_solo_ideal();
+    std::string get_expectativaResistenciaPragas();
+    int get_expectativaCrescimento();
+    float get_expectativaTaxaDeGerminacao();
+    float get_expectativaTaxaDeSobrevivencia();
+    float get_expectativaIncidenciaPragasDoencas(); 
+
 };
