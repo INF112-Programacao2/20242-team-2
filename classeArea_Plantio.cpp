@@ -83,9 +83,9 @@ void area_plantio::exibirDetalhes() {
 }
 
 void area_plantio::registrarPlantio(int id_lote) {
-    if (_status == "disponível") {
+    if (_status == "Disponível") {
         _sementes_plantadas.push_back(id_lote);
-        _status = "em uso";
+        _status = "Em uso";
         std::cout << "Plantio registrado com sucesso!\n";
     } else {
         std::cout << "Área não está disponível para plantio.\n";
