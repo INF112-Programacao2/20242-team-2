@@ -12,13 +12,12 @@ class lote{
 
     private:
 
-
     //atributos:
 
     int _id_lote; //identificador unico do lote de sementes
     semente* _ptr_semente;  //apontador para o objeto semente correspondente
+    int _id_sementeAssociada;
     
-    //int _id_tipo; identificador de tipo de semente (ainda nao visualizei como vai funcionar)
     std::string _nome_cientifico; //nome cientifico da semente
     std::string _geneIntroduzido;
     std::string _metodo_producao; 
@@ -28,8 +27,6 @@ class lote{
     float _preco_estimado;
     std::string _statusDisponibilidade;  //em estoque,vendido ou plantado
 
-    static int _contador_lote; //controla a quantidade de lotes
-    static int _contador_tipo; //controla a quantidade de tipos
 
     public: //sujeito a mudanca
 
@@ -39,6 +36,7 @@ class lote{
     ~lote(); //destrutor
 
     void exibirDetalhes();
+    void exibirDetalhesDaSemente();
     void set_statusDisponibilidade();  //ou set_statusDisponibilidade
     void set_preco_estimado();  //ou set_preco
     float verificarCompatibilidade(); //% devemos atribuir pesos
