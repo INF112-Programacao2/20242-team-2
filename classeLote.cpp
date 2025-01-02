@@ -18,8 +18,27 @@ lote::lote(){
  
     arquivoLotes.close();
     //____________________________________________//
+    //todo lote está associado a alguma semente, entao
+    char resposta;
+    std::cout<<"Esse lote é associado a uma semente ja registrada?  S/N";
+    std::cin>>resposta;
+
+
+    //ainda será alterado! é necessario fazer o construtor da semente ainda
+   if(resposta=='S'||resposta=='s'){
+        int id;
+        std::cout<<"Qual o id da semente associada ao lote? ";
+        std::cin>>id;
+        _ptr_semente=new semente(id);    //essa semente pode ou nao ja estar registrada
+        _id_sementeAssociada=_ptr_semente->get_id_tipo();
+    }
+    else if(resposta=='N'||resposta=='n'){
+        _ptr_semente=new semente();
+        _id_sementeAssociada=_ptr_semente->get_id_tipo();
+    }
 
     std::ofstream arquivoLotesON ("Lotes.txt",std::ios::app);  
+    std::cin.ignore();
     
     std::cout<<"Nome cientifico: ";                  std::getline(std::cin,_nome_cientifico);                 
     std::cout<<"Gene introduzido: ";                 std::getline(std::cin,_geneIntroduzido);
@@ -34,21 +53,11 @@ lote::lote(){
     
     arquivoLotesON.close();
 
-    //____________________________________________//
-    //todo lote está associado a alguma semente, entao
-    char resposta;
-    std::cout<<"Esse lote é associado a uma semente ja registrada?  S/N";
-    std::cin>>resposta;
-
-
-    //ainda será alterado! é necessario fazer o construtor da semente ainda
-    if(resposta=='S'||resposta=='s'){
-        semente *semente_associada=new semente();    //essa semente pode ou nao ja estar registrada
-    }
-    else if(resposta=='N'||resposta=='n'){
-        semente *semente_associada=new semente();
-    }
 }
+lote::~lote(){}
 
+void lote::exibirDetalhesDaSemente(){
+    _ptr_semente->exibirDetalhes();
+}
 
 
