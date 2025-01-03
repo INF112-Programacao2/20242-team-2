@@ -9,7 +9,7 @@ protected:
     std::string _nome;           
     std::string _email;
     static int totalUsuarios;                       // Número total de usuários no sistema
-    virtual void visualizarRelatorio() = 0;         // Método polimórfico para visualização de relatório
+    virtual void visualizarRelatorio() = 0;         // Método polimórfico para visualização de relatório (talvez)
 
 private:
     std::string _tipoUsuario;                       // Atributos privados 
@@ -17,24 +17,22 @@ private:
 
 public:
     // Construtor e Destrutor
-    Usuario(int id, const std::string& nome, const std::string& email, 
+    Usuario(int id, const std::string& nome, const std::string& email,  //ok
             const std::string& tipoUsuario, const std::string& senha);
-    virtual ~Usuario() = default;
+    virtual ~Usuario() = default;                                       //ok                         
 
     // Getters
-    int getId() const;                              // Retorna o ID (somente leitura)
-    std::string getNome() const;                 
-    std::string getEmail() const;                   
-    std::string getTipoUsuario() const;             // Retorna o tipo de usuário (gestor, vendedor, etc.)
+    int getId() const;                      //ok                    // Retorna o ID (somente leitura)
+    std::string getNome() const;            //ok              
+    std::string getEmail() const;           //ok              
+    std::string getTipoUsuario() const;     //ok            // Retorna o tipo de usuário (gestor, vendedor, etc.)
 
     // Setters
-    void setNome(const std::string& nome);   
-    void setEmail(const std::string& email); 
+    void setNome(const std::string& nome);      //ok
+    void setEmail(const std::string& email);    //ok
 
     // Métodos relacionados à segurança
-    bool verificarSenha(const std::string& senha);              // Verifica se a senha está correta
-
-    void realizarLogin();                                       // Metodos relacionados a parte visual  
-    void acessarInterface();
+    void realizarLogin();       //ok                                 // Metodos relacionados a parte visual  
+    void acessarInterface();    //ok
 };
 #endif

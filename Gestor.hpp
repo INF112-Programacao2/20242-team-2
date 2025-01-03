@@ -8,12 +8,11 @@ public:
     //metodos para sementes e lotes
     void registrarSemente();
     void registrarLote();
+    void visualizarRelatorio() override;
    
-
     // metodos para cadastro de usuarios
-    void cadastrarUsuario();
-    void alterarSenhaUsuario();
-    void associarId();                  // Atribui um ID ao usuário
-    void excluirUsuario();
+    void cadastrarUsuario();        //ok
+    void listarUsuarios();          //ok
+    void excluirUsuario();          //ok
 };
 #endif

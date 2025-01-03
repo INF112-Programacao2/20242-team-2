@@ -4,9 +4,10 @@
 #include "Usuario.hpp"
 
 class Analista: public Usuario{
-private:    
+public:
     void registrarRelatorio();
     void atualizarStatusDaSemente();
     void visualizarRelatorio();
+    void visualizarRelatorio() override; 
 };
 #endif
