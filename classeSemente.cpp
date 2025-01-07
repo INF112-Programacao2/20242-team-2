@@ -40,13 +40,13 @@ semente::semente(){
     std::cout<<"Incidencia de pragas/doencas (%): ";                        std::cin>>_expectativaIncidenciaPragasDoencas;
     std::cout<<"Tempo estimado de maturacao (dias): ";                       std::cin>>_expectativaCrescimento;
 
-    arquivoSementesON<<_id_tipo<<" "<<_solo_ideal<<" "<<_clima_ideal<<" "<<_irrigacao_ideal<<" "<<_expectativaIncidenciaPragasDoencas<<" "<<
-        _expectativaTaxaDeSobrevivencia<<" "<<_expectativaTaxaDeGerminacao<<" "<<_expectativaCrescimento<<" ";
+    arquivoSementesON<<_id_tipo<<"+"<<_solo_ideal<<"+"<<_clima_ideal<<"+"<<_irrigacao_ideal<<"+"<<_expectativaIncidenciaPragasDoencas<<"+"<<
+        _expectativaTaxaDeSobrevivencia<<"+"<<_expectativaTaxaDeGerminacao<<"+"<<_expectativaCrescimento<<"+";
     if(_produz_frutos){
-        arquivoSementesON<<1<<" "<<_tempo_colheita<<std::endl;
+        arquivoSementesON<<1<<"+"<<_tempo_colheita<<std::endl;
     }
     else{
-        arquivoSementesON<<0<<0<<std::endl;
+        arquivoSementesON<<0<<"+"<<0<<std::endl;
     }
     arquivoSementesON.close();
 
@@ -66,8 +66,8 @@ semente::semente(int id){
 
     //----------------------------------------------
     arquivoSementes>>_id_tipo;                              arquivoSementes.ignore();                                           
-    arquivoSementes >> _solo_ideal;                                          
-    arquivoSementes >> _clima_ideal;                                         
+    getline(arquivoSementes, _clima_ideal, '+');
+    getline(arquivoSementes, _solo_ideal, '+');                                          
     arquivoSementes >> _irrigacao_ideal;                                     
     arquivoSementes >> _expectativaIncidenciaPragasDoencas;                 
     arquivoSementes >> _expectativaTaxaDeSobrevivencia;                     
@@ -103,8 +103,8 @@ void semente::exibirDetalhes(){
 
     //----------------------------------------------
     arquivoSementes>>_id_tipo;                                                arquivoSementes.ignore();                                           
-    arquivoSementes >> _solo_ideal;                                          
-    arquivoSementes >> _clima_ideal;                                         
+    getline(arquivoSementes, _clima_ideal, '+');
+    getline(arquivoSementes, _solo_ideal, '+');                                          
     arquivoSementes >> _irrigacao_ideal;                                     
     arquivoSementes >> _expectativaIncidenciaPragasDoencas;                 
     arquivoSementes >> _expectativaTaxaDeSobrevivencia;                     
@@ -119,6 +119,8 @@ void semente::exibirDetalhes(){
     arquivoSementes.ignore(1);
     arquivoSementes>>_tempo_colheita;
 
+    arquivoSementes.close();
+
     std::cout<<"Dados da semente:\nID :"<<_id_tipo<<"\nSolo ideal: "<<_solo_ideal<<"\nClima ideal: "<<
     _clima_ideal<<"\nIrrigacao ideal: "<<_irrigacao_ideal<<" cmˆ3 agua/cmˆ3 solo\nTaxa de germinacao: "<<
     _expectativaTaxaDeGerminacao<<" %\nTaxa de sobrevivencia: "<<_expectativaTaxaDeSobrevivencia<<" %\nTaxa de crescimento: "<<
@@ -128,9 +130,30 @@ void semente::exibirDetalhes(){
 }
 
 
-int semente::get_id_tipo(){
+int semente::get_id_tipo(){  //ate entao, o unico get que esta sendo usado é esse
     return _id_tipo;
-};
+}
+int semente::get_tempo_colheita(){
+    return _tempo_colheita;
+}
+std::string semente::get_clima_ideal(){
+    return _clima_ideal;
+}
+std::string semente::get_solo_ideal(){
+    return _solo_ideal;
+}
+int semente::get_expectativaCrescimento(){
+    return _expectativaCrescimento;
+}
+float semente::get_expectativaTaxaDeGerminacao(){
+    return _expectativaTaxaDeGerminacao;
+}
+float semente::get_expectativaTaxaDeSobrevivencia(){
+    return _expectativaTaxaDeSobrevivencia;
+}
+float semente::get_expectativaIncidenciaPragasDoencas(){
+    return _expectativaIncidenciaPragasDoencas;
+} 
 
 
 
