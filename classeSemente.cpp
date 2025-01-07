@@ -10,21 +10,17 @@ semente::semente(){
 
         //identificar qual o id do proximo lote:
     arquivoSementes>>_id_tipo; _id_tipo++;         //le o contador de tipos e calcula o ID
-    arquivoSementes.seekg(0,std::ios::beg);        //leva o apontador até a posicao do contador do arquivo
-    arquivoSementes<<_id_tipo <<std::endl;                    //atualiza o contador
-    
-    arquivoSementes.close();
 
-    //____________________________________________//
-    std::ofstream arquivoSementesON ("Sementes.txt",std::ios::app);  
+    //____________________________________________//  
     
     char resp;
     std::cout<<"Produz frutos? (S/N) ";   std::cin>>resp;
     if(resp=='s'||resp=='s'){
         _produz_frutos=true;
         std::cout<<"Tempo de colheita (meses): ";     
-        std::cin>>_tempo_colheita;   
-        std::cin.ignore();             
+        std::cin>>_tempo_colheita; 
+        std::cin.ignore();  
+                     
    
     }
     else if(resp=='n'||resp=='N'){
@@ -44,16 +40,20 @@ semente::semente(){
     std::cin.ignore();                          
     std::cout << "Tempo estimado de maturacao (dias): ";                       std::cin >> _expectativaCrescimento;
 
-    arquivoSementesON<<_id_tipo<<"+"<<_solo_ideal<<"+"<<_clima_ideal<<"+"<<_irrigacao_ideal<<"+"<<_expectativaIncidenciaPragasDoencas<<"+"<<
+    arquivoSementes.seekp(0,std::ios::end);
+    arquivoSementes<<_id_tipo<<"+"<<_solo_ideal<<"+"<<_clima_ideal<<"+"<<_irrigacao_ideal<<"+"<<_expectativaIncidenciaPragasDoencas<<"+"<<
         _expectativaTaxaDeSobrevivencia<<"+"<<_expectativaTaxaDeGerminacao<<"+"<<_expectativaCrescimento<<"+";
     if(_produz_frutos){
-        arquivoSementesON<<1<<"+"<<_tempo_colheita<<std::endl;
+        arquivoSementes<<1<<"+"<<_tempo_colheita<<std::endl;
     }
     else{
-        arquivoSementesON<<0<<"+"<<0<<std::endl;
+        arquivoSementes<<0<<"+"<<0<<std::endl;
     }
-    arquivoSementesON.close();
-
+    
+    arquivoSementes.seekg(0,std::ios::beg);        //leva o apontador até a posicao do contador do arquivo
+    arquivoSementes<<_id_tipo <<std::endl;                    //atualiza o contador
+    
+    arquivoSementes.close();
 }
 
 semente::semente(int id){
