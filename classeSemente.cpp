@@ -32,13 +32,17 @@ semente::semente(){
         _tempo_colheita=0;   //nulo ou 0?
     }
 
-    std::cout<<"Clima ideal: ";                                             std::getline(std::cin,_clima_ideal);
-    std::cout<<"Solo ideal: ";                                              std::getline(std::cin,_solo_ideal);
-    std::cout<<"Irrigacao ideal: (cmˆ3 agua/cmˆ3 solo)";                    std::cin>>_irrigacao_ideal;
-    std::cout<<"Taxa de germinacao (%): ";                                  std::cin>>_expectativaTaxaDeGerminacao;
-    std::cout<<"Taxa de sobrevivencia (%): ";                               std::cin>>_expectativaTaxaDeSobrevivencia;
-    std::cout<<"Incidencia de pragas/doencas (%): ";                        std::cin>>_expectativaIncidenciaPragasDoencas;
-    std::cout<<"Tempo estimado de maturacao (dias): ";                       std::cin>>_expectativaCrescimento;
+    std::cout << "Clima ideal: ";                                             std::getline(std::cin, _clima_ideal);    
+    std::cout << "Solo ideal: ";                                              std::getline(std::cin, _solo_ideal);     
+    std::cout << "Irrigacao ideal: (cmˆ3 agua/cmˆ3 solo)";                    std::cin >> _irrigacao_ideal;
+    std::cin.ignore();
+    std::cout << "Taxa de germinacao (%): ";                                  std::cin >> _expectativaTaxaDeGerminacao;
+    std::cin.ignore();
+    std::cout << "Taxa de sobrevivencia (%): ";                               std::cin >> _expectativaTaxaDeSobrevivencia;
+    std::cin.ignore();
+    std::cout << "Incidencia de pragas/doencas (%): ";                        std::cin >> _expectativaIncidenciaPragasDoencas;
+    std::cin.ignore();                          
+    std::cout << "Tempo estimado de maturacao (dias): ";                       std::cin >> _expectativaCrescimento;
 
     arquivoSementesON<<_id_tipo<<"+"<<_solo_ideal<<"+"<<_clima_ideal<<"+"<<_irrigacao_ideal<<"+"<<_expectativaIncidenciaPragasDoencas<<"+"<<
         _expectativaTaxaDeSobrevivencia<<"+"<<_expectativaTaxaDeGerminacao<<"+"<<_expectativaCrescimento<<"+";
