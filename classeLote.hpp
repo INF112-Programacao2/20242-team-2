@@ -17,7 +17,6 @@ class lote{
     int _id_lote; //identificador unico do lote de sementes
     semente* _ptr_semente;  //apontador para o objeto semente correspondente
     int _id_sementeAssociada;
-    
     std::string _nome_cientifico; //nome cientifico da semente
     std::string _geneIntroduzido;
     std::string _metodo_producao; 
@@ -34,7 +33,7 @@ class lote{
 
     lote();  //construtor
     ~lote(); //destrutor
-
+    void registrarLote();
     void exibirDetalhes();
     void exibirDetalhesDaSemente();
     void set_statusDisponibilidade();  //ou set_statusDisponibilidade
