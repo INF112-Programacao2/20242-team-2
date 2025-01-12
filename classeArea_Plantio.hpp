@@ -24,9 +24,10 @@ public:
     area_plantio();      //construtor
     ~area_plantio();     //destrutor
 
+    int get_id();
     void exibirDetalhes();
     void registrarPlantio(int id_lote);               //registra o plantio de um lote de sementes na área.
-    std::string verificarDisponibilidade();                 //verifica se a área está disponível para plantio.
+    bool verificarDisponibilidade();           //verifica se a área está disponível para plantio.
     float verificarCompatibilidade(semente& semente); //retorna em porcentagem a compatibilidade de uma area com uma determinada semente.
     void liberarArea();
     void gerar_relatorioArea();

@@ -62,6 +62,10 @@ area_plantio::area_plantio() {
 
 area_plantio:: ~area_plantio(){}
 
+int area_plantio:: get_id(){
+    return _id_area;
+}
+
 void area_plantio::exibirDetalhes() {
     std::cout << "\n=== Detalhes da Área de Plantio ===\n";
     std::cout << "ID: " << _id_area << "\n";
@@ -92,8 +96,12 @@ void area_plantio::registrarPlantio(int id_lote) {
     }
 }
 
-std::string area_plantio::verificarDisponibilidade() {
-    return _status;
+bool area_plantio::verificarDisponibilidade() {
+    if(_status=="disponível"){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 float area_plantio::verificarCompatibilidade(semente& semente) {
