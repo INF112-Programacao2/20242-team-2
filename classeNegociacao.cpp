@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <sstream>
 
+
+//capturar a data atual
 std::string getCurrentDate() {
     time_t now = time(0);
     tm* ltm = localtime(&now);

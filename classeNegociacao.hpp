@@ -18,6 +18,7 @@ private:
     std::string getCurrentDate();
     bool validarData(const std::string& data);
     void atualizarStatusArquivo();
+    
 public:
     negociacao();
     void registrarNegociacao(lote* lote, area_plantio* area, float valor, std::string data);
