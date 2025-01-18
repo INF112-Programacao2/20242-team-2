@@ -31,6 +31,7 @@ class semente{
     ~semente();  //destrutor
 
     void exibirDetalhes();   // Exibe todas as informações da semente
+    void registrarNovaSemente();
     
     //de inicio, nao faz sentido ter seteres dos atributos dessa classe
 
