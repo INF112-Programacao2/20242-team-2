@@ -18,9 +18,39 @@ lote::lote(){
 
     //____________________________________________//
 }
-lote::~lote(){}
+lote::lote(int id_lote){                         //aloca um lote que ja esta registrado. Utilizado para negociacao e relatorios        
 
-void lote::registrarLote(){
+    std::ifstream arquivoLotes ("Lotes.txt");
+    if(!arquivoLotes)
+        std::cerr<<"Erro ao abrir o arquivo Lotes.txt\n";
+
+    std::string linha;
+    for(int i=0;i<id_lote;i++){
+        std::getline(arquivoLotes, linha);  //ignorando as n primeiras linhas do codigo
+    }
+    //----------------------------------------------
+    arquivoLotes>>_id_sementeAssociada;                    arquivoLotes.ignore();
+    arquivoLotes>>_id_lote;                                arquivoLotes.ignore();
+    std::getline(arquivoLotes,_statusDisponibilidade,'+');
+    std::getline(arquivoLotes,_nome_cientifico,'+');
+    std::getline(arquivoLotes,_geneIntroduzido,'+');
+    std::getline(arquivoLotes,_metodo_producao,'+');
+    std::getline(arquivoLotes,_data_producao,'+');
+    std::getline(arquivoLotes,_pais_origem,'+');
+    arquivoLotes>>_quantidade_disponivel;                  arquivoLotes.ignore();
+    arquivoLotes>>_preco_estimado;
+    //--------------------------------------------
+
+    arquivoLotes.close();
+
+    _ptr_semente=new semente(_id_sementeAssociada);
+
+}
+lote::~lote(){
+    delete _ptr_semente;
+}
+
+void lote::registrarNovoLote(int id_semente){
          
     std::fstream arquivoLotes ("Lotes.txt");
     if(!arquivoLotes)
@@ -32,25 +62,9 @@ void lote::registrarLote(){
     arquivoLotes>>contadorDeLotes; contadorDeLotes++;     //le o contador do arquivo e adiciona
  
     //____________________________________________//
-    //todo lote está associado a alguma semente, entao
-    char resposta;
-    std::cout<<"Esse lote é associado a uma semente ja registrada?  S/N ";
-    std::cin>>resposta;
+    _ptr_semente=new semente(id_semente);
+    _id_sementeAssociada=_ptr_semente->get_id_tipo();
     
-
-    //ainda será alterado! é necessario fazer o construtor da semente ainda
-    if(resposta=='S'||resposta=='s'){
-        int id;
-        std::cout<<"Qual o id da semente associada ao lote? ";
-        std::cin>>id;
-        _ptr_semente=new semente(id);    //essa semente pode ou nao ja estar registrada
-        _id_sementeAssociada=_ptr_semente->get_id_tipo();
-    }
-    else if(resposta=='N'||resposta=='n'){
-        _ptr_semente=new semente();
-        _id_sementeAssociada=_ptr_semente->get_id_tipo();
-    }
-  
     std::cin.ignore();
     
     std::cout<<"Nome cientifico: ";                  std::getline(std::cin,_nome_cientifico);                 
@@ -74,7 +88,6 @@ void lote::registrarLote(){
 
 void lote::exibirDetalhesDaSemente(){
     _ptr_semente->exibirDetalhes();
-    //em andamento
     
 }
 void lote::exibirDetalhes(){
