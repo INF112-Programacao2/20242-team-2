@@ -2,7 +2,57 @@
 #include <fstream>
 
 semente::semente(){
+    int _id_tipo=NULL;
+    bool _produz_frutos=false;
+    int _tempo_colheita=NULL;
+    std::string _clima_ideal="";
+    std::string _solo_ideal="";
+    float _irrigacao_ideal=NULL;
+    int _expectativaCrescimento=NULL; 
+    float _expectativaTaxaDeGerminacao=NULL; 
+    float _expectativaTaxaDeSobrevivencia=NULL; 
+    float _expectativaIncidenciaPragasDoencas=NULL; 
+}
+
+semente::semente(int id){
     //____________________________________________//
+         
+    std::ifstream arquivoSementes ("Sementes.txt");
+    if(!arquivoSementes)
+        std::cerr<<"Erro ao abrir o arquivo Lotes.txt\n";
+
+    std::string linha;
+    for(int i=0;i<id;i++){
+        std::getline(arquivoSementes, linha);  //ignorando as n primeiras linhas do codigo
+    }
+
+    //----------------------------------------------
+    arquivoSementes>>_id_tipo;                              arquivoSementes.ignore();                                           
+    getline(arquivoSementes, _clima_ideal, '+');
+    getline(arquivoSementes, _solo_ideal, '+');                                        
+    arquivoSementes >> _irrigacao_ideal;                                     
+    arquivoSementes >> _expectativaIncidenciaPragasDoencas;                 
+    arquivoSementes >> _expectativaTaxaDeSobrevivencia;                     
+    arquivoSementes >> _expectativaTaxaDeGerminacao;                        
+    arquivoSementes >> _expectativaCrescimento;  
+
+    int check;
+    arquivoSementes>>check;                                            
+    if(check==0){
+        _produz_frutos=false;
+        _tempo_colheita=0;
+    }
+    if(check==1){
+        _produz_frutos=true;
+        arquivoSementes>>_tempo_colheita;
+    }
+    arquivoSementes.close();
+}
+
+semente::~semente(){}  //ainda sera desenvolvido
+
+void semente::registrarNovaSemente(){
+     //____________________________________________//
          
     std::fstream arquivoSementes ("Sementes.txt");
     if(!arquivoSementes)
@@ -54,44 +104,8 @@ semente::semente(){
     arquivoSementes<<_id_tipo <<std::endl;                    //atualiza o contador
     
     arquivoSementes.close();
+
 }
-
-semente::semente(int id){
-    //____________________________________________//
-         
-    std::ifstream arquivoSementes ("Sementes.txt");
-    if(!arquivoSementes)
-        std::cerr<<"Erro ao abrir o arquivo Lotes.txt\n";
-
-    std::string linha;
-    for(int i=0;i<id;i++){
-        std::getline(arquivoSementes, linha);  //ignorando as n primeiras linhas do codigo
-    }
-
-    //----------------------------------------------
-    arquivoSementes>>_id_tipo;                              arquivoSementes.ignore();                                           
-    getline(arquivoSementes, _clima_ideal, '+');
-    getline(arquivoSementes, _solo_ideal, '+');                                          
-    arquivoSementes >> _irrigacao_ideal;                                     
-    arquivoSementes >> _expectativaIncidenciaPragasDoencas;                 
-    arquivoSementes >> _expectativaTaxaDeSobrevivencia;                     
-    arquivoSementes >> _expectativaTaxaDeGerminacao;                        
-    arquivoSementes >> _expectativaCrescimento;  
-
-    int check;
-    arquivoSementes>>check;                                            
-    if(check==0){
-        _produz_frutos=false;
-        _tempo_colheita=0;
-    }
-    if(check==1){
-        _produz_frutos=true;
-        arquivoSementes>>_tempo_colheita;
-    }
-    arquivoSementes.close();
-}
-
-semente::~semente(){}  //ainda sera desenvolvido
 
 void semente::exibirDetalhes(){
     //____________________________________________//
@@ -108,7 +122,7 @@ void semente::exibirDetalhes(){
     //----------------------------------------------
     arquivoSementes>>_id_tipo;                                                arquivoSementes.ignore();                                           
     getline(arquivoSementes, _clima_ideal, '+');
-    getline(arquivoSementes, _solo_ideal, '+');                                          
+    getline(arquivoSementes, _solo_ideal, '+');                                       
     arquivoSementes >> _irrigacao_ideal;                                     
     arquivoSementes >> _expectativaIncidenciaPragasDoencas;                 
     arquivoSementes >> _expectativaTaxaDeSobrevivencia;                     
@@ -124,6 +138,9 @@ void semente::exibirDetalhes(){
     arquivoSementes>>_tempo_colheita;
 
     arquivoSementes.close();
+    //------------------------------------------------
+    for(int i=0;i<50;i++) std::cout<<"-";
+    std::cout<<std::endl;
 
     std::cout<<"Dados da semente:\nID :"<<_id_tipo<<"\nSolo ideal: "<<_solo_ideal<<"\nClima ideal: "<<
     _clima_ideal<<"\nIrrigacao ideal: "<<_irrigacao_ideal<<" cmˆ3 agua/cmˆ3 solo\nTaxa de germinacao: "<<
@@ -131,12 +148,17 @@ void semente::exibirDetalhes(){
     _expectativaCrescimento<<" %\nTaxa de incidencia de Pragas e doencas: "<<_expectativaIncidenciaPragasDoencas<<" %\n";
     if(_produz_frutos)
         std::cout<<"Produz frutos com um tempo de colheita de: "<<_tempo_colheita<<" meses\n";
+
+    for(int i=0;i<50;i++) std::cout<<"-";
+    std::cout<<std::endl;
 }
 
 
-int semente::get_id_tipo(){  //ate entao, o unico get que esta sendo usado é esse
+
+int semente::get_id_tipo(){   //ate entao, o unico get que esta sendo usado é esse
     return _id_tipo;
 }
+
 int semente::get_tempo_colheita(){
     return _tempo_colheita;
 }
@@ -158,6 +180,5 @@ float semente::get_expectativaTaxaDeSobrevivencia(){
 float semente::get_expectativaIncidenciaPragasDoencas(){
     return _expectativaIncidenciaPragasDoencas;
 } 
-
 
 
