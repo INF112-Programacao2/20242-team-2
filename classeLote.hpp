@@ -39,10 +39,11 @@ class lote{
     void exibirDetalhes();
     void exibirDetalhesDaSemente();
     void set_statusDisponibilidade();  //ou set_statusDisponibilidade
-    void set_preco_estimado();  //ou set_preco
+    float get_preco_estimado();
+    int get_id_lote();
     float verificarCompatibilidade(); //% devemos atribuir pesos
     void consumirSementes(int _id_lote,int quantidadeConsumida); //diminuir ou zerar a quantidade disponivel no lote
     void gerarRelatorioSementes();  //polimorfismo?
-};
 
+};
 #endif

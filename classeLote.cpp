@@ -96,7 +96,7 @@ void lote::exibirDetalhes(){
 
     std::cout<<"Dados do lote:\nID :"<<_id_lote<<"\nNome cientifico: "<<_nome_cientifico<<"\nGene introduzido: "<<
     _geneIntroduzido<<"\nMetodo de producao: "<<_metodo_producao<<"\nData de producao: "<<_data_producao<<"\nPais de origem: "<<
-    _pais_origem<<"\nQuantidade disponivel no lote: "<<_quantidade_disponivel<<" kg\nPreco estimado: RS"<<_preco_estimado;
+    _pais_origem<<"\nQuantidade disponivel no lote: "<<_quantidade_disponivel<<" kg\nPreco estimado: RS"<<_preco_estimado<<"\n";
     
 
     for(int i=0;i<50;i++) std::cout<<"-";
@@ -168,6 +168,12 @@ void lote::consumirSementes(int id_lote,int quantidadeConsumida){
     arquivoLotesON.close();
 }
 
+float lote::get_preco_estimado(){
+    return _preco_estimado;
+}
 
+int lote::get_id_lote(){
+    return _id_lote;
+}
 
 
