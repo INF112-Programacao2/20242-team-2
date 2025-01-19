@@ -4,16 +4,16 @@
 lote::lote(){
 
     _statusDisponibilidade="estoque"; 
-    int _id_lote=NULL;
+    int _id_lote=0;
     semente* _ptr_semente=nullptr;
-    int _id_sementeAssociada=NULL;
+    int _id_sementeAssociada=0;
     std::string _nome_cientifico="";
     std::string _geneIntroduzido="";
     std::string _metodo_producao="";
     std::string _data_producao="";
     std::string _pais_origem="";
-    int _quantidade_disponivel=NULL;
-    float _preco_estimado=NULL;
+    int _quantidade_disponivel=0;
+    float _preco_estimado=0;
     std::string _statusDisponibilidade="";
 
     //____________________________________________//

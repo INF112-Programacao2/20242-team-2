@@ -2,16 +2,16 @@
 #include <fstream>
 
 semente::semente(){
-    int _id_tipo=NULL;
+    int _id_tipo=0;
     bool _produz_frutos=false;
-    int _tempo_colheita=NULL;
+    int _tempo_colheita=0;
     std::string _clima_ideal="";
     std::string _solo_ideal="";
-    float _irrigacao_ideal=NULL;
-    int _expectativaCrescimento=NULL; 
-    float _expectativaTaxaDeGerminacao=NULL; 
-    float _expectativaTaxaDeSobrevivencia=NULL; 
-    float _expectativaIncidenciaPragasDoencas=NULL; 
+    float _irrigacao_ideal=0;
+    int _expectativaCrescimento=0; 
+    float _expectativaTaxaDeGerminacao=0; 
+    float _expectativaTaxaDeSobrevivencia=0; 
+    float _expectativaIncidenciaPragasDoencas=0; 
 }
 
 semente::semente(int id){
