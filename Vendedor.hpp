@@ -8,9 +8,8 @@ class Vendedor: public Usuario{
 private:
     std::vector<area_plantio> areas;
 public:
-    void registrarArea();
+    void registrarArea();       
     void cadastrarNegociacao();
     void atualizarPrecoDaSemente();
-    void visualizarRelatorio() override;
 };
 #endif

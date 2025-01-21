@@ -156,6 +156,86 @@ void Gestor::excluirUsuario() {
     std::cout << "Usuario com ID " << idParaExcluir << " excluido com sucesso." << std::endl;
 }
 
-void Gestor::visualizarRelatorio(){
-    // Metodo a ser implementado
+void Gestor::salvarSemente(const Semente& semente) {
+    try {
+        std::ofstream arquivo("Sementes.txt", std::ios::app);
+        if (!arquivo.is_open()) {
+            throw std::ios_base::failure("Erro ao abrir o arquivo para registro.");
+        }
+
+        // Verifica se algum valor está vazio ou inválido
+        if (semente.getId() == 0 || semente.getSoloIdeal().empty() || semente.getClimaIdeal().empty() ||
+            semente.getTempoColheita() <= 0 || semente.getIrrigacaoIdeal() <= 0 || 
+            semente.getExpectativaResistenciaPraga() < 0 || semente.getExpectativaCrescimento() < 0 ||
+            semente.getExpectativaTaxaDeGerminacao() < 0 || semente.getExpectativaTaxaDeSobrevivencia() < 0) {
+            throw std::invalid_argument("Nao foi possivel registrar a semente pois um dos valores esta vazio ou invalido.");
+        }
+
+        // Caso todos os valores estejam válidos, escreve no arquivo
+        arquivo << semente.getId() << "+" << semente.getSoloIdeal() << "+"
+                << semente.getClimaIdeal() << "+" << semente.getTempoColheita() << "+"
+                << semente.getIrrigacaoIdeal() << "+" << semente.getExpectativaResistenciaPraga() << "+"
+                << semente.getExpectativaCrescimento() << "+" << semente.getExpectativaTaxaDeGerminacao() << "+"
+                << semente.getExpectativaTaxaDeSobrevivencia() << "+" << semente.getProduzFrutos() << "\n";
+                
+        std::cout << "Semente registrada com sucesso!" << std::endl;
+        arquivo.close();
+
+    } catch (const std::ios_base::failure& e) {
+        std::cerr << "Excecao de I/O: " << e.what() << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Excecao de argumento invalido: " << e.what() << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Excecao geral: " << e.what() << std::endl;
+    }
 }
+
+
+
+
+void Gestor::registrarSemente() {
+        Semente novaSemente;
+
+        std::string clima, solo;
+        float tempoColheita, irrigacaoIdeal, expectativaResistencia, expectativaCrescimento;
+        bool produzFrutos;
+        float expectativaTaxaGerminacao, expectativaTaxaSobrevivencia;
+
+        std::cout << "Insira os detalhes da semente:\n";
+        std::cout << "Clima ideal: ";
+        std::getline(std::cin, clima);
+        std::cout << "Solo ideal: ";
+        std::getline(std::cin, solo);
+        std::cout << "Tempo de colheita (em dias): ";
+        std::cin >> tempoColheita;
+        std::cout << "Irrigacao ideal (em mm/dia): ";
+        std::cin >> irrigacaoIdeal;
+        std::cout << "Expectativa de resistência a pragas (%): ";
+        std::cin >> expectativaResistencia;
+        std::cout << "Expectativa de crescimento (%): ";
+        std::cin >> expectativaCrescimento;
+        std::cout << "Expectativa de taxa de germinação (%): ";
+        std::cin >> expectativaTaxaGerminacao;
+        std::cout << "Expectativa de taxa de sobrevivência (%): ";
+        std::cin >> expectativaTaxaSobrevivencia;
+        std::cout << "A semente produz frutos (1 - sim, 0 - não): ";
+        std::cin >> produzFrutos;
+
+        // Preenche os dados no objeto
+        novaSemente.setClimaIdeal(clima);
+        novaSemente.setSoloIdeal(solo);
+        novaSemente.setTempoColheita(tempoColheita);
+        novaSemente.setIrrigacaoIdeal(irrigacaoIdeal);
+        novaSemente.setExpectativaResistenciaPraga(expectativaResistencia);
+        novaSemente.setExpectativaCrescimento(expectativaCrescimento);
+        novaSemente.setExpectativaTaxaDeGerminacao(expectativaTaxaGerminacao);
+        novaSemente.setExpectativaTaxaDeSobrevivencia(expectativaTaxaSobrevivencia);
+        novaSemente.setProduzFrutos(produzFrutos);
+
+        // Registra a nova semente no contêiner
+        sementesRegistradas.push_back(novaSemente);
+
+        salvarSemente(novaSemente);
+}
+
+

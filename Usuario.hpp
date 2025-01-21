@@ -9,7 +9,7 @@ protected:
     std::string _nome;           
     std::string _email;
     static int totalUsuarios;                       // Número total de usuários no sistema
-    virtual void visualizarRelatorio() = 0;         // Método polimórfico para visualização de relatório (talvez)
+    void visualizarRelatorio();                     // Método polimórfico para visualização de relatório (talvez)
 
 private:
     std::string _tipoUsuario;                       // Atributos privados 

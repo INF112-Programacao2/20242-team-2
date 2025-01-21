@@ -64,3 +64,7 @@ void Usuario::acessarInterface(){
     //metodo a ser implementado futuramente
 }
 
+void Usuario::visualizarRelatorio(){
+    //metodo a ser implementado futuramente
+}
+
