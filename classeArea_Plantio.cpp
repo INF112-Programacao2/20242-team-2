@@ -183,17 +183,68 @@ bool area_plantio::verificarDisponibilidade() {
     }
 }
 
-/*float area_plantio::verificarCompatibilidade(semente& semente) {
-    // implementar lógica de compatibilidade, por enquanto retorna 0.0
-    return 0.0;
-}
-*/
-
 void area_plantio::liberarArea() {
-    _status = "disponível";
+    // Atualiza o status da área para "Disponível"
+    _status = "Disponível";
+
+    // Limpa as sementes plantadas
     _sementes_plantadas.clear();
+
+    // Atualiza o arquivo que armazena as informações da área
+    std::fstream arquivoArea("AreaPlantio.txt", std::ios::in | std::ios::out);
+    if (!arquivoArea) {
+        throw std::runtime_error("Erro ao abrir o arquivo AreaPlantio.txt");
+    }
+
+    int contador_areas;
+    arquivoArea >> contador_areas;
+    arquivoArea.ignore();
+
+    std::string* linhas = new std::string[contador_areas];
+
+    // Lê todas as linhas do arquivo
+    for (int i = 0; i < contador_areas; i++) {
+        std::string linha_atual;
+        std::getline(arquivoArea, linha_atual);
+
+        // Identifica a área correspondente
+        std::stringstream ss(linha_atual);
+        int id_area;
+        ss >> id_area;
+
+        if (id_area == _id_area) {
+            // Atualiza o status da área correspondente
+            std::stringstream nova_linha;
+            nova_linha << _id_area << " "  << _status << "+" << _nome_proprietario << "+"  << _cnpj_proprietario << "+" << _localizacao << "+" 
+                        << _tipo_solo << "+" << _clima << "+"  << _tamanho;
+            linhas[i] = nova_linha.str();
+        } else {
+            linhas[i] = linha_atual;
+        }
+    }
+
+    // Fecha o arquivo de leitura
+    arquivoArea.close();
+
+    // Reescreve o arquivo com os dados atualizados
+    std::ofstream arquivoSaida("AreaPlantio.txt", std::ios::trunc);
+    if (!arquivoSaida) {
+        delete[] linhas;
+        throw std::runtime_error("Erro ao reescrever o arquivo AreaPlantio.txt");
+    }
+
+    arquivoSaida << contador_areas << std::endl;
+    for (int i = 0; i < contador_areas; i++) {
+        arquivoSaida << linhas[i] << std::endl;
+    }
+
+    delete[] linhas;
+    arquivoSaida.close();
+
+    // Mensagem de sucesso
     std::cout << "Área liberada com sucesso!\n";
 }
+
 
 void area_plantio::gerar_relatorioArea() {
     exibirDetalhes();
