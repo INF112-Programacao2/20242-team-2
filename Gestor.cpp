@@ -190,9 +190,6 @@ void Gestor::salvarSemente(const Semente& semente) {
     }
 }
 
-
-
-
 void Gestor::registrarSemente() {
         Semente novaSemente;
 
@@ -238,4 +235,119 @@ void Gestor::registrarSemente() {
         salvarSemente(novaSemente);
 }
 
+void Gestor::excluirSemente() {
+    int idParaExcluir;
+    std::cout << "Insira o ID da semente que deseja excluir: ";
+    std::cin >> idParaExcluir;
+    std::cin.ignore(); // Limpa o buffer de entrada
+
+    std::ifstream arquivoEntrada("Sementes.txt");
+    if (!arquivoEntrada.is_open()) {
+        throw std::ios_base::failure("Erro ao abrir o arquivo Sementes.txt");
+    }
+
+    std::vector<std::string> sementesRestantes;
+    std::string linha;
+    bool sementeEncontrada = false;
+
+    while (std::getline(arquivoEntrada, linha)) {
+        std::stringstream ss(linha);
+        int idAtual;
+        char separador;
+        ss >> idAtual >> separador;
+
+        if (idAtual == idParaExcluir) {
+            sementeEncontrada = true;
+            continue; // Ignora essa linha (não adiciona ao vetor)
+        }
+        sementesRestantes.push_back(linha);
+    }
+    arquivoEntrada.close();
+
+    if (!sementeEncontrada) {
+        std::cout << "Semente com ID " << idParaExcluir << " nao encontrada." << std::endl;
+        return;
+    }
+
+    std::ofstream arquivoSaida("Sementes.txt");
+    if (!arquivoSaida.is_open()) {
+        throw std::ios_base::failure("Erro ao abrir o arquivo Sementes.txt para escrita");
+    }
+
+    for (const auto &semente : sementesRestantes) {
+        arquivoSaida << semente << std::endl;
+    }
+    arquivoSaida.close();
+
+    std::cout << "Semente com ID " << idParaExcluir << " excluida com sucesso." << std::endl;
+}
+
+void Gestor::salvarLote(const Lote& lote) {
+    try {
+        std::ofstream arquivoLotes("Lotes.txt", std::ios::app);
+        if (!arquivoLotes.is_open()) {
+            throw std::ios_base::failure("Erro ao abrir o arquivo para escrita.");
+        }
+
+        arquivoLotes << lote.getIdSementeAssociada() << "+" << lote.getIdLote() << "+" << lote.getStatusDisponibilidade() << "+"
+                     << lote.getNomeCientifico() << "+" << lote.getGeneIntroduzido() << "+" << lote.getMetodoProducao() << "+"
+                     << lote.getDataProducao() << "+" << lote.getPaisOrigem() << "+" << lote.getQuantidadeDisponivel() << "+" << lote.getPrecoEstimado() << "\n";
+
+        arquivoLotes.close();
+
+        std::ofstream arquivoLotesWrite("Lotes.txt", std::ios::in | std::ios::out);
+        if (!arquivoLotesWrite.is_open()) {
+            throw std::ios_base::failure("Erro ao abrir o arquivo para leitura e escrita.");
+        }
+
+        arquivoLotesWrite.seekp(0, std::ios::beg);
+        arquivoLotesWrite << lote.getIdLote() << std::endl;
+        arquivoLotesWrite.close();
+
+        std::cout << "Lote registrado com sucesso!\n";
+    } catch (const std::ios_base::failure& e) {
+        std::cerr << "Excecao de I/O: " << e.what() << "\n";
+    } catch (const std::exception& e) {
+        std::cerr << "Excecao: " << e.what() << "\n";
+    }
+}
+
+void Gestor::registrarLote() {
+        Lote novoLote;
+
+        int idSementeAssociada;
+        std::string statusDisponibilidade, nomeCientifico, geneIntroduzido, metodoProducao, dataProducao, paisOrigem;
+        float quantidadeDisponivel, precoEstimado;
+
+        std::cout << "ID da semente associada: "; 
+        std::cin >> idSementeAssociada;
+        std::cout << "Status de disponibilidade (Estoque/Vendido/Plantado): "; 
+        std::getline(std::cin, statusDisponibilidade);
+        std::cout << "Nome cientifico: "; 
+        std::getline(std::cin, nomeCientifico);
+        std::cout << "Gene introduzido: "; 
+        std::getline(std::cin, geneIntroduzido);
+        std::cout << "Metodo de producao: "; 
+        std::getline(std::cin, metodoProducao);
+        std::cout << "Data de producao (DD/MM/AA): "; 
+        std::getline(std::cin, dataProducao);
+        std::cout << "Pais de origem: "; 
+        std::getline(std::cin, paisOrigem);
+        std::cout << "Quantidade disponivel (kg): "; 
+        std::cin >> quantidadeDisponivel;
+        std::cout << "Preco estimado: "; 
+        std::cin >> precoEstimado;
+
+        novoLote.setIdSementeAssociada(idSementeAssociada);
+        novoLote.setStatusDisponibilidade(statusDisponibilidade);
+        novoLote.setNomeCientifico(nomeCientifico);
+        novoLote.setGeneIntroduzido(geneIntroduzido);
+        novoLote.setMetodoProducao(metodoProducao);
+        novoLote.setDataProducao(dataProducao);
+        novoLote.setPaisOrigem(paisOrigem);
+        novoLote.setQuantidadeDisponivel(quantidadeDisponivel);
+        novoLote.setPrecoEstimado(precoEstimado);
+
+        salvarLote(novoLote);
+}
 
