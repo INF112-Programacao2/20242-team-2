@@ -20,7 +20,7 @@ private:
     std::string _status;             //status atual da área ("disponível", "em uso", "reservado").
     std::vector <int> _sementes_plantadas; //lista de IDs dos lotes de sementes plantadas na área.
     
-    void atualizarStatusArquivo(int id_lote);
+    void atualizarStatusArquivo();
 
 public:
     area_plantio();      //construtor

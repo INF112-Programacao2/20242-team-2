@@ -114,82 +114,7 @@ void area_plantio::exibirDetalhes() {
     }
 }
 
-void area_plantio::registrarPlantio(int id_lote) {
-    if (_status != "Disponível") {
-        throw std::runtime_error("Área não está disponível para plantio.");
-    }
-
-    // Atualiza o estado do objeto
-    _sementes_plantadas.push_back(id_lote);
-    _status = "Em uso";
-
-    // Abre o arquivo para leitura e escrita
-    std::fstream arquivoArea("AreaPlantio.txt", std::ios::in | std::ios::out);
-    if (!arquivoArea) {
-        throw std::runtime_error("Erro ao abrir o arquivo AreaPlantio.txt");
-    }
-
-    int contador_areas;
-    arquivoArea >> contador_areas;
-    arquivoArea.ignore();
-
-    // Aloca memória para armazenar todas as linhas
-    std::string* linhas = new std::string[contador_areas];
-
-    // Lê todas as linhas do arquivo
-    for (int i = 0; i < contador_areas; i++) {
-        if (i + 1 == _id_area) {
-            // Pula a linha atual que será atualizada
-            std::string linha_antiga;
-            std::getline(arquivoArea, linha_antiga);
-
-            // Cria a nova linha com os dados atualizados
-            std::stringstream nova_linha;
-            nova_linha << _id_area << " "  << _status << "+" << _nome_proprietario << "+"  << _cnpj_proprietario << "+" << _localizacao << "+" 
-                        << _tipo_solo << "+" << _clima << "+"  << _tamanho;
-
-            linhas[i] = nova_linha.str();
-        } else {
-            std::getline(arquivoArea, linhas[i]);
-        }
-    }
-
-    // Fecha o arquivo e reabre para reescrita
-    arquivoArea.close();
-    std::ofstream arquivoSaida("AreaPlantio.txt", std::ios::trunc);
-    
-    if (!arquivoSaida) {
-        delete[] linhas;
-        throw std::runtime_error("Erro ao reescrever o arquivo AreaPlantio.txt");
-    }
-
-    // Escreve o número de áreas e todas as linhas atualizadas
-    arquivoSaida << contador_areas << std::endl;
-    for (int i = 0; i < contador_areas; i++) {
-        arquivoSaida << linhas[i] << std::endl;
-    }
-
-    delete[] linhas;
-    arquivoSaida.close();
-    
-    std::cout << "Plantio registrado com sucesso!\n";
-}
-
-bool area_plantio::verificarDisponibilidade() {
-    if(_status=="Disponível"){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-void area_plantio::liberarArea() {
-    // Atualiza o status da área para "Disponível"
-    _status = "Disponível";
-
-    // Limpa as sementes plantadas
-    _sementes_plantadas.clear();
-
+void area_plantio:: atualizarStatusArquivo(){
     // Atualiza o arquivo que armazena as informações da área
     std::fstream arquivoArea("AreaPlantio.txt", std::ios::in | std::ios::out);
     if (!arquivoArea) {
@@ -240,7 +165,37 @@ void area_plantio::liberarArea() {
 
     delete[] linhas;
     arquivoSaida.close();
+}
 
+void area_plantio::registrarPlantio(int id_lote) {
+    if (_status != "Disponível") {
+        throw std::runtime_error("Área não está disponível para plantio.");
+    }
+
+    // Atualiza o estado do objeto
+    _sementes_plantadas.push_back(id_lote);
+    _status = "Em uso";
+
+    atualizarStatusArquivo();
+    
+    std::cout << "Plantio registrado com sucesso!\n";
+}
+
+bool area_plantio::verificarDisponibilidade() {
+    if(_status=="Disponível"){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+void area_plantio::liberarArea() {
+    // Atualiza o status da área para "Disponível"
+    _status = "Disponível";
+
+    // Limpa as sementes plantadas
+    _sementes_plantadas.clear();
+    atualizarStatusArquivo();
     // Mensagem de sucesso
     std::cout << "Área liberada com sucesso!\n";
 }
