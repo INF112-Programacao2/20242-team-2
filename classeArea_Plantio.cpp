@@ -183,10 +183,11 @@ bool area_plantio::verificarDisponibilidade() {
     }
 }
 
-float area_plantio::verificarCompatibilidade(semente& semente) {
+/*float area_plantio::verificarCompatibilidade(semente& semente) {
     // implementar lógica de compatibilidade, por enquanto retorna 0.0
     return 0.0;
 }
+*/
 
 void area_plantio::liberarArea() {
     _status = "disponível";
@@ -197,6 +198,75 @@ void area_plantio::liberarArea() {
 void area_plantio::gerar_relatorioArea() {
     exibirDetalhes();
     // Aicionar mais informações específicas para o relatório se necessário
+}
+std::string area_plantio::get_tipo_solo(){
+    return _tipo_solo;
+}
+std::string area_plantio::get_clima(){
+    return _clima;
+}
+
+void area_plantio::buscar_lotes_dessa_semente(int id_semente_busca){
+    std::ifstream arquivoLotes("Lotes.txt");
+    if(!arquivoLotes)
+        std::cerr<<"Erro ao abrir arquivo Lotes.txt";
+
+    int quant_lotes;      arquivoLotes>>quant_lotes; 
+    arquivoLotes.ignore(); arquivoLotes>>quant_lotes; 
+
+    int id_lote;
+    int id_semente_lido;
+    std::string linha;
+    lote *lote_teste;
+
+    for(int i=0;i<quant_lotes;i++){
+        arquivoLotes>>id_semente_lido;
+
+        if(id_semente_lido==id_semente_busca){
+            arquivoLotes.ignore();    arquivoLotes>>id_lote;
+            lote_teste=new lote(id_lote);
+
+            //nesse caso aqui ele ja vai imprimir os lotes apenas por saber que o clima
+            //e o solo batem
+            //aqui deve ser estipulado os pesos, de modo que so sera imprimido na tela
+            //se o x% for atingido
+            lote_teste->exibirDetalhes();
+            delete lote_teste;
+        }   
+        std::getline(arquivoLotes,linha);
+    }
+    arquivoLotes.close();
+}
+
+
+void area_plantio::compatibilidade_semente(){
+    
+    std::ifstream arquivoSementes("Sementes.txt");
+    if(!arquivoSementes){
+        std::cerr<<"Erro ao abrir arquivo Sementes.txt";
+    }
+    int quant_sementes;            arquivoSementes>>quant_sementes; 
+    arquivoSementes.ignore();      arquivoSementes>>quant_sementes;
+
+    int id_semente;
+    std::string linha;
+    std::string solo_semente;
+    std::string clima_semente;
+
+    //so serao oferecidas sementes com compatibilidade de solo e clima, necessariamente
+
+    for(int i=0;i<quant_sementes;i++){
+        arquivoSementes>>id_semente;     arquivoSementes.ignore();
+        std::getline(arquivoSementes,solo_semente,'+');
+        std::getline(arquivoSementes,clima_semente,'+');
+
+        if(solo_semente==_tipo_solo&&clima_semente==_clima){
+            buscar_lotes_dessa_semente(id_semente);
+        }   
+        std::getline(arquivoSementes,linha);
+    }
+
+    arquivoSementes.close();
 }
 
 

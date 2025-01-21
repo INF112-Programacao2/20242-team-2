@@ -30,6 +30,8 @@ public:
     int get_id_lote_associado();
     float calcularDesconto();
     void gerar_relatorioNegociacao();
+
+
 };
 
 #endif

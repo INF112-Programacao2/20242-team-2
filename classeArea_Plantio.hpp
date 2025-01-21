@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include "classeSemente.hpp"
+#include "classeLote.hpp"
 
 class area_plantio{
 private:
@@ -29,9 +30,16 @@ public:
     void exibirDetalhes();
     void registrarPlantio(int id_lote);         //registra o plantio de um lote de sementes na área.
     bool verificarDisponibilidade();           //verifica se a área está disponível para plantio.
-    float verificarCompatibilidade(semente& semente); //retorna em porcentagem a compatibilidade de uma area com uma determinada semente.
+
+
+    void compatibilidade_semente(); //em andamento
+    void buscar_lotes_dessa_semente(int id_semente_busca);
+
     void liberarArea();
     void gerar_relatorioArea();
+
+    std::string get_tipo_solo();
+    std::string get_clima();
 };
 
 #endif

@@ -252,3 +252,7 @@ void negociacao::gerar_relatorioNegociacao() {
         std::cout << "\nÁrea não associada\n";
     }
 }
+
+
+
+
