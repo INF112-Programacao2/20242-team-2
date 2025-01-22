@@ -17,6 +17,7 @@ private:
 
 public:
     // Construtor e Destrutor
+    Usuario();
     Usuario(int id, const std::string& nome, const std::string& email,  //ok
             const std::string& tipoUsuario, const std::string& senha);
     virtual ~Usuario() = default;                                       //ok                         
@@ -33,6 +34,6 @@ public:
 
     // Métodos relacionados à segurança
     void realizarLogin();       //ok                                 // Metodos relacionados a parte visual  
-    void acessarInterface();    //ok
+    virtual int acessarInterface();    //NOVA FUNCAO!!
 };
 #endif
