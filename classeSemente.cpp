@@ -1,7 +1,7 @@
 #include "classeSemente.hpp"
 #include <fstream>
 
-semente::semente(){
+Semente::Semente(){
     int _id_tipo=0;
     bool _produz_frutos=false;
     int _tempo_colheita=0;
@@ -14,7 +14,7 @@ semente::semente(){
     float _expectativaIncidenciaPragasDoencas=0; 
 }
 
-semente::semente(int id){
+Semente::Semente(int id){
     //____________________________________________//
          
     std::ifstream arquivoSementes ("Sementes.txt");
@@ -49,9 +49,9 @@ semente::semente(int id){
     arquivoSementes.close();
 }
 
-semente::~semente(){}  //ainda sera desenvolvido
+Semente::~Semente(){}  //ainda sera desenvolvido
 
-void semente::registrarNovaSemente(){
+void Semente::registrarNovaSemente(){
      //____________________________________________//
          
     std::fstream arquivoSementes ("Sementes.txt");
@@ -69,26 +69,45 @@ void semente::registrarNovaSemente(){
         _produz_frutos=true;
         std::cout<<"Tempo de colheita (meses): ";     
         std::cin>>_tempo_colheita; 
-        std::cin.ignore();  
-                     
-   
+
+        if (std::cin.fail()) {
+            throw std::invalid_argument("Entrada inválida para o tempo de colheita.");
+        }
+        std::cin.ignore();          
     }
     else if(resp=='n'||resp=='N'){
         _produz_frutos=false;
         _tempo_colheita=0;   //nulo ou 0?
     }
+    else{
+        throw std::invalid_argument("Resposta inválida para 'Produz frutos?'");
+    }
 
-    std::cout << "Clima ideal: ";                                             std::getline(std::cin, _clima_ideal);    
+    std::cout << "Clima ideal: ";                                             std::getline(std::cin, _clima_ideal);  
     std::cout << "Solo ideal: ";                                              std::getline(std::cin, _solo_ideal);     
     std::cout << "Irrigacao ideal: (cmˆ3 agua/cmˆ3 solo)";                    std::cin >> _irrigacao_ideal;
+    if (std::cin.fail()||_irrigacao_ideal<0) 
+        throw std::invalid_argument("Entrada inválida para irrigação ideal.");
+    
     std::cin.ignore();
     std::cout << "Taxa de germinacao (%): ";                                  std::cin >> _expectativaTaxaDeGerminacao;
+    if (std::cin.fail()||_expectativaTaxaDeGerminacao>100||_expectativaTaxaDeGerminacao<0) 
+        throw std::invalid_argument("Entrada inválida para Taxa de germinacao.");
+    
     std::cin.ignore();
     std::cout << "Taxa de sobrevivencia (%): ";                               std::cin >> _expectativaTaxaDeSobrevivencia;
+    if (std::cin.fail()||_expectativaTaxaDeSobrevivencia>100||_expectativaTaxaDeSobrevivencia<0) 
+        throw std::invalid_argument("Entrada inválida para Taca de sobrevivencia.");
+    
     std::cin.ignore();
     std::cout << "Incidencia de pragas/doencas (%): ";                        std::cin >> _expectativaIncidenciaPragasDoencas;
+    if (std::cin.fail()||_expectativaIncidenciaPragasDoencas>100||_expectativaIncidenciaPragasDoencas<0) 
+        throw std::invalid_argument("Entrada inválida para indicidencia de pragas/doencas.");
+
     std::cin.ignore();                          
     std::cout << "Tempo estimado de maturacao (dias): ";                       std::cin >> _expectativaCrescimento;
+    if (std::cin.fail()||_expectativaCrescimento<0) 
+        throw std::invalid_argument("Entrada inválida para tempo estimado de maturacao");
 
     arquivoSementes.seekp(0,std::ios::end);
     arquivoSementes<<_id_tipo<<"+"<<_solo_ideal<<"+"<<_clima_ideal<<"+"<<_irrigacao_ideal<<"+"<<_expectativaIncidenciaPragasDoencas<<"+"<<
@@ -107,7 +126,7 @@ void semente::registrarNovaSemente(){
 
 }
 
-void semente::exibirDetalhes(){
+void Semente::exibirDetalhes(){
     //____________________________________________//
          
     std::fstream arquivoSementes ("Sementes.txt");
@@ -117,17 +136,45 @@ void semente::exibirDetalhes(){
     std::string linha;
     for(int i=0;i<_id_tipo;i++){
         std::getline(arquivoSementes, linha);  //ignorando as n primeiras linhas do codigo
+        if (arquivoSementes.fail()) {
+            throw std::ios_base::failure("Erro ao ler o arquivo.");
+        }
     }
 
     //----------------------------------------------
-    arquivoSementes>>_id_tipo;                                                arquivoSementes.ignore();                                           
+    arquivoSementes>>_id_tipo;
+    if (arquivoSementes.fail()) 
+            throw std::ios_base::failure("Erro ao ler o ID da semente.");
+                                                        
+    arquivoSementes.ignore();                                           
     getline(arquivoSementes, _clima_ideal, '+');
-    getline(arquivoSementes, _solo_ideal, '+');                                       
-    arquivoSementes >> _irrigacao_ideal;                                     
-    arquivoSementes >> _expectativaIncidenciaPragasDoencas;                 
-    arquivoSementes >> _expectativaTaxaDeSobrevivencia;                     
-    arquivoSementes >> _expectativaTaxaDeGerminacao;                        
-    arquivoSementes >> _expectativaCrescimento;                    
+    if (arquivoSementes.fail()) {
+            throw std::ios_base::failure("Erro ao ler o clima ideal");
+        }
+    getline(arquivoSementes, _solo_ideal, '+'); 
+    if (arquivoSementes.fail()) {
+            throw std::ios_base::failure("Erro ao ler o solo ideal.");
+        }                                      
+    arquivoSementes >> _irrigacao_ideal; 
+    if (arquivoSementes.fail()) {
+            throw std::ios_base::failure("Erro ao ler a irrigacao ideal.");
+        }                                    
+    arquivoSementes >> _expectativaIncidenciaPragasDoencas;
+    if (arquivoSementes.fail()) {
+            throw std::ios_base::failure("Erro ao ler a expectativa de incidencia de pragas ou doencas.");
+        }                 
+    arquivoSementes >> _expectativaTaxaDeSobrevivencia;  
+    if (arquivoSementes.fail()) {
+            throw std::ios_base::failure("Erro ao ler a expectativa de taxa de sobrevivencia.");
+        }                   
+    arquivoSementes >> _expectativaTaxaDeGerminacao; 
+    if (arquivoSementes.fail()) {
+            throw std::ios_base::failure("Erro ao ler a expectativa de taxa de germinacao");
+        }                       
+    arquivoSementes >> _expectativaCrescimento;  
+    if (arquivoSementes.fail()) {
+            throw std::ios_base::failure("Erro ao ler a expectativa de crescimento.");
+        }                  
     int check;
     arquivoSementes>>check;
     if(check==1)
@@ -155,30 +202,34 @@ void semente::exibirDetalhes(){
 
 
 
-int semente::get_id_tipo(){   //ate entao, o unico get que esta sendo usado é esse
+int Semente::get_id_tipo(){   //ate entao, o unico get que esta sendo usado é esse
     return _id_tipo;
 }
 
-int semente::get_tempo_colheita(){
+int Semente::get_tempo_colheita(){
     return _tempo_colheita;
 }
-std::string semente::get_clima_ideal(){
+std::string Semente::get_clima_ideal(){
     return _clima_ideal;
 }
-std::string semente::get_solo_ideal(){
+std::string Semente::get_solo_ideal(){
     return _solo_ideal;
 }
-int semente::get_expectativaCrescimento(){
+int Semente::get_expectativaCrescimento(){
     return _expectativaCrescimento;
 }
-float semente::get_expectativaTaxaDeGerminacao(){
+float Semente::get_expectativaTaxaDeGerminacao(){
     return _expectativaTaxaDeGerminacao;
 }
-float semente::get_expectativaTaxaDeSobrevivencia(){
+float Semente::get_expectativaTaxaDeSobrevivencia(){
     return _expectativaTaxaDeSobrevivencia;
 }
-float semente::get_expectativaIncidenciaPragasDoencas(){
+float Semente::get_expectativaIncidenciaPragasDoencas(){
     return _expectativaIncidenciaPragasDoencas;
 } 
-
-
+float Semente::get_irrigacao_ideal(){
+    return _irrigacao_ideal;
+}
+bool Semente::get_produz_frutos(){
+    return _produz_frutos;
+}

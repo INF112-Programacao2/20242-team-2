@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-class semente{
+class Semente{
 
     private:
 
@@ -26,9 +26,9 @@ class semente{
 
     //metodos:
 
-    semente();   //construtor (em teoria, todos os atributos serao definidos aqui)
-    semente(int id);  //sobrecarga do construtor
-    ~semente();  //destrutor
+    Semente();   //construtor (em teoria, todos os atributos serao definidos aqui)
+    Semente(int id);  //sobrecarga do construtor
+    ~Semente();  //destrutor
 
     void exibirDetalhes();   // Exibe todas as informações da semente
     void registrarNovaSemente();
@@ -44,6 +44,8 @@ class semente{
     float get_expectativaTaxaDeGerminacao();
     float get_expectativaTaxaDeSobrevivencia();
     float get_expectativaIncidenciaPragasDoencas(); 
+    float get_irrigacao_ideal();
+    bool get_produz_frutos();
 
 
 };

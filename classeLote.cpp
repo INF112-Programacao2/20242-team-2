@@ -1,7 +1,7 @@
 #include "classeLote.hpp"
 #include "classeSemente.hpp"
 
-lote::lote(){
+Lote::Lote(){
 
     _statusDisponibilidade="estoque"; 
     int _id_lote=0;
@@ -18,7 +18,7 @@ lote::lote(){
 
     //____________________________________________//
 }
-lote::lote(int id_lote){                         //aloca um lote que ja esta registrado. Utilizado para negociacao e relatorios        
+Lote::Lote(int id_lote){                         //aloca um lote que ja esta registrado. Utilizado para negociacao e relatorios        
 
     std::ifstream arquivoLotes ("Lotes.txt");
     if(!arquivoLotes)
@@ -29,6 +29,7 @@ lote::lote(int id_lote){                         //aloca um lote que ja esta reg
         std::getline(arquivoLotes, linha);  //ignorando as n primeiras linhas do codigo
     }
     //----------------------------------------------
+    try{
     arquivoLotes>>_id_sementeAssociada;                    arquivoLotes.ignore();
     arquivoLotes>>_id_lote;                                arquivoLotes.ignore();
     std::getline(arquivoLotes,_statusDisponibilidade,'+');
@@ -39,24 +40,35 @@ lote::lote(int id_lote){                         //aloca um lote que ja esta reg
     std::getline(arquivoLotes,_pais_origem,'+');
     arquivoLotes>>_quantidade_disponivel;                  arquivoLotes.ignore();
     arquivoLotes>>_preco_estimado;
-    //--------------------------------------------
 
+    if(arquivoLotes.fail())
+        throw std::ios_base::failure("Erro na leitura do arquivoLotes.txt");
+    
+    //--------------------------------------------
+    }catch(const std::exception& e){
+        throw std::runtime_error("Erro ao processar dados do lote.");
+    }
     arquivoLotes.close();
 
+    try{
     _ptr_semente=new semente(_id_sementeAssociada);
+    }catch(const std::bad_alloc& e){
+        throw std::runtime_error("Erro na alocacao de memoria para semente.");
+    }
 
 }
-lote::~lote(){
+Lote::~Lote(){
     delete _ptr_semente;
 }
 
-void lote::registrarNovoLote(int id_semente){
+void Lote::registrarNovoLote(int id_semente){
          
     std::fstream arquivoLotes ("Lotes.txt");
     if(!arquivoLotes)
         std::cerr<<"Erro ao abrir o arquivo Lotes.txt\n";
 
     int contadorDeLotes;
+    try{
     //identificar qual o id do proximo lote:
     arquivoLotes>>_id_lote; _id_lote++;         //le o contador de id e calcula o ID
     arquivoLotes>>contadorDeLotes; contadorDeLotes++;     //le o contador do arquivo e adiciona
@@ -74,7 +86,12 @@ void lote::registrarNovoLote(int id_semente){
     std::cout<<"País de origem: ";                   std::getline(std::cin,_pais_origem);
     std::cout<<"Quantidade disponível no lote: ";    std::cin>>_quantidade_disponivel;
     std::cout<<"Preco estimado:  ";                  std::cin>>_preco_estimado;
+
+    }catch(const std::exception& e){
+        throw std::runtime_error("Erro ao registrar novo lote.");
+    }
     
+    try{
     arquivoLotes.seekp(0, std::ios::end);
     arquivoLotes<<_id_sementeAssociada<<"+"<<_id_lote<<"+"<<_statusDisponibilidade<<"+"<<_nome_cientifico<<
     "+"<<_geneIntroduzido<<"+"<<_metodo_producao<<"+"<<_data_producao<<"+"<<_pais_origem<<"+"<<
@@ -83,14 +100,23 @@ void lote::registrarNovoLote(int id_semente){
     arquivoLotes.seekg(0,std::ios::beg);        //leva o apontador até a posicao do contador do arquivo
     arquivoLotes<<_id_lote <<" "<<contadorDeLotes<<std::endl;                    //atualiza o contador
 
+    }catch(const std::exception& e){
+        throw std::runtime_error("Erro ao gravar no arquivo Lotes.txt.");
+    }
+
     arquivoLotes.close();
 }
 
-void lote::exibirDetalhesDaSemente(){
-    _ptr_semente->exibirDetalhes();
-    
+void Lote::exibirDetalhesDaSemente(){
+    if (_ptr_semente != nullptr) {
+        _ptr_semente->exibirDetalhes();
+    } else {
+        throw std::runtime_error("Erro: Ponteiro para semente não alocado.");
+    }
 }
-void lote::exibirDetalhes(){
+    
+void Lote::exibirDetalhes(){
+    try{
     for(int i=0;i<50;i++) std::cout<<"-";
     std::cout<<std::endl;
 
@@ -101,9 +127,16 @@ void lote::exibirDetalhes(){
 
     for(int i=0;i<50;i++) std::cout<<"-";
     std::cout<<std::endl;
+    }catch(const std::exception& e){
+        throw std::runtime_error("Erro ao exibir detalhes sobre o lote.");
+    }
 }
 
-void lote::consumirSementes(int id_lote,int quantidadeConsumida){
+void Lote::consumirSementes(int id_lote,int quantidadeConsumida){
+
+    if (quantidadeConsumida < 0) {
+        throw std::invalid_argument("Quantidade consumida não pode ser negativa.");
+    }
    
     std::fstream arquivoLotes ("Lotes.txt");   //o arquivo sera lido e escrito  
     if(!arquivoLotes)
@@ -137,11 +170,11 @@ void lote::consumirSementes(int id_lote,int quantidadeConsumida){
     
     //alterando o saldo de sementes: 
  
-    if(_quantidade_disponivel-quantidadeConsumida<0){
-        std::cout<<"Quantidade indisponivel!\n";
-        delete[] linha;
-        return;
-    } 
+    if (_quantidade_disponivel - quantidadeConsumida < 0) {
+        delete []linha;
+        throw std::out_of_range("Quantidade indisponível no lote.");
+    }
+    
     else if(_quantidade_disponivel-quantidadeConsumida==0){
         _quantidade_disponivel=0;
         std::cout<<"Quantidade disponível!\n";
@@ -154,6 +187,9 @@ void lote::consumirSementes(int id_lote,int quantidadeConsumida){
 
     //----------escrevendo o arquivo atualizado------//
     std::ofstream arquivoLotesON("Lotes.txt");
+    if (!arquivoLotesON) {
+        throw std::runtime_error("Erro ao abrir o arquivo para gravação Lotes.txt.");
+    }
     arquivoLotesON<<controleDeID<<" "<<contador_lotes<<std::endl;
     for(int i=0;i<contador_lotes;i++){
         if(i+1==id_lote){
@@ -168,11 +204,11 @@ void lote::consumirSementes(int id_lote,int quantidadeConsumida){
     arquivoLotesON.close();
 }
 
-float lote::get_preco_estimado(){
+float Lote::get_preco_estimado(){
     return _preco_estimado;
 }
 
-int lote::get_id_lote(){
+int Lote::get_id_lote(){
     return _id_lote;
 }
 

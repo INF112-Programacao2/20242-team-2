@@ -8,7 +8,7 @@
 #include "classeLote.hpp"
 #include <fstream>
 
-class lote{
+class Lote{
 
     private:
 
@@ -31,9 +31,9 @@ class lote{
 
     //metodos:
 
-    lote();  //construtor
-    lote(int id_semente); //sobrecarga do construtor
-    ~lote(); //destrutor
+    Lote();  //construtor
+    Lote(int id_semente); //sobrecarga do construtor
+    ~Lote(); //destrutor
 
     void registrarNovoLote(int id_semente);
     void exibirDetalhes();
