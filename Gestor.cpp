@@ -156,7 +156,7 @@ void Gestor::excluirUsuario() {
     std::cout << "Usuario com ID " << idParaExcluir << " excluido com sucesso." << std::endl;
 }
 
-void Gestor::salvarSemente(const Semente& semente) {
+void Gestor::salvarSemente(Semente& semente) {
     try {
         std::ofstream arquivo("Sementes.txt", std::ios::app);
         if (!arquivo.is_open()) {
@@ -164,19 +164,19 @@ void Gestor::salvarSemente(const Semente& semente) {
         }
 
         // Verifica se algum valor está vazio ou inválido
-        if (semente.getId() == 0 || semente.getSoloIdeal().empty() || semente.getClimaIdeal().empty() ||
-            semente.getTempoColheita() <= 0 || semente.getIrrigacaoIdeal() <= 0 || 
-            semente.getExpectativaResistenciaPraga() < 0 || semente.getExpectativaCrescimento() < 0 ||
-            semente.getExpectativaTaxaDeGerminacao() < 0 || semente.getExpectativaTaxaDeSobrevivencia() < 0) {
+        if (semente.get_id_tipo() == 0 || semente.get_solo_ideal().empty() || semente.get_clima_ideal().empty() ||
+            semente.get_tempo_colheita() <= 0 || semente.get_irrigacao_ideal() <= 0 || 
+            semente.get_expectativaIncidenciaPragasDoencas() < 0 || semente.get_expectativaCrescimento() < 0 ||
+            semente.get_expectativaTaxaDeGerminacao() < 0 || semente.get_expectativaTaxaDeSobrevivencia() < 0) {
             throw std::invalid_argument("Nao foi possivel registrar a semente pois um dos valores esta vazio ou invalido.");
         }
 
         // Caso todos os valores estejam válidos, escreve no arquivo
-        arquivo << semente.getId() << "+" << semente.getSoloIdeal() << "+"
-                << semente.getClimaIdeal() << "+" << semente.getTempoColheita() << "+"
-                << semente.getIrrigacaoIdeal() << "+" << semente.getExpectativaResistenciaPraga() << "+"
-                << semente.getExpectativaCrescimento() << "+" << semente.getExpectativaTaxaDeGerminacao() << "+"
-                << semente.getExpectativaTaxaDeSobrevivencia() << "+" << semente.getProduzFrutos() << "\n";
+        arquivo << semente.get_id_tipo() << "+" << semente.get_solo_ideal() << "+"
+                << semente.get_clima_ideal() << "+" << semente.get_tempo_colheita() << "+"
+                << semente.get_irrigacao_ideal() << "+" << semente.get_expectativaIncidenciaPragasDoencas() << "+"
+                << semente.get_expectativaCrescimento() << "+" << semente.get_expectativaTaxaDeGerminacao() << "+"
+                << semente.get_expectativaTaxaDeSobrevivencia() << "+" << semente.get_produz_frutos() << "\n";
                 
         std::cout << "Semente registrada com sucesso!" << std::endl;
         arquivo.close();

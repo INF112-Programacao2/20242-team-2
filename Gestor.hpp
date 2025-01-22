@@ -13,7 +13,7 @@ private:
 
     //metodos para sementes
     void registrarSemente();                        //ok
-    void salvarSemente(const Semente &semente);     //ok
+    void salvarSemente(Semente &semente);     //ok
     void excluirSemente();                          //ok
 
     //metodos para lote
