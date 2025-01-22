@@ -25,5 +25,13 @@ private:
     void cadastrarUsuario();                        //ok
     void listarUsuarios();                          //ok
     void excluirUsuario();                          //ok
+
+
+    void atividadesGestor(int opcao_menu);     //necessario para o menu -julia
+
+    public:
+
+    virtual int acessarInterface()override;   //abre o menu dos gestores -julia
+
 };
 #endif
