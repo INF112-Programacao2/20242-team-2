@@ -351,3 +351,53 @@ void Gestor::registrarLote() {
         salvarLote(novoLote);
 }
 
+void Gestor::excluirLote() {
+    int idParaExcluir;
+    std::cout << "Insira o ID do lote que deseja excluir: ";
+    std::cin >> idParaExcluir;
+    std::cin.ignore();
+
+    std::ifstream arquivoEntrada("Lotes.txt");
+    if (!arquivoEntrada.is_open()) {
+        throw std::ios_base::failure("Erro ao abrir o arquivo Lotes.txt");
+    }
+
+    std::vector<std::string> lotesRestantes;
+    std::string linha;
+    bool loteEncontrado = false;
+
+    while (std::getline(arquivoEntrada, linha)) {
+        std::stringstream ss(linha);
+        int idSementeAssociada, idLote;
+        char separador;
+
+        ss >> idSementeAssociada >> separador >> idLote >> separador;
+
+        if (idLote == idParaExcluir) {
+            loteEncontrado = true;
+            continue; 
+        }
+        lotesRestantes.push_back(linha);
+    }
+    arquivoEntrada.close();
+
+    if (!loteEncontrado) {
+        std::cout << "Lote com ID " << idParaExcluir << " nao encontrado." << std::endl;
+        return;
+    }
+
+    std::ofstream arquivoSaida("Lotes.txt");
+    if (!arquivoSaida.is_open()) {
+        throw std::ios_base::failure("Erro ao abrir o arquivo Lotes.txt para escrita");
+    }
+
+    for (const auto &lote : lotesRestantes) {
+        arquivoSaida << lote << std::endl;
+    }
+    arquivoSaida.close();
+
+    std::cout << "Lote com ID " << idParaExcluir << " excluido com sucesso." << std::endl;
+}
+
+
+
