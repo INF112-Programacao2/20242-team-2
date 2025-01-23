@@ -27,20 +27,25 @@ public:
     area_plantio(int id);
     ~area_plantio();     //destrutor
 
-    int get_id_area();
     void exibirDetalhes();
+    void registrarArea();
     void registrarPlantio(int id_lote);         //registra o plantio de um lote de sementes na área.
     bool verificarDisponibilidade();           //verifica se a área está disponível para plantio.
+    void liberarArea();
+    void gerar_relatorioArea();
 
 
     void compatibilidade_semente(); //em andamento
     void buscar_lotes_dessa_semente(int id_semente_busca);
 
-    void liberarArea();
-    void gerar_relatorioArea();
-
+    int get_id_area();
+    std::string get_nome_proprietario();
+    std::string get_cnpj_proprietario();
+    float get_tamanho();
+    std::string get_localizacao();
     std::string get_tipo_solo();
     std::string get_clima();
+    std::string get_status();
 };
 
 #endif

@@ -5,18 +5,15 @@
 #include <sstream>
 
 area_plantio::area_plantio() {
-    
-    // inicializa atributos da classe
+    // inicializa os atributos
     _status = "Disponível";
     _sementes_plantadas.clear();
 
-    //____________________________________________//
-
-    // abre ou cria o arquivo para controle de ID
+    // abre o arquivo e registra o controle de id
     std::fstream arquivoAreaPlantio("AreaPlantio.txt", std::ios::in | std::ios::out);
 
     if (!arquivoAreaPlantio.is_open()) {
-        // se o arquivo não existir, cria um novo
+        // se o arquivo não existe, cria um novo
         std::ofstream novoArquivo("AreaPlantio.txt");
         if (!novoArquivo) {
             std::cerr << "Erro ao criar o arquivo AreaPlantio.txt\n";
@@ -26,40 +23,12 @@ area_plantio::area_plantio() {
         novoArquivo.close();
         _id_area = 1;
     } else {
-        arquivoAreaPlantio >> _id_area;   // lê o último ID e atualiza
+        arquivoAreaPlantio >> _id_area;   //Lê o ultimo id para alterações
         _id_area++;
-        arquivoAreaPlantio.seekp(0);      // retorna ao início para sobrescrever o ID
+        arquivoAreaPlantio.seekp(0);      // Rvolta no inicio para atualizar o contador de id
         arquivoAreaPlantio << _id_area << std::endl;
         arquivoAreaPlantio.close();
     }
-
-   //____________________________________________//
-
-    // reabre o arquivo para adicionar novas áreas
-    std::ofstream arquivoAreasON("AreaPlantio.txt", std::ios::app);
-    if (!arquivoAreasON) {
-        std::cerr << "Erro ao abrir o arquivo AreaPlantio.txt para escrita\n";
-        return;
-    }
-
-    std::cout << "Informações sobre o proprietário:\n";
-    std::cin.ignore();
-    std::cout << "Nome do proprietário: ";                                 std::getline(std::cin, _nome_proprietario);
-    std::cout << "CNPJ do proprietário: ";                                 std::getline(std::cin, _cnpj_proprietario);
-
-    std::cout << "\nInformações sobre a área:\n";
-    std::cout << "Localização: ";                                           std::getline(std::cin, _localizacao);
-    std::cout << "Tipo de solo: ";                                          std::getline(std::cin, _tipo_solo);
-    std::cout << "Clima: ";                                                 std::getline(std::cin, _clima);
-    std::cout << "Tamanho em hectares: ";                                   std::cin >> _tamanho;
-   
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');      // limpa o buffer após leitura
-
-    // salva os dados no arquivo
-    arquivoAreasON << _id_area << " " <<_status<< "+"<< _nome_proprietario << "+" << _cnpj_proprietario << "+"<< _localizacao << "+" << _tipo_solo << "+" << _clima 
-                    << "+" << _tamanho <<"\n";
-
-    arquivoAreasON.close();
 }
 
 area_plantio:: area_plantio(int id_area){                               
@@ -90,8 +59,27 @@ area_plantio:: area_plantio(int id_area){
 
 area_plantio:: ~area_plantio(){}
 
-int area_plantio:: get_id_area(){
-    return _id_area;
+
+void area_plantio:: registrarArea(){
+
+    std::ofstream arquivoAreasON("AreaPlantio.txt", std::ios::app);
+    if (!arquivoAreasON) {
+        std::cerr << "Erro ao abrir o arquivo AreaPlantio.txt para escrita\n";
+        return;
+    }
+
+    std::cout << "Informações sobre o proprietário:\n";
+    std::cout << "Nome do proprietário: ";    std::getline(std::cin, _nome_proprietario);
+    std::cout << "CNPJ do proprietário: ";    std::getline(std::cin, _cnpj_proprietario);
+
+    std::cout << "\nInformações sobre a área:\n";
+    std::cout << "Localização: ";             std::getline(std::cin, _localizacao);
+    std::cout << "Tipo de solo: ";            std::getline(std::cin, _tipo_solo);
+    std::cout << "Clima: ";                   std::getline(std::cin, _clima);
+    std::cout << "Tamanho em hectares: ";     std::cin >> _tamanho;
+   
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Limpa o buffer
+    arquivoAreasON.close();
 }
 
 void area_plantio::exibirDetalhes() {
@@ -196,8 +184,6 @@ void area_plantio::liberarArea() {
     // Limpa as sementes plantadas
     _sementes_plantadas.clear();
     atualizarStatusArquivo();
-    // Mensagem de sucesso
-    std::cout << "Área liberada com sucesso!\n";
 }
 
 
@@ -205,12 +191,7 @@ void area_plantio::gerar_relatorioArea() {
     exibirDetalhes();
     // Aicionar mais informações específicas para o relatório se necessário
 }
-std::string area_plantio::get_tipo_solo(){
-    return _tipo_solo;
-}
-std::string area_plantio::get_clima(){
-    return _clima;
-}
+
 
 void area_plantio::buscar_lotes_dessa_semente(int id_semente_busca){
     std::ifstream arquivoLotes("Lotes.txt");
@@ -223,14 +204,14 @@ void area_plantio::buscar_lotes_dessa_semente(int id_semente_busca){
     int id_lote;
     int id_semente_lido;
     std::string linha;
-    lote *lote_teste;
+    Lote *lote_teste;
 
     for(int i=0;i<quant_lotes;i++){
         arquivoLotes>>id_semente_lido;
 
         if(id_semente_lido==id_semente_busca){
             arquivoLotes.ignore();    arquivoLotes>>id_lote;
-            lote_teste=new lote(id_lote);
+            lote_teste=new Lote(id_lote);
 
             //nesse caso aqui ele ja vai imprimir os lotes apenas por saber que o clima
             //e o solo batem
@@ -275,4 +256,34 @@ void area_plantio::compatibilidade_semente(){
     arquivoSementes.close();
 }
 
+int area_plantio::get_id_area() {
+    return _id_area;
+}
 
+std::string area_plantio::get_nome_proprietario() {
+    return _nome_proprietario;
+}
+
+std::string area_plantio::get_cnpj_proprietario(){
+    return _cnpj_proprietario;
+}
+
+float area_plantio::get_tamanho(){
+    return _tamanho;
+}
+
+std::string area_plantio::get_localizacao(){
+    return _localizacao;
+}
+
+std::string area_plantio::get_tipo_solo(){
+    return _tipo_solo;
+}
+
+std::string area_plantio::get_clima(){
+    return _clima;
+}
+
+std::string area_plantio::get_status(){
+    return _status;
+}

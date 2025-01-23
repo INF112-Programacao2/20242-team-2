@@ -7,11 +7,19 @@
 
 void Vendedor::registrarArea() {
     area_plantio novaArea; // Cria uma nova instância de area_plantio, que já gera um novo ID automaticamente
-
-    if (!novaArea.verificarDisponibilidade()) {
-        std::cout << "Erro: A area com ID " << novaArea.get_id_area() << " nao esta disponivel para plantio.\n";
+    novaArea.registrarArea();
+    //salva as informações no documento
+        std::ofstream arquivoAreasON("AreaPlantio.txt", std::ios::app);
+    if (!arquivoAreasON) {
+        std::cerr << "Erro ao abrir o arquivo AreaPlantio.txt para escrita\n";
         return;
     }
+
+    arquivoAreasON << novaArea.get_id_area() << " " << novaArea.get_status() << "+" << novaArea.get_nome_proprietario() << "+" 
+                   << novaArea.get_cnpj_proprietario() << "+" <<novaArea. get_localizacao() << "+" << novaArea.get_tipo_solo() << "+" 
+                   << novaArea.get_clima() << "+" << novaArea.get_tamanho() << "\n";
+
+    arquivoAreasON.close();
 
     areas.push_back(novaArea);
 
@@ -202,7 +210,7 @@ void Vendedor::excluirArea() {
 
 void Vendedor::cadastrarNegociacao() {
     negociacao* nova_negociacao = nullptr;
-    lote* lote_selecionado = nullptr;
+    Lote* lote_selecionado = nullptr;
     
     try {
         // 1. Lista áreas disponíveis
@@ -256,7 +264,7 @@ void Vendedor::cadastrarNegociacao() {
         std::cout << "\nDigite o ID do lote desejado: ";
         std::cin >> id_lote;
         
-        lote_selecionado = new lote(id_lote);
+        lote_selecionado = new Lote(id_lote);
 
         // 5. Quantidade de sementes
         float quantidade;

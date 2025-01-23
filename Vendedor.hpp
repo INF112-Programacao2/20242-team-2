@@ -10,12 +10,12 @@
 class Vendedor: public Usuario {
 private:
     std::vector<area_plantio> areas;
-
+public:
     //metodos para area de plantio
     void registrarArea();               //ok
     void listarAreasRegistradas();      //ok
     void liberarAreaRegistrada();       //ok
-    void excluirArea();                 //ok       
+    void excluirArea();                 //não está funcioando corretamente     
 
     //metodos para negociacao
     void cadastrarNegociacao();         //ok       
