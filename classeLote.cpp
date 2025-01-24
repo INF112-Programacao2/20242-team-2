@@ -2,22 +2,18 @@
 #include "classeSemente.hpp"
 
 Lote::Lote(){
-
-    _statusDisponibilidade="estoque"; 
-    int _id_lote=0;
-    Semente* _ptr_semente=nullptr;
-    int _id_sementeAssociada=0;
-    std::string _nome_cientifico="";
-    std::string _geneIntroduzido="";
-    std::string _metodo_producao="";
-    std::string _data_producao="";
-    std::string _pais_origem="";
-    int _quantidade_disponivel=0;
-    float _preco_estimado=0;
-    std::string _statusDisponibilidade="";
-
-    //____________________________________________//
+    _statusDisponibilidade="Estoque"; 
+    _id_lote=0;
+    _id_sementeAssociada=0;
+    _nome_cientifico="";
+    _geneIntroduzido="";
+    _metodo_producao="";
+    _data_producao="";
+    _pais_origem="";
+    _quantidade_disponivel=0;
+    _preco_estimado=0;
 }
+//KATRINE VAI TER QUE ADAPTAR
 Lote::Lote(int id_lote){                         //aloca um lote que ja esta registrado. Utilizado para negociacao e relatorios        
 
     std::ifstream arquivoLotes ("Lotes.txt");
@@ -57,55 +53,9 @@ Lote::Lote(int id_lote){                         //aloca um lote que ja esta reg
     }
 
 }
-Lote::~Lote(){
-    delete _ptr_semente;
-}
+Lote::~Lote(){}
 
-void Lote::registrarNovoLote(int id_semente){
-         
-    std::fstream arquivoLotes ("Lotes.txt");
-    if(!arquivoLotes)
-        std::cerr<<"Erro ao abrir o arquivo Lotes.txt\n";
-
-    int contadorDeLotes;
-    try{
-    //identificar qual o id do proximo lote:
-    arquivoLotes>>_id_lote; _id_lote++;         //le o contador de id e calcula o ID
-    arquivoLotes>>contadorDeLotes; contadorDeLotes++;     //le o contador do arquivo e adiciona
- 
-    //____________________________________________//
-    _ptr_semente=new Semente(id_semente);
-    _id_sementeAssociada=_ptr_semente->get_id_tipo();
-    
-    std::cin.ignore();
-    
-    std::cout<<"Nome cientifico: ";                  std::getline(std::cin,_nome_cientifico);                 
-    std::cout<<"Gene introduzido: ";                 std::getline(std::cin,_geneIntroduzido);
-    std::cout<<"Metodo de producao: ";               std::getline(std::cin,_metodo_producao);
-    std::cout<<"Data de producao:  DD/MM/AA ";       std::getline(std::cin,_data_producao);
-    std::cout<<"País de origem: ";                   std::getline(std::cin,_pais_origem);
-    std::cout<<"Quantidade disponível no lote: ";    std::cin>>_quantidade_disponivel;
-    std::cout<<"Preco estimado:  ";                  std::cin>>_preco_estimado;
-
-    }catch(const std::exception& e){
-        throw std::runtime_error("Erro ao registrar novo lote.");
-    }
-    
-    try{
-    arquivoLotes.seekp(0, std::ios::end);
-    arquivoLotes<<_id_sementeAssociada<<"+"<<_id_lote<<"+"<<_statusDisponibilidade<<"+"<<_nome_cientifico<<
-    "+"<<_geneIntroduzido<<"+"<<_metodo_producao<<"+"<<_data_producao<<"+"<<_pais_origem<<"+"<<
-    _quantidade_disponivel<<"+"<<_preco_estimado<<"\n";
-    
-    arquivoLotes.seekg(0,std::ios::beg);        //leva o apontador até a posicao do contador do arquivo
-    arquivoLotes<<_id_lote <<" "<<contadorDeLotes<<std::endl;                    //atualiza o contador
-
-    }catch(const std::exception& e){
-        throw std::runtime_error("Erro ao gravar no arquivo Lotes.txt.");
-    }
-
-    arquivoLotes.close();
-}
+/*  //mantendo para caso precise reutilizar a logica
 
 void Lote::exibirDetalhesDaSemente(){
     if (_ptr_semente != nullptr) {
@@ -131,6 +81,7 @@ void Lote::exibirDetalhes(){
         throw std::runtime_error("Erro ao exibir detalhes sobre o lote.");
     }
 }
+*/
 
 void Lote::consumirSementes(int id_lote,int quantidadeConsumida){
 
@@ -204,12 +155,76 @@ void Lote::consumirSementes(int id_lote,int quantidadeConsumida){
     arquivoLotesON.close();
 }
 
-float Lote::get_preco_estimado(){
-    return _preco_estimado;
-}
-
-int Lote::get_id_lote(){
+int Lote::getIdLote() const {
     return _id_lote;
 }
+void Lote::setIdLote(int idLote) {
+    _id_lote = idLote;
+}
+
+int Lote::getIdSementeAssociada() const {
+    return _id_sementeAssociada;
+}
+void Lote::setIdSementeAssociada(int idSementeAssociada) {
+    _id_sementeAssociada = idSementeAssociada;
+}
+
+std::string Lote::getNomeCientifico() const {
+    return _nome_cientifico;
+}
+void Lote::setNomeCientifico(const std::string& nomeCientifico) {
+    _nome_cientifico = nomeCientifico;
+}
+
+std::string Lote::getGeneIntroduzido() const {
+    return _geneIntroduzido;
+}
+void Lote::setGeneIntroduzido(const std::string& geneIntroduzido) {
+    _geneIntroduzido = geneIntroduzido;
+}
+
+std::string Lote::getMetodoProducao() const {
+    return _metodo_producao;
+}
+void Lote::setMetodoProducao(const std::string& metodoProducao) {
+    _metodo_producao = metodoProducao;
+}
+
+std::string Lote::getDataProducao() const {
+    return _data_producao;
+}
+void Lote::setDataProducao(const std::string& dataProducao) {
+    _data_producao = dataProducao;
+}
+
+std::string Lote::getPaisOrigem() const {
+    return _pais_origem;
+}
+void Lote::setPaisOrigem(const std::string& paisOrigem) {
+    _pais_origem = paisOrigem;
+}
+
+int Lote::getQuantidadeDisponivel() const {
+    return _quantidade_disponivel;
+}
+void Lote::setQuantidadeDisponivel(int quantidadeDisponivel) {
+    _quantidade_disponivel = quantidadeDisponivel;
+}
+
+float Lote::getPrecoEstimado() const {
+    return _preco_estimado;
+}
+void Lote::setPrecoEstimado(float precoEstimado) {
+    _preco_estimado = precoEstimado;
+}
+
+std::string Lote::getStatusDisponibilidade() const {
+    return _statusDisponibilidade;
+}
+void Lote::setStatusDisponibilidade(const std::string& statusDisponibilidade) {
+    _statusDisponibilidade = statusDisponibilidade;
+}
+
+
 
 
