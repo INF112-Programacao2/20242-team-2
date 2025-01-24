@@ -14,6 +14,7 @@ private:
     area_plantio* _area;
     std::string _data_negociacao;
     float _valor_negociado;
+    float _desconto;
     std::string _status;
 
     float _quantidade_semente_negociada;

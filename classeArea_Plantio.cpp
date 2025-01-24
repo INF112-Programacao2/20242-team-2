@@ -19,9 +19,9 @@ area_plantio::area_plantio() {
             std::cerr << "Erro ao criar o arquivo AreaPlantio.txt\n";
             return;
         }
-        novoArquivo << "1" << std::endl;
+        novoArquivo << "0" << std::endl;
         novoArquivo.close();
-        _id_area = 1;
+        _id_area = 0;
     } else {
         arquivoAreaPlantio >> _id_area;   //Lê o ultimo id para alterações
         _id_area++;
@@ -44,7 +44,7 @@ area_plantio:: area_plantio(int id_area){
     //----------------------------------------------
 
 
-    arquivoAreas >>_id_area;                                arquivoAreas.ignore();
+    arquivoAreas >>_id_area; _id_area++;         //le o contador de tipos e calcula o ID                                arquivoAreas.ignore();
     std::getline(arquivoAreas, _status, '+');
     std::getline(arquivoAreas, _nome_proprietario,'+');
     std::getline(arquivoAreas, _cnpj_proprietario,'+');
@@ -135,6 +135,9 @@ void area_plantio:: atualizarStatusArquivo(){
             linhas[i] = linha_atual;
         }
     }
+
+    arquivoArea.seekg(0,std::ios::beg);                    //leva o apontador até a posicao do contador do arquivo
+    arquivoArea<<_id_area <<std::endl;                    //atualiza o contador
 
     // Fecha o arquivo de leitura
     arquivoArea.close();

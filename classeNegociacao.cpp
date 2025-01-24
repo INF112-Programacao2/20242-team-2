@@ -55,12 +55,6 @@ bool negociacao::validarData(const std::string& data) {
     }
 }
 
-// Método para calcular descontos. Deve ser implementado posteriormente.
-float negociacao::calcularDesconto() {
-    float desconto = 0.0;
-    return desconto;
-}
-
 // construtor da classe negociacao.
 negociacao::negociacao() {
     // inicializa todos os membros com valores padrão
@@ -101,6 +95,11 @@ void negociacao::registrarNegociacao(Lote* lote, area_plantio* area, float quant
         throw std::invalid_argument("Formato de data inválido (deve ser DD/MM/AAAA)");
     }
 
+    // Recebendo desconto
+    std::cout << "Digite o desconto aplicado (%): ";
+    std::cin >> _desconto;
+    std::cin.ignore();
+
     // Lê e incrementa o ID da negociação
     std::fstream arquivo("Negociacao.txt", std::ios::in | std::ios::out);
     if (!arquivo) {
@@ -118,7 +117,7 @@ void negociacao::registrarNegociacao(Lote* lote, area_plantio* area, float quant
 
     _lote = lote;
     _area = area;
-    _valor_negociado = lote->get_preco_estimado()*quantidade_semente_negociada;
+    _valor_negociado = (_lote->get_preco_estimado() * _quantidade_semente_negociada) * (1 - _desconto/100);
     _quantidade_semente_negociada=quantidade_semente_negociada;
     _data_negociacao = data.empty() ? getCurrentDate() : data;
     
@@ -234,7 +233,7 @@ void negociacao::gerar_relatorioNegociacao() {
               << "Data: " << _data_negociacao << "\n"
               << "Valor: R$ " << std::fixed << std::setprecision(2) << _valor_negociado << "\n"
               << "Status: " << _status << "\n"
-              << "Desconto aplicável: R$ " << calcularDesconto() << "\n"; // ,ostra o desconto, se aplicável.
+              << "Desconto aplicável: R$ " << _desconto << "\n"; // ,ostra o desconto, se aplicável.
 
     // exibe detalhes do lote, se associado.
     if (_lote != nullptr) {
@@ -252,7 +251,3 @@ void negociacao::gerar_relatorioNegociacao() {
         std::cout << "\nÁrea não associada\n";
     }
 }
-
-
-
-
