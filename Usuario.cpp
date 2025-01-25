@@ -7,6 +7,9 @@
 Usuario:: Usuario(int id, const std::string& nome, const std::string& email, const std::string& tipoUsuario, 
 const std::string& senha): _id(id), _nome(nome), _email(email), _tipoUsuario(tipoUsuario), _senha(senha){}
 
+Usuario:: Usuario(int id, const std::string& nome, const std::string& email, const std::string& tipoUsuario, 
+const std::string& senha): _id(id), _nome(nome), _email(email), _tipoUsuario(tipoUsuario), _senha(senha){}
+
 Usuario::~Usuario(){}
 int Usuario::totalUsuarios = 0;
 
@@ -75,7 +78,4 @@ void Usuario::visualizarRelatorio(){
     //metodo a ser implementado futuramente
 }
 
-void Usuario::atividade(int opcao_selecionada){
-    std::cout<<"Se chegou aqui é porque teve erro na alocacao do usuario especifico!!!" ; //mudar
-}
 
