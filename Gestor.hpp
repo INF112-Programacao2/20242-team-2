@@ -29,6 +29,9 @@ class Gestor: public Usuario{
         void listarUsuarios();                          //ok
         void excluirUsuario();                          //ok
 
+        //relatorio
+        virtual void gerarRelatorio();
+
     public:
         virtual int acessarInterface();                  //atualizado
         Gestor();                         //vazio?publico?
