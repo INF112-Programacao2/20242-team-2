@@ -366,7 +366,7 @@ void Gestor::salvarLote(const Lote& lote) {
     }
 }
 
-void Gestor::registrarLote() {   // tem erro aqui!!!
+void Gestor::registrarLote() {   
 
     Lote novoLote;
     int id = 0;
@@ -656,4 +656,111 @@ int Gestor::acessarInterface() {
     else if(opcao_selecionada==7){
         // funcao pra visualizar relatorio;
     }
+}
+
+void Gestor::gerarRelatorio() {
+    try {
+        std::cout << "O relatorio sobre as sementes e os lotes está sendo gerado!\n";
+
+        // Abre ou cria o arquivo de relatório
+        std::ofstream relatorioGerado("RelatorioGestor.txt");
+        if (!relatorioGerado) {
+            throw std::runtime_error("Erro: Não foi possível abrir o arquivo 'RelatorioGestor.txt'");
+        }
+
+        // Abrir o arquivo de sementes
+        std::ifstream arquivoSementes("Sementes.txt");
+        if (!arquivoSementes) {
+            throw std::runtime_error("Erro: Não foi possível abrir o arquivo 'Sementes.txt'");
+        }
+
+        relatorioGerado << "------------------------------------------------DADOS DAS SEMENTES------------------------------------------------------\n";
+        std::string linha;
+        
+        // Percorrendo cada linha do arquivo de sementes
+        while (std::getline(arquivoSementes, linha)) {
+            std::string clima, solo;
+            float tempoColheita, irrigacaoIdeal, expectativaIncidenciaPragasDoencas, expectativaCrescimento;
+            int produzFrutos;
+            float expectativaTaxaGerminacao, expectativaTaxaSobrevivencia;
+            int id_lido;
+
+            arquivoSementes >> id_lido; arquivoSementes.ignore(); 
+            std::getline(arquivoSementes, clima, '+');
+            std::getline(arquivoSementes, solo, '+');
+            arquivoSementes >> irrigacaoIdeal;
+            arquivoSementes >> expectativaIncidenciaPragasDoencas;
+            arquivoSementes >> expectativaTaxaSobrevivencia;
+            arquivoSementes >> expectativaTaxaGerminacao;
+            arquivoSementes >> expectativaCrescimento;
+            arquivoSementes >> produzFrutos;
+            arquivoSementes >> tempoColheita;
+
+            // Construir a string com os dados da semente
+            relatorioGerado << "ID: " << id_lido << 
+                                "\n\nSolo ideal: " + solo +
+                                "\nClima ideal: " + clima +
+                                "\nIrrigação ideal: " << irrigacaoIdeal << " cm3/água/cm3 solo" <<
+                                "\nTaxa de germinação: " << expectativaTaxaGerminacao << "%" <<
+                                "\nTaxa de sobrevivência: " << expectativaTaxaSobrevivencia << "%" <<
+                                "\nTaxa de crescimento: " << expectativaCrescimento << "%" <<
+                                "\nTaxa de incidência de Pragas e Doenças: " << expectativaIncidenciaPragasDoencas << "%\n";
+
+            if (produzFrutos == 1) {
+                relatorioGerado << "Produz frutos a cada " << tempoColheita << " meses, em média.\n\n\n";
+            } else {
+                relatorioGerado << "Não produz frutos.\n\n\n";
+            }
+        }
+
+        arquivoSementes.close();
+
+        // Abrir o arquivo dos lotes
+        std::ifstream arquivoLotes("Lotes.txt");
+        if (!arquivoLotes) {
+            throw std::runtime_error("Erro: Não foi possível abrir o arquivo 'Lotes.txt'");
+        }
+
+        // Parte dos lotes do relatório
+        relatorioGerado << "\n\n--------------------------------------------------DADOS DOS LOTES------------------------------------------------------\n";
+
+        int cont;
+        arquivoLotes >> cont >> cont;
+
+        // Percorrendo cada linha do arquivo de lotes
+        for (int i = 0; i < cont; i++) {
+            int idSementeAssociada, id;
+            float quantidadeDisponivel, precoEstimado;
+            std::string statusDisponibilidade, nomeCientifico, geneIntroduzido, metodoProducao, dataProducao, paisOrigem;
+
+            arquivoLotes >> idSementeAssociada; arquivoLotes.ignore();
+            arquivoLotes >> id; arquivoLotes.ignore();
+            std::getline(arquivoLotes, statusDisponibilidade, '+');
+            std::getline(arquivoLotes, nomeCientifico, '+');
+            std::getline(arquivoLotes, geneIntroduzido, '+');
+            std::getline(arquivoLotes, metodoProducao, '+');
+            std::getline(arquivoLotes, dataProducao, '+');
+            std::getline(arquivoLotes, paisOrigem, '+');
+            arquivoLotes >> quantidadeDisponivel; arquivoLotes.ignore();
+            arquivoLotes >> precoEstimado;
+
+            // Construir a string com os dados do lote
+            relatorioGerado << "ID: " << id << "\n\nID da semente associada: " << idSementeAssociada <<
+                                "\nNome científico: " << nomeCientifico <<
+                                "\nGene introduzido: " << geneIntroduzido <<
+                                "\nMétodo de produção: " << metodoProducao <<
+                                "\nData de produção: " << dataProducao <<
+                                "\nPaís de origem: " << paisOrigem <<
+                                "\nStatus de disponibilidade: " << statusDisponibilidade <<
+                                "\nQuantidade disponível: " << std::fixed << std::setprecision(2) << quantidadeDisponivel << "KG" <<
+                                "\nPreço por kg: RS" << std::fixed << std::setprecision(2) << precoEstimado << "\n\n\n";
+        }
+
+        arquivoLotes.close();
+        relatorioGerado.close();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Erro: " << e.what() << std::endl;
+    }
+    std::cout<<"Relatorio completo em: RelatorioGestor.txt\n";
 }
