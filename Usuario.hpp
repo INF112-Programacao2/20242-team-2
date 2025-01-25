@@ -9,7 +9,8 @@ protected:
     std::string _nome;           
     std::string _email;
     static int totalUsuarios;                       // Número total de usuários no sistema
-    void visualizarRelatorio();                     // Método polimórfico para visualização de relatório (talvez)
+    virtual void gerarRelatorio()=0;  
+                        
 
 private:
     std::string _tipoUsuario;                       // Atributos privados 
@@ -34,7 +35,7 @@ public:
 
     // Métodos relacionados à segurança
     void realizarLogin();       //ok                                 // Metodos relacionados a parte visual  
-    virtual int acessarInterface();    //NOVA FUNCAO!!
+    virtual int acessarInterface()=0;    
     
 };
 #endif
