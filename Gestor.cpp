@@ -7,6 +7,8 @@
 #include "Vendedor.hpp"
 #include "Analista.hpp"
 
+Gestor::Gestor(){};
+
 void Gestor::cadastrarUsuario() {
     std::string nome, email, tipo, senha;
 
