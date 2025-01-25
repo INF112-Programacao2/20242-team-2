@@ -8,7 +8,7 @@
 #include "classeSemente.hpp"
 #include "classeLote.hpp"
 
-class area_plantio{
+class AreaPlantio{
 private:
     int _id_area;                     //identificador único da área.
     std::string _nome_proprietario;   //nome do proprietário da área.
@@ -19,24 +19,24 @@ private:
     std::string _clima;              //clima predominante da região.
     std::string _status;             //status atual da área ("disponível", "em uso", "reservado").
     std::vector <int> _sementes_plantadas; //lista de IDs dos lotes de sementes plantadas na área.
-    
-    void atualizarStatusArquivo();
 
 public:
-    area_plantio();      //construtor
-    area_plantio(int id);
-    ~area_plantio();     //destrutor
+    AreaPlantio();      //construtor
+    AreaPlantio(int id);
+    ~AreaPlantio();     //destrutor
 
-    void exibirDetalhes();
-    void registrarArea();
-    void registrarPlantio(int id_lote);         //registra o plantio de um lote de sementes na área.
-    bool verificarDisponibilidade();           //verifica se a área está disponível para plantio.
-    void liberarArea();
-    void gerar_relatorioArea();
+    void exibirArea();
+    bool verificarDisponibilidade(int id_area);
 
-
-    void compatibilidade_semente(); //em andamento
-    void buscar_lotes_dessa_semente(int id_semente_busca);
+    void set_id_area(int id);
+    void set_nome_proprietario(std::string nome);
+    void set_cnpj_proprietario(std::string cnpj);
+    void set_tamanho(float tamanho);
+    void set_localizacao(std::string localizacao);
+    void set_tipo_solo(std::string tipo_solo);
+    void set_clima(std::string clima);
+    void set_status(std::string status);
+    void adicionar_semente_plantada(int id_semente);
 
     int get_id_area();
     std::string get_nome_proprietario();
@@ -46,6 +46,7 @@ public:
     std::string get_tipo_solo();
     std::string get_clima();
     std::string get_status();
+    std::vector<int> get_sementes_plantadas();
 };
 
 #endif

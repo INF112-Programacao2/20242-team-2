@@ -1,253 +1,121 @@
 #include "classeNegociacao.hpp"
-#include <limits>
-#include <fstream>
 #include <iostream>
-#include <ctime>
 #include <iomanip>
-#include <sstream>
 
+// Construtor
+#include <iostream>
+#include <fstream>
+#include <string>
 
-// função para capturar a data atual no formato DD/MM/AAAA.
-std::string negociacao:: getCurrentDate() {
-    time_t now = time(0); // obtém o tempo atual em segundos desde o Epoch.
-    tm* ltm = localtime(&now); // converte o tempo para uma estrutura tm.
-    
-    std::ostringstream oss;
-    oss << std::setfill('0') 
-        << std::setw(2) << ltm->tm_mday << "/" // dia com 2 dígitos.
-        << std::setw(2) << (ltm->tm_mon + 1) << "/" // mês com 2 dígitos (0-based).
-        << (ltm->tm_year + 1900); // ano completo.
-    
-    return oss.str();
-}
+Negociacao::Negociacao() 
+    : _id_negociacao(0), _id_lote(0), _id_area(0), _data_negociacao(""), 
+      _valor_negociado(0.0), _status("Pendente"), _desconto(0.0), 
+      _quantidade_semente_negociada(0.0) 
+{
+    // Nome correto do arquivo para evitar inconsistências
+    const std::string nomeArquivo = "Negociacao.txt";
 
-// método para validar uma data no formato DD/MM/AAAA.
-bool negociacao::validarData(const std::string& data) {
-    // verifica se o comprimento e o formato básico estão corretos.
-    if (data.length() != 10) return false;
-    if (data[2] != '/' || data[5] != '/') return false;
-    
-    try {
-        // extrai dia, mês e ano como inteiros.
-        int dia = std::stoi(data.substr(0, 2));
-        int mes = std::stoi(data.substr(3, 2));
-        int ano = std::stoi(data.substr(6, 4));
+    // Tentar abrir o arquivo para leitura e escrita
+    std::fstream arquivoAreaPlantio(nomeArquivo, std::ios::in | std::ios::out);
 
-        // verifica os valores básicos de mês e ano.
-        if (mes < 1 || mes > 12) return false;
-        if (ano < 1900) return false;
-
-        // define os dias máximos de cada mês.
-        int diasPorMes[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-        // ajusta fevereiro para anos bissextos.
-        if ((ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0)) {
-            diasPorMes[1] = 29;
+    if (!arquivoAreaPlantio.is_open()) {
+        // Se o arquivo não existir, criar um novo
+        std::ofstream novoArquivo(nomeArquivo);
+        if (!novoArquivo) {
+            std::cerr << "Erro ao criar o arquivo " << nomeArquivo << "\n";
+            return;
         }
 
-        // verifica o valor do dia.
-        if (dia < 1 || dia > diasPorMes[mes - 1]) return false;
-
-        return true;
-    } catch (...) {
-        // captura qualquer erro durante a conversão.
-        return false;
-    }
-}
-
-// construtor da classe negociacao.
-negociacao::negociacao() {
-    // inicializa todos os membros com valores padrão
-    _id_negociacao = 0;
-    _lote = nullptr;
-    _area = nullptr;
-    _data_negociacao = "";
-    _valor_negociado = 0.0;
-    _status = "Pendente";
-
-    _quantidade_semente_negociada=0;
-
-    // Verifica se o arquivo existe
-    std::ifstream verificaArquivo("Negociacao.txt");
-    if (!verificaArquivo.is_open()) {
-        // Cria um novo arquivo apenas se ele não existir
-        std::ofstream novoArquivo("Negociacao.txt");
-        if (!novoArquivo.is_open()) {
-            throw std::runtime_error("Erro ao criar arquivo Negociacao.txt");
-        }
-        novoArquivo << "0" << std::endl; // Inicializa o contador de IDs
+        // Escrevendo valores iniciais no novo arquivo
+        novoArquivo << "0 0" << std::endl;
         novoArquivo.close();
-    } else {
-        verificaArquivo.close();
+
+        // Inicializando _id_negociacao como 0
+        _id_negociacao = 0;
     }
 }
 
-void negociacao::registrarNegociacao(Lote* lote, area_plantio* area, float quantidade_semente_negociada, std::string data) {
-    if (lote == nullptr || area == nullptr) {
-        throw std::invalid_argument("Lote ou área inválidos");
-    }
-    
-    if (area->verificarDisponibilidade() == false) {
-        throw std::runtime_error("Área já está ocupada");
-    }
-    
-    if (!data.empty() && !validarData(data)) {
-        throw std::invalid_argument("Formato de data inválido (deve ser DD/MM/AAAA)");
-    }
-
-    // Recebendo desconto
-    std::cout << "Digite o desconto aplicado (%): ";
-    std::cin >> _desconto;
-    std::cin.ignore();
-
-    // Lê e incrementa o ID da negociação
-    std::fstream arquivo("Negociacao.txt", std::ios::in | std::ios::out);
-    if (!arquivo) {
-        throw std::runtime_error("Erro ao abrir arquivo para leitura do ID");
-    }
-    
-    std::string linha;
-    std::getline(arquivo, linha);
-    _id_negociacao = std::stoi(linha) + 1;
-    
-    // Volta ao início do arquivo e escreve o novo ID
-    arquivo.seekp(0);
-    arquivo << _id_negociacao << std::endl;
-    arquivo.close();
-
-    _lote = lote;
-    _area = area;
-    _valor_negociado = (_lote->get_preco_estimado() * _quantidade_semente_negociada) * (1 - _desconto/100);
-    _quantidade_semente_negociada=quantidade_semente_negociada;
-    _data_negociacao = data.empty() ? getCurrentDate() : data;
-    
-    std::ofstream arquivoAppend("Negociacao.txt", std::ios::app);
-    if (!arquivoAppend) {
-        throw std::runtime_error("Erro ao abrir arquivo para salvar negociação");
-    }
-    
-    arquivoAppend << _id_negociacao << " " << _lote->get_id_lote() << "+" << _area->get_id_area() << "+"
-                  << _data_negociacao << "+" << std::fixed << std::setprecision(2) << _valor_negociado << "+" << _status << "\n";
-
-    lote->consumirSementes(lote->get_id_lote(), quantidade_semente_negociada);
+// Getters
+int Negociacao::get_id_negociacao(){
+    return _id_negociacao;
 }
 
-void negociacao::atualizarStatusArquivo(int id_negociacao) {
-    std::fstream arquivoNegociacao("Negociacao.txt", std::ios::in | std::ios::out);
-    if (!arquivoNegociacao) {
-        throw std::runtime_error("Erro ao abrir o arquivo Negociacao.txt");
-    }
-
-    int contador_negociacoes;
-    arquivoNegociacao >> contador_negociacoes;
-    arquivoNegociacao.ignore();
-
-    if (id_negociacao <= 0 || id_negociacao > contador_negociacoes) {
-        throw std::runtime_error("ID de negociação inválido");
-    }
-
-    std::string* linhas = new std::string[contador_negociacoes];
-
-    // Lê todas as linhas do arquivo
-    for (int i = 0; i < contador_negociacoes; i++) {
-        if (i + 1 == id_negociacao) {
-            // Lê a negociação que será atualizada
-            std::string linha_atual;
-            std::getline(arquivoNegociacao, linha_atual);
-            
-            // Cria nova linha com status atualizado
-            std::stringstream nova_linha;
-            nova_linha << _id_negociacao << " "<< _lote->get_id_lote() << "+" << _area->get_id_area() << "+" << _data_negociacao << "+"
-                        << _valor_negociado << "+" << _status;
-            
-            linhas[i] = nova_linha.str();
-        } else {
-            std::getline(arquivoNegociacao, linhas[i]);
-        }
-    }
-
-    // Reescreve o arquivo com o conteúdo atualizado
-    arquivoNegociacao.close();
-    std::ofstream arquivoSaida("Negociacao.txt", std::ios::trunc);
-    
-    if (!arquivoSaida) {
-        delete[] linhas;
-        throw std::runtime_error("Erro ao reescrever o arquivo Negociacao.txt");
-    }
-
-    arquivoSaida << contador_negociacoes << std::endl;
-    for (int i = 0; i < contador_negociacoes; i++) {
-        arquivoSaida << linhas[i] << std::endl;
-    }
-
-    delete[] linhas;
-    arquivoSaida.close();
+int Negociacao::get_id_lote(){
+    return _id_lote;
 }
 
-void negociacao::finalizarNegociacao() {
-    if (_lote == nullptr || _area == nullptr) {
-        throw std::runtime_error("Negociação não inicializada corretamente");
-    }
-
-    if (_status == "Pendente") {
-        try {
-            // Remove a chamada duplicada de registrarPlantio
-            _area->registrarPlantio(_lote->get_id_lote());
-            _status = "Concluída";
-            atualizarStatusArquivo(_id_negociacao);
-            std::cout << "Negociação finalizada com sucesso!\n";
-        } catch (const std::exception& e) {
-            _status = "Pendente"; // Reverte o status em caso de erro
-            throw std::runtime_error(std::string("Erro ao finalizar negociação: ") + e.what());
-        }
-    } else {
-        throw std::runtime_error("Negociação não pode ser finalizada. Status atual: " + _status);
-    }
+int Negociacao::get_id_area(){
+    return _id_area;
+}
+std::string Negociacao::get_data_negociacao(){
+    return _data_negociacao;
 }
 
-// Método para cancelar uma negociação.
-void negociacao::cancelarNegociacao() {
-    if (_lote == nullptr || _area == nullptr) {
-        throw std::runtime_error("Negociação não inicializada corretamente");
-    }
-
-    if (_status == "Pendente") {
-        _status = "Cancelada";
-        
-        try {
-            atualizarStatusArquivo(_id_negociacao);
-            std::cout << "Negociação cancelada com sucesso!\n";
-        } catch (const std::exception& e) {
-            _status = "Pendente"; // Reverte o status em caso de erro
-            throw std::runtime_error(std::string("Erro ao cancelar negociação: ") + e.what());
-        }
-    } else {
-        throw std::runtime_error("Negociação não pode ser cancelada. Status atual: " + _status);
-    }
+float Negociacao::get_valor_negociado() {
+    return _valor_negociado;
 }
 
-// método para gerar um relatório da negociação atual.
-void negociacao::gerar_relatorioNegociacao() {
-    std::cout << "\n=== Relatório da Negociação ===\n"
+std::string Negociacao::get_status() {
+    return _status;
+}
+
+float Negociacao::get_desconto() {
+    return _desconto;
+}
+
+float Negociacao::get_quantidade_semente_negociada(){
+    return _quantidade_semente_negociada;
+}
+
+// Setters
+void Negociacao::set_id_negociacao(int id) {
+    _id_negociacao = id;
+}
+
+void Negociacao::set_id_lote(int id) {
+    _id_lote = id;
+}
+
+void Negociacao::set_id_area(int id) {
+    _id_area = id;
+}
+
+void Negociacao::set_data_negociacao(const std::string& data) {
+    _data_negociacao = data;
+}
+
+void Negociacao::set_valor_negociado(float valor) {
+    _valor_negociado = valor;
+
+}
+
+void Negociacao::set_status(std::string status) {
+    _status = status;
+}
+
+void Negociacao::set_desconto(float desconto) {
+    _desconto = desconto;
+}
+
+void Negociacao::set_quantidade_semente_negociada(float quantidade) {
+    _quantidade_semente_negociada = quantidade;
+}
+
+// Método de exibição de detalhes
+void Negociacao::exibir_detalhes() {
+    std::cout << "=== Detalhes da Negociação ===\n"
               << "ID: " << _id_negociacao << "\n"
               << "Data: " << _data_negociacao << "\n"
-              << "Valor: R$ " << std::fixed << std::setprecision(2) << _valor_negociado << "\n"
+              << "Valor Negociado: R$ " << std::fixed << std::setprecision(2) << _valor_negociado << "\n"
               << "Status: " << _status << "\n"
-              << "Desconto aplicável: R$ " << _desconto << "\n"; // ,ostra o desconto, se aplicável.
-
-    // exibe detalhes do lote, se associado.
-    if (_lote != nullptr) {
-        _lote->exibirDetalhes(); // método fictício para exibir detalhes do lote.
-        std::cout << "\n";
-    } else {
-        std::cout << "\nLote não associado\n";
+              << "Desconto: " << _desconto << "%\n"
+              << "Quantidade de Sementes: " << _quantidade_semente_negociada << "\n";
+    
+    if (_id_lote!=0) {
+        std::cout << "ID do Lote: " << _id_lote << "\n";
     }
-
-    // exibe detalhes da área, se associada.
-    if (_area != nullptr) {
-        std::cout << "\nInformações da Área:\n";
-        _area->exibirDetalhes(); // método fictício para exibir detalhes da área.
-    } else {
-        std::cout << "\nÁrea não associada\n";
+    
+    if (_id_area!=0) {
+        std::cout << "ID da Área: " << _id_area << "\n";
     }
 }
