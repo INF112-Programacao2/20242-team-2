@@ -20,7 +20,7 @@ public:
     Usuario();
     Usuario(int id, const std::string& nome, const std::string& email,  //ok
             const std::string& tipoUsuario, const std::string& senha);
-    virtual ~Usuario() = default;                                       //ok                         
+    virtual ~Usuario();                                       //defalt?                         
 
     // Getters
     int getId() const;                      //ok                    // Retorna o ID (somente leitura)
@@ -35,6 +35,6 @@ public:
     // Métodos relacionados à segurança
     void realizarLogin();       //ok                                 // Metodos relacionados a parte visual  
     virtual int acessarInterface();    //NOVA FUNCAO!!
-    virtual void atividade(int opcao_selecionada);         //NOVA FUNCAO!!
+    
 };
 #endif
