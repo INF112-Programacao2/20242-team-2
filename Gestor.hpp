@@ -1,6 +1,7 @@
 #ifndef GESTOR_HPP
 #define GESTOR_HPP
 
+#include <iomanip>
 #include <vector>
 #include "Usuario.hpp"
 #include "classeSemente.hpp"
@@ -29,7 +30,8 @@ class Gestor: public Usuario{
         void excluirUsuario();                          //ok
 
     public:
-        virtual int acessarInterface()override;   //abre o menu dos gestores - falta funcao de ver relatorios
+        virtual int acessarInterface();                  //atualizado
+        Gestor();                         //vazio?publico?
 
 };
 #endif
