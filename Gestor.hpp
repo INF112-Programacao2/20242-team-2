@@ -34,7 +34,6 @@ class Gestor: public Usuario{
 
     public:
         virtual int acessarInterface();                  //atualizado
-        Gestor();                         //vazio?publico?
-
+        Gestor();                         //vazio?publico? provavelmente privado -pedro
 };
 #endif

@@ -11,7 +11,7 @@ class Lote{
 
     private:
         //atributos:
-    
+        Semente* _ptr_semente;
         int _id_lote; //identificador unico do lote de sementes
         int _id_sementeAssociada;
         std::string _nome_cientifico; //nome cientifico da semente

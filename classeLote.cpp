@@ -1,17 +1,17 @@
 #include "classeLote.hpp"
 #include "classeSemente.hpp"
 
-Lote::Lote(){
-    _statusDisponibilidade="Estoque"; 
-    _id_lote=0;
-    _id_sementeAssociada=0;
-    _nome_cientifico="";
-    _geneIntroduzido="";
-    _metodo_producao="";
-    _data_producao="";
-    _pais_origem="";
-    _quantidade_disponivel=0;
-    _preco_estimado=0;
+Lote::Lote() : _ptr_semente(nullptr) {
+    _statusDisponibilidade = "Estoque"; 
+    _id_lote = 0;
+    _id_sementeAssociada = 0;
+    _nome_cientifico = "";
+    _geneIntroduzido = "";
+    _metodo_producao = "";
+    _data_producao = "";
+    _pais_origem = "";
+    _quantidade_disponivel = 0;
+    _preco_estimado = 0;
 }
 //KATRINE VAI TER QUE ADAPTAR
 Lote::Lote(int id_lote){                         //aloca um lote que ja esta registrado. Utilizado para negociacao e relatorios        
@@ -47,13 +47,15 @@ Lote::Lote(int id_lote){                         //aloca um lote que ja esta reg
     arquivoLotes.close();
 
     try{
-    _ptr_semente=new Semente(_id_sementeAssociada);
+    _ptr_semente = new Semente(_id_sementeAssociada);
     }catch(const std::bad_alloc& e){
         throw std::runtime_error("Erro na alocacao de memoria para semente.");
     }
 
 }
-Lote::~Lote(){}
+Lote::~Lote() {
+    delete _ptr_semente;
+}
 
 /*  //mantendo para caso precise reutilizar a logica
 

@@ -19,24 +19,24 @@ private:
 
 public:
     //metodos para area de plantio
-    void registrarArea();               //ok
-    void listarAreasRegistradas();      //ok
-    void liberarArea();                 //ok
-    void excluirArea();                 //ok
+    void registrarArea();                                   //ok
+    void listarAreasRegistradas();                          //ok
+    void liberarArea();                                     //ok
+    void excluirArea();                                     //ok
     
-    void registrarPlantio();         //registra o plantio de um lote de sementes na área.
-    bool verificarDisponibilidade(int id_area);           //verifica se a área está disponível para plantio.
+    void registrarPlantio();                               //registra o plantio de um lote de sementes na área.
+    bool verificarDisponibilidade(int id_area);            //verifica se a área está disponível para plantio.
     //void compatibilidade_semente();
     //void buscar_lotes_dessa_semente(int id_semente_busca);                 
 
     //metodos para negociacao
-    void registrarNegociacao();  //em andamento
-    void listarNegociacoesRegistradas();  //ok
-    void finalizarNegociacao();        //ok
-    void excluirNegociacao();         //ok
+    void registrarNegociacao();                             //em andamento
+    void listarNegociacoesRegistradas();                    //ok
+    void finalizarNegociacao();                             //ok
+    void excluirNegociacao();                               //ok
     void atualizarPrecoDaSemente();   
 
-    virtual int acessarInterface()override;   //abre o menu dos vendedores
+    virtual int acessarInterface()override;                 //abre o menu dos vendedores
     virtual void gerarRelatorio(){};
     
 };

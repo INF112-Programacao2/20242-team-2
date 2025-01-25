@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <ctime>
 #include <limits>
+#include <algorithm>
 
 //_________________________________________Métodos para Area de Plantio_________________________________________________________________
 
@@ -542,89 +543,103 @@ bool Vendedor::validarData(std::string& data) {
 
 void Vendedor::registrarNegociacao() {
     Negociacao novaNegociacao;
-    int id, lote_id, area_id;
+    int lote_id, area_id;
     std::string data;
     float quantidade_semente, desconto;
 
-    // Read current ID from file
-    std::ifstream arquivoNegociacoes("Negociacao.txt");
-    if (!arquivoNegociacoes.is_open()) {
-        throw std::ios_base::failure("Erro ao abrir o arquivo Negociacao.txt para leitura");
-    }
-    arquivoNegociacoes >> id;
-    id++;
-    arquivoNegociacoes.close();
-
+    // Melhorias na entrada de dados
     std::cout << "Insira os detalhes da Negociação:\n";
-    
-    std::cout << "ID do Lote: ";
-    std::cin >> lote_id;
+
+    while (true) {
+        std::cout << "ID do Lote: ";
+        if (std::cin >> lote_id && lote_id > 0) break;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cerr << "Entrada inválida. Por favor, insira um valor numérico válido.\n";
+    }
     std::cin.ignore();
 
-    std::cout << "ID da Área: ";
-    std::cin >> area_id;
+    while (true) {
+        std::cout << "ID da Área: ";
+        if (std::cin >> area_id && area_id > 0) break;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cerr << "Entrada inválida. Por favor, insira um valor numérico válido.\n";
+    }
     std::cin.ignore();
 
-    std::cout << "Quantidade de Sementes Negociadas: ";
-    std::cin >> quantidade_semente;
+    while (true) {
+        std::cout << "Quantidade de Sementes Negociadas: ";
+        if (std::cin >> quantidade_semente && quantidade_semente > 0) break;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cerr << "Entrada inválida. Insira uma quantidade positiva.\n";
+    }
     std::cin.ignore();
 
     std::cout << "Data da Negociação (DD/MM/AAAA, deixe em branco para data atual): ";
     std::getline(std::cin, data);
-
-    std::cout << "Desconto (%): ";
-    std::cin >> desconto;
-    std::cin.ignore();
-
-    // Valida os inputs
-    if (quantidade_semente <= 0 || 
-        (!data.empty() && !validarData(data)) || 
-        desconto < 0) {
-        throw std::invalid_argument("Dados inválidos para registro de negociação");
+    if (data.empty()) {
+        data = getCurrentDate();
+    } else if (!validarData(data)) {
+        throw std::invalid_argument("Data inválida.");
     }
+
+    while (true) {
+        std::cout << "Desconto (%): ";
+        if (std::cin >> desconto && desconto >= 0) break;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cerr << "Entrada inválida. Insira um valor de desconto válido (>= 0).\n";
+    }
+    std::cin.ignore();
 
     // Calcular valor negociado
     Lote lote(lote_id);
-    float valor_estimado = lote.getPrecoEstimado(); // Substitua pela lógica correta de obtenção do preço
+    float valor_estimado = lote.getPrecoEstimado();
+    if (valor_estimado <= 0) {
+        throw std::runtime_error("Erro: preço estimado inválido para o lote informado.");
+    }
 
-    // Set informações da negociação
-    novaNegociacao.set_id_negociacao(id);
+    // Definição do ID automaticamente em salvarNegociacao()
     novaNegociacao.set_id_lote(lote_id);
     novaNegociacao.set_id_area(area_id);
     novaNegociacao.set_quantidade_semente_negociada(quantidade_semente);
-    novaNegociacao.set_data_negociacao(data.empty() ? getCurrentDate() : data);
+    novaNegociacao.set_data_negociacao(data);
     novaNegociacao.set_desconto(desconto);
-    novaNegociacao.set_valor_negociado((valor_estimado * quantidade_semente) * (1 - desconto/100));
+    novaNegociacao.set_valor_negociado((valor_estimado * quantidade_semente) * (1 - desconto / 100));
     novaNegociacao.set_status("Pendente");
 
     // Registra negociação
     salvarNegociacao(novaNegociacao);
 }
 
+
 void Vendedor::salvarNegociacao(Negociacao& neg) {
-    int cont_id, cont_registros;
+    int cont_id = 0, cont_registros = 0;
 
     try {
-        // Abre o arquivo Negociacao.txt para leitura e escrita
-        std::fstream arquivo("Negociacao.txt", std::ios::in | std::ios::out);
+        std::fstream arquivo("Negociacao.txt", std::ios::in | std::ios::out | std::ios::app);
         if (!arquivo.is_open()) {
-            throw std::ios_base::failure("Erro ao abrir o arquivo Negociacao.txt para registro.");
+            throw std::ios_base::failure("Erro ao abrir o arquivo Negociacao.txt.");
         }
 
-        // Lê os contadores no início do arquivo
-        arquivo >> cont_id >> cont_registros;
+        // Ler e atualizar contadores
+        arquivo.seekg(0, std::ios::beg);
+        if (!(arquivo >> cont_id >> cont_registros)) {
+            cont_id = 0;
+            cont_registros = 0;
+        }
         cont_id++;
         cont_registros++;
 
-        // Move o ponteiro para o final do arquivo para registrar a negociação
+        // Registrar negociação no final do arquivo
         arquivo.seekp(0, std::ios::end);
-
-        // Escreve os dados da negociação no arquivo
-        arquivo << neg.get_id_negociacao() << " " 
+        arquivo << cont_id << " " 
                 << neg.get_id_lote() << "+" 
                 << neg.get_id_area() << "+"
                 << neg.get_status() << "+"
-                << neg.get_data_negociacao() << "+" 
+                << neg.get_data_negociacao() << "+"
                 << std::fixed << std::setprecision(2) << neg.get_valor_negociado() << "+"
                 << neg.get_quantidade_semente_negociada() 
                 << "\n";
@@ -633,7 +648,7 @@ void Vendedor::salvarNegociacao(Negociacao& neg) {
         arquivo.seekp(0, std::ios::beg);
         arquivo << cont_id << " " << cont_registros << std::endl;
 
-        std::cout << "Negociação registrada com sucesso!" << std::endl;
+        std::cout << "Negociação registrada com sucesso! ID: " << cont_id << std::endl;
 
         arquivo.close();
     } catch (const std::ios_base::failure& e) {
@@ -642,7 +657,6 @@ void Vendedor::salvarNegociacao(Negociacao& neg) {
         std::cerr << "Exceção geral: " << e.what() << std::endl;
     }
 }
-
 void Vendedor::finalizarNegociacao() {
     // Abre o arquivo para leitura
     std::ifstream arquivoEntrada("Negociacao.txt");
@@ -669,7 +683,7 @@ void Vendedor::finalizarNegociacao() {
         std::string status, id_lote, id_area;
 
         ss >> id_negociacao;
-        std::getline(ss,  id_lote, '+');
+        std::getline(ss, id_lote, '+');
         std::getline(ss, id_area, '+');
         std::getline(ss, status, '+');  // Lê o status após o ID da negociação
 
@@ -694,15 +708,7 @@ void Vendedor::finalizarNegociacao() {
     std::cin >> id_negociacao;
 
     // Verifica se o ID existe na lista de negociações pendentes
-    bool found = false;
-    for (int neg : negociacoes_pendentes) {
-        if (neg == id_negociacao) {
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
+    if (std::find(negociacoes_pendentes.begin(), negociacoes_pendentes.end(), id_negociacao) == negociacoes_pendentes.end()) {
         std::cout << "Negociação com ID " << id_negociacao << " não encontrada ou já foi finalizada.\n";
         return;
     }
@@ -715,7 +721,7 @@ void Vendedor::finalizarNegociacao() {
 
         // Lê todos os campos da linha
         ss >> id_lido;
-        std::getline(ss,  id_lote, '+');
+        std::getline(ss, id_lote, '+');
         std::getline(ss, id_area, '+');
         std::getline(ss, status, '+');
         std::getline(ss, data_negociacao, '+');
