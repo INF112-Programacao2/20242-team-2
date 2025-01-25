@@ -657,7 +657,16 @@ int Gestor::acessarInterface() {
     }
     else if(opcao_selecionada==7){
         // funcao pra visualizar relatorio;
+         // funcao pra visualizar relatorio;
+        try{
+            gerarRelatorio();
+        }catch(const std::exception& e){
+            std::cerr<<"Erro: "<<e.what()<<std::endl;
+        }catch(...){
+            std::cerr<<"Erro desconhecido!"<<std::endl;
+        }
     }
+    
 }
 
 void Gestor::gerarRelatorio() {
