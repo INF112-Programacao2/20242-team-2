@@ -59,7 +59,6 @@ int main(){
    // cada usuario deve levar a um acessarInterface() e a um atividade() personalizados
    int menu_selecionado;
    menu_selecionado=usuario->acessarInterface();   //polimorfismo
-   usuario->atividade(menu_selecionado);           //polimorfismo
 
 
 
