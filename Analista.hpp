@@ -3,11 +3,22 @@
 
 #include "Usuario.hpp"
 #include "classeNegociacao.hpp"
+#include "Relatorio.hpp"
 
 class Analista: public Usuario{
-public:
-    void registrarRelatorio();
-    void atualizarStatusDaSemente();
-    void visualizarRelatorio();
-};
+    public:
+
+        Analista();
+        ~Analista();
+
+        void atualizarStatusDaSemente();
+        void visualizarRelatorio();
+        virtual void acessarInterface();
+
+    private:
+        void elaborarRelatorio();
+        void registrarRelatorio(Relatorio &relatorio);
+        virtual void gerarRelatorio(); 
+
+    };
 #endif
