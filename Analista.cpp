@@ -5,13 +5,17 @@ Analista::Analista(){};
 Analista::~Analista(){};
 
 void Analista::elaborarRelatorio(){
+    std::string comando="espeak -v pt-br -s 120 \Elaboracao do relatorio de analise de sementes\"";
     std::cout<<"Elaboração do relatório de analise das sementes"<<
     "\n\nDeseja realizar o relatorio de qual semente? ID: ";
+    system(comando.c_str());
 
     int id_semente;
     std::cin>>id_semente;
     while(id_semente<=0){
         std::cout<<"ID inválido. Digite novamente o ID da semente: ";
+        comando="espeak -v pt-br -s 120 \"ID invalido. Digite novamente o ID da semente: \"";
+        system(comando.c_str());
         std::cin>>id_semente;
     }
 
@@ -21,19 +25,36 @@ void Analista::elaborarRelatorio(){
     float texto;
 
     std::cout << "Insira os detalhes da observados no plantio:\n";
-    std::cout << "Irrigacao ideal (em mm/dia): ";                   std::cin >> texto;          relatorio.set_irrigacao(texto);     
-    std::cout << "Taxa desistência a pragas (%): ";                 std::cin >> texto;          relatorio.set_pragasDoencas(texto);
-    std::cout << "Taxa de crescimento (%): ";                       std::cin >> texto;          relatorio.set_crescimento(texto);
-    std::cout << "Taxa de germinação (%): ";                        std::cin >> texto;          relatorio.set_geminacao(texto);
-    std::cout << "Taxa de sobrevivência (%): ";                     std::cin >> texto;          relatorio.set_sobrevivencia(texto);
-    std::cout << "Tempo de colheira em dias: ";                     std::cin >> texto;          relatorio.set_tempo_colheita(texto);
+    comando="espeak -v pt-br -s 120 \"Insira os detalhes observados no plantio\"";
+    system(comando.c_str());
+
+    std::cout << "Irrigacao ideal (em mm/dia): ";  comando="espeak -v pt-br -s 120 \"Irrigacao ideal, em milimetros por dia \"";
+    system(comando.c_str());      
+    std::cin >> texto;          relatorio.set_irrigacao(texto);    
+
+    std::cout << "Taxa de incidencia de pragas e doencas (%): "; comando="espeak -v pt-br -s 120 \"Taxa de incidencia de pragas e doencas, em porcentagem \"";
+    system(comando.c_str());      
+    std::cin >> texto;          relatorio.set_pragasDoencas(texto);
+
+    std::cout << "Taxa de crescimento (%): ";                    comando="espeak -v pt-br -s 120 \"Taxa de incidencia de pragas e doencas, em porcentagem \"";
+    std::cin >> texto;          relatorio.set_crescimento(texto);
+
+    std::cout << "Taxa de germinação (%): ";                     comando="espeak -v pt-br -s 120 \"Taxa de germinacao, em porcentagem \"";
+    system(comando.c_str());
+    std::cin >> texto;          relatorio.set_geminacao(texto);
+    
+    std::cout << "Taxa de sobrevivência (%): ";                  comando="espeak -v pt-br -s 120 \"Taxa de sobrevivencia, em porcentagem \"";
+    system(comando.c_str());
+    std::cin >> texto;          relatorio.set_sobrevivencia(texto);
+
+    std::cout << "Tempo de colheira em dias: ";                   comando="espeak -v pt-br -s 120 \"Tempo de colheita, em dias \"";
+    std::cin >> texto;          relatorio.set_tempo_colheita(texto);
     
     registrarRelatorio(relatorio);
 
 }
 
 void Analista::registrarRelatorio(Relatorio &relatorio){
-
 
     std::fstream arquivoRelatorio("Relatorio.txt");
     if(!arquivoRelatorio)
@@ -55,6 +76,10 @@ void Analista::registrarRelatorio(Relatorio &relatorio){
 
     arquivoRelatorio.close();
 
+    std::cout<<"Relatorio registrado com sucesso!\n";
+    std::string comando="espeak -v pt-br -s 120 \"Taxa de incidencia de pragas e doencas, em porcentagem \"";
+    system(comando.c_str());
+
 }
 
 void Analista::acessarInterface() {
@@ -66,6 +91,12 @@ void Analista::acessarInterface() {
         std::cout << "|3|- Atualizar status de um lote\n|4|- Sair do programa\n";
         std::cout << "|------------------------------------------------------------------|\n";
 
+        std::string comando = "espeak -v pt-br -s 120 \"Bem vindo ao menu do analista! Digite um para registrar um novo relatorio. "
+                      "pressione dois para gerar relatorio. pressione três para atualizar status de um lote. ou "
+                      "quatro para sair do programa\"";
+
+        system(comando.c_str());
+        
         std::cout << "Escolha uma opção: ";
         std::cin >> opcao_menu;
 
@@ -97,8 +128,11 @@ void Analista::acessarInterface() {
 
 void Analista::gerarRelatorio(){
 
+    
     try {
         std::cout << "O relatorio está sendo gerado!\n";
+        std::string comando = "espeak -v pt-br -s 120 \"O relatorio está sendo gerado!\"";
+        system(comando.c_str());
 
         // Abrir o arquivo de sementes
         std::ifstream arquivoRelatorio("Relatorio.txt");
@@ -153,17 +187,24 @@ void Analista::gerarRelatorio(){
     }catch (const std::exception& e) {
             std::cerr << "Erro: " << e.what() << std::endl;
     }
-        std::cout<<"Relatorio completo em: RelatorioGestor.txt\n";
+    std::string comando = "espeak -v pt-br -s 120 \"Relatorio completo no arquivo Relatorio Analista te xis te\"";
+    system(comando.c_str());
 
+    std::cout<<"Relatorio completo em: RelatorioAnalista.txt\n";
 }
 
 void Analista::atualizarStatusDoLote(){
+    
     int id_lote=0;
-    std::cout<<"Atualizar como 'Plantado' status da semente de ID: ";
+    std::string comando = "espeak -v pt-br -s 120 \"Digite o ID do lote que deseja atualizar o status como plantado\"";
+        system(comando.c_str());
+    std::cout<<"Atualizar como 'Plantado' status do lote de ID: ";
     std::cin>>id_lote;
 
     while(id_lote<=0){
         std::cout<<"ID de lote inválido. Digite novamente: ";
+        std::string comando = "espeak -v pt-br -s 120 \"ID de lote inválido. Digite novamente\"";
+        system(comando.c_str());
         std::cin>>id_lote;
     }
 
@@ -192,5 +233,9 @@ void Analista::atualizarStatusDoLote(){
     arquivoLote<<"+Plantado";
 
     arquivoLote.close();
+
+    comando="espeak -v pt-br -s 120 \"Status atualizado com sucesso\"";
+    system(comando.c_str());
+    std::cout<<"Status atualizado com sucesso!\n";
 
 }
