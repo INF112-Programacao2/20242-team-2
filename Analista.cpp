@@ -57,13 +57,13 @@ void Analista::registrarRelatorio(Relatorio &relatorio){
 
 }
 
-void Analista::acessarInterface(){
+int Analista::acessarInterface(){
 
 int opcao_menu;
 
 std::cout<<"-------------------------MENU DO ANALISTA--------------------------\n";
    std::cout<<"1- Registrar um novo relatorio\n2- Gerar relatório\n";
-   std::cout<<"3- Excluir uma semente\n";
+   std::cout<<"3- Fechar programa\n";
    std::cout<<"------------------------------------------------------------------\n";
 
    std::cin>>opcao_menu;
@@ -73,6 +73,9 @@ std::cout<<"-------------------------MENU DO ANALISTA--------------------------\
    else if(opcao_menu==2){
         gerarRelatorio();
    }
+       else if(opcao_menu==3){
+           return 0;
+       }
    else{
     throw std::invalid_argument("Opcao de menu inválido!\n");
    }
