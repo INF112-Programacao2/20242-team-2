@@ -34,6 +34,11 @@ class Gestor: public Usuario{
 
     public:
         virtual int acessarInterface();                  //atualizado
-        Gestor();                         //vazio?publico? provavelmente privado -pedro
+        Gestor();
+        virtual ~Gestor();
+
+        // Impedir cópia e atribuição
+        Gestor(const Gestor&) = delete;
+        Gestor& operator=(const Gestor&) = delete;
 };
 #endif
