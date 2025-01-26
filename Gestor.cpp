@@ -162,7 +162,8 @@ void Gestor::excluirUsuario() {
 
 void Gestor::salvarSemente(Semente& semente) {
 
-    int cont_id,cont_registros;
+    int cont_id=0;
+    int cont_registros=0;
     try {
         std::fstream arquivo("Sementes.txt");
         if (!arquivo.is_open()) {
@@ -170,8 +171,11 @@ void Gestor::salvarSemente(Semente& semente) {
         }
 
         //lendo contadores do arquivo
-        arquivo>>cont_id;         cont_id++;
-        arquivo>>cont_registros;  cont_registros++;
+         if (arquivo.peek() != std::ifstream::traits_type::eof()) {
+            arquivo >> cont_id >> cont_registros;
+        }
+        cont_id++;
+        cont_registros++;
 
         // Verifica se algum valor está vazio ou inválido
         if (semente.get_id_tipo() == 0 || semente.get_solo_ideal().empty() || semente.get_clima_ideal().empty() ||
