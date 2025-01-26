@@ -885,7 +885,9 @@ int Vendedor::acessarInterface() {
             std::cout << "8- Finalizar uma negociação\n";
             std::cout << "9- Excluir uma negociação\n";
             std::cout << "10- Atualizar preço da semente\n";
-            std::cout << "11- Sair\n";
+            std::cout << "11- Verificar compatibilidade\n";
+            std::cout << "12- Sair\n";
+
             std::cout << "---------------------------------------------------------------\n";
             std::cout << "Escolha uma opção: ";
             std::cin >> opcao_selecionada;
@@ -922,8 +924,11 @@ int Vendedor::acessarInterface() {
                     //atualizarPrecoDaSemente();
                     break;
                 case 11:
+                    compatibilidade_semente();
+                case 12:
                     std::cout << "Saindo do menu do vendedor.\n";
                     return 0; // Encerra o menu
+                case
                 default:
                     std::cout << "Opção inválida, tente novamente.\n";
             }
