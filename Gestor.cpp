@@ -590,12 +590,13 @@ int Gestor::acessarInterface() {
    std::cout<<"1- Registrar uma nova semente\n2- Visualizar dados de uma semente\n";
    std::cout<<"3- Excluir uma semente\n4- Registrar um novo lote\n";
    std::cout<<"5-Visualizar dados de um lote\n6- Excluir um lote\n";
-   std::cout<<"7-Visualizar relatórios\n";
+   std::cout<<"7-Visualizar relatórios\n8- Sair do programa\n";
    std::cout<<"------------------------------------------------------------------\n";
 
    std::cin>>opcao_selecionada;
    if(opcao_selecionada!=1&&opcao_selecionada!=2&&opcao_selecionada!=3
-       &&opcao_selecionada!=4&&opcao_selecionada!=5&&opcao_selecionada!=6){
+       &&opcao_selecionada!=4&&opcao_selecionada!=5&&opcao_selecionada!=6
+       %%opcao_selecioana!=7&&opcao_selecionada!-8){
        throw std::invalid_argument("Opção inválida! Por favor, selecione uma opção válida.");
    }
     if(opcao_selecionada==1){
@@ -670,6 +671,9 @@ int Gestor::acessarInterface() {
         }catch(...){
             std::cerr<<"Erro desconhecido!"<<std::endl;
         }
+    }
+    else if(opcao_selecionada==8){
+        return 0;
     }
     
 }
