@@ -15,6 +15,7 @@ private:
     std::string getCurrentDate();
     bool validarData(std::string& data);
     void salvarNegociacao(Negociacao& neg);
+    void buscar_lotes_dessa_semente(int id_semente_busca);
 
 public:
     //metodos para area de plantio
@@ -25,7 +26,7 @@ public:
     
     void registrarPlantio();                               //registra o plantio de um lote de sementes na área.
     bool verificarDisponibilidade(int id_area);            //verifica se a área está disponível para plantio.
-    //void compatibilidade_semente();
+    void compatibilidade_semente();
     //void buscar_lotes_dessa_semente(int id_semente_busca);                 
 
     //metodos para negociacao
