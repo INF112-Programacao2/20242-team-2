@@ -7,9 +7,6 @@
 Usuario:: Usuario(int id, const std::string& nome, const std::string& email, const std::string& tipoUsuario, 
 const std::string& senha): _id(id), _nome(nome), _email(email), _tipoUsuario(tipoUsuario), _senha(senha){}
 
-Usuario:: Usuario(int id, const std::string& nome, const std::string& email, const std::string& tipoUsuario, 
-const std::string& senha): _id(id), _nome(nome), _email(email), _tipoUsuario(tipoUsuario), _senha(senha){}
-
 Usuario::~Usuario(){}
 int Usuario::totalUsuarios = 0;
 
@@ -65,12 +62,6 @@ void Usuario::realizarLogin(){
 
 Usuario::Usuario() : _id(0), _nome(""), _email(""), _tipoUsuario(""), _senha("") {}
 
-int Usuario::acessarInterface(){
-   //aqui sera feito a pagina de login            - pedro
 
-   //qualquer coisa aqui so pra ver funcionar:
-   std::cout<<"login aqui";
-
-}
 
 
