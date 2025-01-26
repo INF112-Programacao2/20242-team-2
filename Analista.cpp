@@ -63,7 +63,7 @@ int opcao_menu;
 
 std::cout<<"-------------------------MENU DO ANALISTA--------------------------\n";
    std::cout<<"1- Registrar um novo relatorio\n2- Gerar relatório\n";
-   std::cout<<"3- Fechar programa\n";
+   std::cout<<"3- Atualizar status de um lote\n""4- Sair do programa\n";
    std::cout<<"------------------------------------------------------------------\n";
 
    std::cin>>opcao_menu;
@@ -142,5 +142,43 @@ void Analista::gerarRelatorio(){
             std::cerr << "Erro: " << e.what() << std::endl;
     }
         std::cout<<"Relatorio completo em: RelatorioGestor.txt\n";
+
+}
+
+void Analista::atualizarStatusDoLote(){
+    int id_lote=0;
+    std::cout<<"Atualizar como 'Plantado' status da semente de ID: ";
+    std::cin>>id_lote;
+
+    while(id_lote<=0){
+        std::cout<<"ID de lote inválido. Digite novamente: ";
+        std::cin>>id_lote;
+    }
+
+    std::fstream arquivoLote("Lotes.txt");
+    if(!arquivoLote)
+        throw std::runtime_error("Erro: Não foi possível abrir o arquivo 'Sementes.txt'");
+
+    std::string linha;
+    std::getline(arquivoLote,linha); //ignorando primeira linha do txt
+    int id_lido;
+    
+    while(true){
+        arquivoLote>>id_lido; arquivoLote.ignore();      //ignorando id semente e caracter +
+        arquivoLote>>id_lido;
+
+        if(id_lido==id_lote)
+            break;
+        else{
+            std::getline(arquivoLote,linha);
+            if(arquivoLote.fail())
+                throw std::ios_base::failure("ID nao encontrado!");
+        }
+    }
+    Lote lote_alterado(id_lote);
+    arquivoLote.seekp(arquivoLote.tellg());
+    arquivoLote<<"+Plantado";
+
+    arquivoLote.close();
 
 }
