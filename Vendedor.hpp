@@ -17,25 +17,25 @@ private:
     void salvarNegociacao(Negociacao& neg);
     void buscar_lotes_dessa_semente(int id_semente_busca);
 
-public:
     //metodos para area de plantio
     void registrarArea();                                   //ok
     void listarAreasRegistradas();                          //ok
     void liberarArea();                                     //ok
     void excluirArea();                                     //ok
     
-    void registrarPlantio();                               //registra o plantio de um lote de sementes na área.
-    bool verificarDisponibilidade(int id_area);            //verifica se a área está disponível para plantio.
-    void compatibilidade_semente();
-    //void buscar_lotes_dessa_semente(int id_semente_busca);                 
+    void registrarPlantio();                               //ok
+    bool verificarDisponibilidade(int id_area);            //ok
+    void compatibilidade_semente();                        //ok
 
     //metodos para negociacao
-    void registrarNegociacao();                             //em andamento
+    void registrarNegociacao();                             //ok
     void listarNegociacoesRegistradas();                    //ok
-    void finalizarNegociacao();                             //ok
+    void finalizarNegociacao();                             //não esta atualizando o txt corretamente
     void excluirNegociacao();                               //ok
-    void atualizarPrecoDaSemente();   
+    void atualizarPrecoDaSemente();                         //ainda não implementado
+    void consumirSementes();                                //ainda não implementado
 
+public:
     virtual int acessarInterface()override;                 //abre o menu dos vendedores
     virtual void gerarRelatorio(){};
     

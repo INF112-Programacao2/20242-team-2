@@ -357,10 +357,10 @@ void Vendedor::liberarArea() {
      std::cout << "Área " << id_area << " liberada com sucesso.\n";
 }
 
-/*void Vendedor::buscar_lotes_dessa_semente(int id_semente_busca) {
+void Vendedor::buscar_lotes_dessa_semente(int id_semente_busca) {
     std::ifstream arquivoLotes("Lotes.txt");
     if (!arquivoLotes)
-        std::cerr << "Erro ao abrir arquivo Lotes.txt";
+        throw std::ios_base::failure("Erro ao abrir arquivo Lotes.txt");
 
     int quant_lotes;
     arquivoLotes >> quant_lotes; 
@@ -370,26 +370,81 @@ void Vendedor::liberarArea() {
     int id_lote;
     int id_semente_lido;
     std::string linha;
-    Lote *lote_teste;
+
+    int idSementeAssociada,id;
+    float quantidadeDisponivel,precoEstimado;
+    std::string statusDisponibilidade,nomeCientifico,geneIntroduzido,metodoProducao,dataProducao,paisOrigem;
 
     for (int i = 0; i < quant_lotes; i++) {
         arquivoLotes >> id_semente_lido;
+        if(arquivoLotes.fail())
+            throw std::ios_base::failure("Erro ao ler ID da semente associada ao lote!");
 
         if (id_semente_lido == id_semente_busca) {
             arquivoLotes.ignore();
             arquivoLotes >> id_lote;
-            lote_teste = new Lote(id_lote);
-            delete lote_teste;
-        }   
+            arquivoLotes.ignore();
+        std::getline(arquivoLotes,statusDisponibilidade,'+');
+        std::getline(arquivoLotes,nomeCientifico,'+');
+        std::getline(arquivoLotes,geneIntroduzido,'+');
+        std::getline(arquivoLotes,metodoProducao,'+');
+        std::getline(arquivoLotes,dataProducao,'+');
+        std::getline(arquivoLotes,paisOrigem,'+');
+        arquivoLotes>>quantidadeDisponivel;                  arquivoLotes.ignore();
+        arquivoLotes>>precoEstimado;
+        if(arquivoLotes.fail())
+            throw std::ios_base::failure("Erro ao ler ID da semente associada ao lote!");
+
+
+        //imprimir
+        std::cout<<"Dados do lote:\nID :"<<id_lote<<"\nNome cientifico: "<<nomeCientifico<<"\nGene introduzido: "<<
+        geneIntroduzido<<"\nMetodo de producao: "<<metodoProducao<<"\nData de producao: "<<dataProducao<<"\nPais de origem: "<<
+        paisOrigem<<"\nQuantidade disponivel no lote: "<<quantidadeDisponivel<<" kg\nPreco estimado: RS"<<precoEstimado<<"/kg de semente\n\n\n\n";
+        }  
         std::getline(arquivoLotes, linha);
+
     }
     arquivoLotes.close();
 }
 
+
 void Vendedor::compatibilidade_semente() {
+    int id_buscado;
+
+    std::cout<<"Deseja verificar a compatibilidade de qual Área de plantio? ID: ";
+    std::cin>>id_buscado;
+    while(id_buscado<=0){
+        std::cout<<"Entrada de ID inválida. Digite novamente o id da Area de plantio: ";
+        std::cin>>id_buscado;
+    }
+
+    //----buscando dados sobre a Area de plantio--//
+    std::ifstream arquivoArea("AreaPlantio.txt");
+    if (!arquivoArea) {
+        throw std::ios_base::failure("Erro ao abrir arquivo AreaPlantio.txt");
+    }
+
+    int id;
+    std::string solo,clima;
+    std::string buffer;
+
+    while(std::getline(arquivoArea,buffer)){
+
+        //guardadno clima e solo da area de plantio
+
+        arquivoArea>>id;        arquivoArea.ignore();
+        std::getline(arquivoArea, buffer, '+');
+        std::getline(arquivoArea, buffer, '+');
+        std::getline(arquivoArea, buffer, '+');
+        std::getline(arquivoArea, buffer, '+');
+        std::getline(arquivoArea, solo, '+');
+        std::getline(arquivoArea, clima, '+');
+    }
+    arquivoArea.close();
+
     std::ifstream arquivoSementes("Sementes.txt");
     if (!arquivoSementes) {
-        std::cerr << "Erro ao abrir arquivo Sementes.txt";
+        throw std::ios_base::failure("Erro ao abrir arquivo Sementes.txt");
     }
     int quant_sementes;
     arquivoSementes >> quant_sementes; 
@@ -397,24 +452,25 @@ void Vendedor::compatibilidade_semente() {
     arquivoSementes >> quant_sementes;
 
     int id_semente;
-    std::string linha;
     std::string solo_semente;
     std::string clima_semente;
 
     for (int i = 0; i < quant_sementes; i++) {
         arquivoSementes >> id_semente;
+        if(arquivoSementes.fail())
+            throw std::ios_base:: failure("Erro ao ler ID da semente.\n");
         arquivoSementes.ignore();
         std::getline(arquivoSementes, solo_semente, '+');
         std::getline(arquivoSementes, clima_semente, '+');
 
-        if (solo_semente == get_tipo_solo() && clima_semente == _clima) {
+        if (solo_semente == solo && clima_semente == clima) {
             buscar_lotes_dessa_semente(id_semente);
         }   
-        std::getline(arquivoSementes, linha);
+        std::getline(arquivoSementes, buffer);
     }
 
     arquivoSementes.close();
-} */
+}
 
 void Vendedor::excluirArea() {
     std::fstream arquivoArea("AreaPlantio.txt", std::ios::in | std::ios::out);
@@ -621,7 +677,7 @@ void Vendedor::salvarNegociacao(Negociacao& neg) {
 
         arquivo.seekp(0, std::ios::end);
         
-        // Write negotiation details
+        // Escreve os detalhes da negociação
         arquivo << cont_id << " " 
                 << neg.get_id_lote() << "+"
                 << neg.get_id_area() << "+"
@@ -928,7 +984,6 @@ int Vendedor::acessarInterface() {
                 case 12:
                     std::cout << "Saindo do menu do vendedor.\n";
                     return 0; // Encerra o menu
-                case
                 default:
                     std::cout << "Opção inválida, tente novamente.\n";
             }
