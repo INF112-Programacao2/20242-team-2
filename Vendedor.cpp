@@ -589,6 +589,74 @@ bool Vendedor::validarData(std::string& data) {
     }
 }
 
+void Vendedor::consumirSementes(int id_lote,int quantidadeConsumida){
+
+    int id_sementeAssociada;
+    int quantidade_disponivel;
+    double preco_estimado;
+    std::string statusDisponibilidade, nome_cientifico, geneIntroduzido, metodo_producao, data_producao, pais_origem;
+   
+    std::fstream arquivoLotes ("Lotes.txt");   //o arquivo sera lido e escrito  
+    if(!arquivoLotes)
+        std::cerr<<"Erro ao abrir o arquivo Lotes.txt\n";
+    int contador_lotes;  //quantos lotes possui o arquivo
+    int controleDeID;    //usado nessa funcao apenas pra ser reescrito no arquivo
+    arquivoLotes>>controleDeID;
+    arquivoLotes>>contador_lotes;
+    arquivoLotes.ignore();
+    
+    std::string *linha=new std::string[contador_lotes];   //aloca as linhas que nao serao alteradas
+      // Lê todas as linhas exceto a que será modificada
+    for(int i=0;i<contador_lotes;i++){
+        if(i+1 == id_lote){
+            // Lê o lote que será consumido
+            arquivoLotes>>id_sementeAssociada;                       arquivoLotes.ignore();
+            arquivoLotes>>id_lote;                                   arquivoLotes.ignore();                  
+            getline(arquivoLotes, statusDisponibilidade, '+');
+            getline(arquivoLotes, nome_cientifico, '+');     
+            getline(arquivoLotes, geneIntroduzido, '+');
+            getline(arquivoLotes, metodo_producao, '+');                                        
+            getline(arquivoLotes, data_producao, '+');
+            getline(arquivoLotes, pais_origem, '+');                                        
+            arquivoLotes>> quantidade_disponivel;                      arquivoLotes.ignore(); 
+            arquivoLotes>> preco_estimado;                            arquivoLotes.ignore();
+        } else {
+            std::getline(arquivoLotes, linha[i]);
+        }
+    }             
+    
+    //alterando o saldo de sementes: 
+ 
+    if(quantidade_disponivel-quantidadeConsumida<0){
+        std::cout<<"Quantidade indisponivel!\n";
+        delete[] linha;
+        return;
+    } 
+    else if(quantidade_disponivel-quantidadeConsumida==0){
+        quantidade_disponivel=0;
+        std::cout<<"Quantidade disponível!\n";
+        statusDisponibilidade="Vendido";
+    }
+    else{
+        quantidade_disponivel-=quantidadeConsumida;
+    }
+    arquivoLotes.close();
+    //----------escrevendo o arquivo atualizado------//
+    std::ofstream arquivoLotesON("Lotes.txt");
+    arquivoLotesON<<controleDeID<<" "<<contador_lotes<<std::endl;
+    for(int i=0;i<contador_lotes;i++){
+        if(i+1==id_lote){
+            arquivoLotesON<<id_sementeAssociada<<"+"<<id_lote<<"+"<<statusDisponibilidade<<"+"<<nome_cientifico
+            <<"+"<<geneIntroduzido<<"+"<<metodo_producao<<"+"<<data_producao<<"+"<<pais_origem<<"+"<<
+            quantidade_disponivel<<"+"<<preco_estimado<<std::endl;
+        }
+        else
+            arquivoLotesON<<linha[i]<<std::endl;  //escrevendo linhas nao alteradas
+    }
+    delete[] linha;
+    arquivoLotesON.close();
+}
+
 void Vendedor::registrarNegociacao() {
     Negociacao novaNegociacao;
     int lote_id, area_id;
@@ -689,6 +757,9 @@ void Vendedor::salvarNegociacao(Negociacao& neg) {
         // Atualiza contadores
         arquivo.seekp(0, std::ios::beg);
         arquivo << cont_id << " " << cont_registros << std::endl;
+
+        //Consome as sementes do lote
+        consumirSementes(neg.get_id_lote(), neg.get_quantidade_semente_negociada());
 
         std::cout << "Negociação registrada com sucesso! ID: " << cont_id << std::endl;
         arquivo.close();
@@ -1036,7 +1107,8 @@ int Vendedor::acessarInterface() {
             std::cout << "9- Excluir uma negociação\n";
             std::cout << "10- Atualizar preço da semente\n";
             std::cout << "11- Verificar compatibilidade\n";
-            std::cout << "12- Sair\n";
+            std::cout << "12- Visualizar Relatórios\n";
+            std:: cout << "13- Sair \n";
 
             std::cout << "---------------------------------------------------------------\n";
             std::cout << "Escolha uma opção: ";
@@ -1076,6 +1148,8 @@ int Vendedor::acessarInterface() {
                 case 11:
                     compatibilidade_semente();
                 case 12:
+                    gerarRelatorio();
+                case 13:
                     std::cout << "Saindo do menu do vendedor.\n";
                     return 0; // Encerra o menu
                 default:
