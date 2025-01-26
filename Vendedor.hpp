@@ -11,11 +11,11 @@ class Vendedor: public Usuario {
 //private:
 private:
     std::vector<AreaPlantio> areasRegistradas;
-    void salvarArea(AreaPlantio area);  //ok
-    std::string getCurrentDate();
-    bool validarData(std::string& data);
-    void salvarNegociacao(Negociacao& neg);
-    void buscar_lotes_dessa_semente(int id_semente_busca);
+    void salvarArea(AreaPlantio area);                       //ok
+    std::string getCurrentDate();                            //ok
+    bool validarData(std::string& data);                    //ok
+    void salvarNegociacao(Negociacao& neg);                 //ok
+    void buscar_lotes_dessa_semente(int id_semente_busca);  //ok
 
     //metodos para area de plantio
     void registrarArea();                                   //ok
@@ -37,7 +37,7 @@ private:
 
 public:
     virtual int acessarInterface()override;                 //abre o menu dos vendedores
-    virtual void gerarRelatorio(){};
+    virtual void gerarRelatorio();                          //julia esta desenvolvendo
     
 };
 #endif
