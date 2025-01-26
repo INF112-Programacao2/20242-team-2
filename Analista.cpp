@@ -57,29 +57,39 @@ void Analista::registrarRelatorio(Relatorio &relatorio){
 
 }
 
-int Analista::acessarInterface(){
+void Analista::acessarInterface() {
+    int opcao_menu;
 
-int opcao_menu;
+    while (true){
+    std::cout << "-------------------------MENU DO ANALISTA--------------------------\n";
+    std::cout << "1- Registrar um novo relatorio\n2- Gerar relatório\n";
+    std::cout << "3- Atualizar status de um lote\n4- Sair do programa\n";
+    std::cout << "------------------------------------------------------------------\n";
 
-std::cout<<"-------------------------MENU DO ANALISTA--------------------------\n";
-   std::cout<<"1- Registrar um novo relatorio\n2- Gerar relatório\n";
-   std::cout<<"3- Atualizar status de um lote\n""4- Sair do programa\n";
-   std::cout<<"------------------------------------------------------------------\n";
+    std::cin >> opcao_menu;
 
-   std::cin>>opcao_menu;
-   if(opcao_menu==1){
-        elaborarRelatorio();
-   }
-   else if(opcao_menu==2){
-        gerarRelatorio();
-   }
-       else if(opcao_menu==3){
-           return 0;
-       }
-   else{
-    throw std::invalid_argument("Opcao de menu inválido!\n");
-   }
+        switch (opcao_menu) {
+            case 1:
+                elaborarRelatorio();
+                break;
 
+            case 2:
+                gerarRelatorio();
+                break;
+
+            case 3:
+                return;  // Para sair da função sem precisar de um `return 0;`
+                break;
+
+            case 4:
+                return;  // Para sair do programa ou da função
+                break;
+
+            default:
+                throw std::invalid_argument("Opção de menu inválida!\n");
+        }
+        break;
+    }
 }
 
 
