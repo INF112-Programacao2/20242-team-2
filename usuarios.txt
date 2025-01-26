@@ -1,0 +1,12 @@
+Julia
+julia@empresa.com
+Gestor
+123abc
+Pedro
+pedro@empresa.com
+Analista
+santos
+Katrine
+katrine@empresa.com
+Vendedor
+2025
