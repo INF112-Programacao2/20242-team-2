@@ -34,7 +34,7 @@ public:
 
     // Métodos relacionados à segurança
     Usuario* realizarLogin();                       //ok                           
-    virtual int acessarInterface()=0;           //ok
+    virtual void acessarInterface()=0;           //ok
     
 };
 #endif
