@@ -38,7 +38,7 @@ private:
     void consumirSementes(int id_lote,int quantidadeConsumida);  //ok
 
 public:
-    virtual int acessarInterface()override;                 //abre o menu dos vendedores
+    virtual void acessarInterface()override;                 //abre o menu dos vendedores
     virtual void gerarRelatorio();                          //julia esta desenvolvendo
     
 };
