@@ -11,7 +11,7 @@ class Analista: public Usuario{
         Analista();
         ~Analista();
 
-        void atualizarStatusDaSemente();
+        void atualizarStatusDoLote();
         void visualizarRelatorio();
         virtual int acessarInterface();
 
