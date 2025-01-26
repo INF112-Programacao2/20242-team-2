@@ -33,7 +33,7 @@ public:
     void setEmail(const std::string& email);    //ok
 
     // Métodos relacionados à segurança
-    void realizarLogin();                       //ok                           
+    Usuario* realizarLogin();                       //ok                           
     virtual int acessarInterface()=0;           //ok
     
 };
