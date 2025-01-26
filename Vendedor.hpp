@@ -35,7 +35,7 @@ private:
     void finalizarNegociacao();                             //não esta atualizando o txt corretamente
     void excluirNegociacao();                               //ok
     void atualizarPrecoDaSemente();                         //ainda não implementado
-    void consumirSementes();                                //ainda não implementado
+    void consumirSementes(int id_lote,int quantidadeConsumida);  //ok
 
 public:
     virtual int acessarInterface()override;                 //abre o menu dos vendedores
