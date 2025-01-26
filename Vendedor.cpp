@@ -13,34 +13,44 @@
 
 void Vendedor::registrarArea() {
     AreaPlantio novaArea;
-    int id;
+    int id = 0;
     std::string nome, cnpj, localizacao, tipo_solo, clima, status;
     float tamanho;
 
+    // Lê o último ID do arquivo
     std::ifstream arquivoAreas("AreaPlantio.txt");
-    if (!arquivoAreas.is_open()) {
-        throw std::ios_base::failure("Erro ao abrir o arquivo AreaPlantio.txt para leitura");
-    }
-    arquivoAreas >> id;
-    id++;
-    arquivoAreas.close();
-
-    std::cout << "Insira os detalhes da área:\n";           std::cin.ignore();  
-    std::cout << "Nome do Proprietário: ";                  std::getline(std::cin, nome);
-    std::cout << "CNPJ do Proprietário: ";                  std::getline(std::cin, cnpj);
-    std::cout << "Tamanho da Área (hectares): ";            std::cin >> tamanho;  std::cin.ignore();        
-    std::cout << "Localização: ";                           std::getline(std::cin, localizacao);
-    std::cout << "Tipo de Solo: ";                          std::getline(std::cin, tipo_solo);
-    std::cout << "Clima: ";                                 std::getline(std::cin, clima);
-    status="Disponível";
-
-    // Valida os inputs
-    if (nome.empty() || cnpj.empty() || tamanho <= 0 || 
-        localizacao.empty() || tipo_solo.empty() || clima.empty()){
-        throw std::invalid_argument("Dados inválidos para registro de área");
+    if (arquivoAreas.is_open()) {
+        arquivoAreas >> id; // Lê o ID atual
+        arquivoAreas.close();
     }
 
-    // Set informações da area
+    id++; // Incrementa o ID para a nova área
+
+    // Coleta os dados da nova área
+    std::cout << "Insira os detalhes da área:\n";
+    std::cin.ignore();
+    std::cout << "Nome do Proprietário: ";
+    std::getline(std::cin, nome);
+    std::cout << "CNPJ do Proprietário: ";
+    std::getline(std::cin, cnpj);
+    std::cout << "Tamanho da Área (hectares): ";
+    std::cin >> tamanho;
+    std::cin.ignore();
+    std::cout << "Localização: ";
+    std::getline(std::cin, localizacao);
+    std::cout << "Tipo de Solo: ";
+    std::getline(std::cin, tipo_solo);
+    std::cout << "Clima: ";
+    std::getline(std::cin, clima);
+    status = "Disponível";
+
+    // Validação dos inputs
+    if (nome.empty() || cnpj.empty() || tamanho <= 0 ||
+        localizacao.empty() || tipo_solo.empty() || clima.empty()) {
+        throw std::invalid_argument("Dados inválidos para registro de área.");
+    }
+
+    // Configura os dados da nova área
     novaArea.set_id_area(id);
     novaArea.set_nome_proprietario(nome);
     novaArea.set_cnpj_proprietario(cnpj);
@@ -50,65 +60,79 @@ void Vendedor::registrarArea() {
     novaArea.set_clima(clima);
     novaArea.set_status(status);
 
-    // Registra area
+    // Registra a nova área na memória e no arquivo
     areasRegistradas.push_back(novaArea);
     salvarArea(novaArea);
 }
 
-void Vendedor:: atualizarArquivo( std::vector<std::string>& linhas) {
-        std::ofstream arquivoSaida("AreaPlantio.txt");
-        if (!arquivoSaida) {
-            throw std::runtime_error("Erro ao abrir o arquivo AreaPlantio.txt para escrita.");
-        }
-
-        for (const auto& linha : linhas) {
-            arquivoSaida << linha << "\n";
-        }
-        arquivoSaida.close();
-}
-
 void Vendedor::salvarArea(AreaPlantio area) {
-    int cont_id, cont_registros;
+    int cont_id = 0, cont_registros = 0;
+    std::vector<std::string> linhas;
+
     try {
-        std::fstream arquivo("AreaPlantio.txt", std::ios::in | std::ios::out);
-        if (!arquivo.is_open()) {
-            throw std::ios_base::failure("Erro ao abrir o arquivo para registro.");
+        // Abrir arquivo em modo leitura
+        std::ifstream arquivoEntrada("AreaPlantio.txt");
+        if (arquivoEntrada.is_open()) {
+            std::string linha;
+
+            // Ler o primeiro ID e o número de registros
+            if (std::getline(arquivoEntrada, linha)) {
+                std::stringstream ss(linha);
+                ss >> cont_id >> cont_registros;
+            }
+
+            // Carregar as demais linhas
+            while (std::getline(arquivoEntrada, linha)) {
+                linhas.push_back(linha);
+            }
+
+            arquivoEntrada.close();
         }
 
-        // Le os contadores
-        arquivo >> cont_id >> cont_registros;
+        // Incrementar contadores
         cont_id++;
         cont_registros++;
 
-        arquivo.seekp(0, std::ios::end);
-        
-        // Write area details
-        arquivo << area.get_id_area() << " " 
-                << area.get_status()  << "+"
-                << area.get_nome_proprietario() << "+" 
-                << area.get_cnpj_proprietario() << "+" 
-                << area.get_localizacao() << "+" 
-                << area.get_tipo_solo() << "+" 
-                << area.get_clima() << "+"
-                << area.get_tamanho(); 
+        // Adicionar a nova área no vetor de linhas
+        std::ostringstream novaLinha;
+        novaLinha << area.get_id_area() << " "
+                  << area.get_status() << "+"
+                  << area.get_nome_proprietario() << "+"
+                  << area.get_cnpj_proprietario() << "+"
+                  << area.get_localizacao() << "+"
+                  << area.get_tipo_solo() << "+"
+                  << area.get_clima() << "+"
+                  << std::fixed << std::setprecision(2) << area.get_tamanho();
 
-
+        // Adicionar sementes, se houver
         std::vector<int> sementes = area.get_sementes_plantadas();
         if (!sementes.empty()) {
-            arquivo << "+";
+            novaLinha << "+";
             for (size_t i = 0; i < sementes.size(); ++i) {
-                arquivo << sementes[i];
-                if (i < sementes.size() - 1) arquivo << ",";
+                novaLinha << sementes[i];
+                if (i < sementes.size() - 1) novaLinha << ",";
             }
         }
-        arquivo << "\n";
 
-        //Atualiza contadores
-        arquivo.seekp(0, std::ios::beg);
-        arquivo << cont_id << " " << cont_registros << std::endl;
+        linhas.push_back(novaLinha.str());
 
-        std::cout << "Área registrada com sucesso!" << std::endl;
-        arquivo.close();
+        // Reescrever o arquivo com os novos dados
+        std::ofstream arquivoSaida("AreaPlantio.txt", std::ios::trunc);
+        if (!arquivoSaida.is_open()) {
+            throw std::ios_base::failure("Erro ao abrir o arquivo para escrita.");
+        }
+
+        // Escrever contadores atualizados
+        arquivoSaida << cont_id << " " << cont_registros << "\n";
+
+        // Escrever as linhas restantes
+        for (const auto& linha : linhas) {
+            arquivoSaida << linha << "\n";
+        }
+
+        arquivoSaida.close();
+
+        std::cout << "Área registrada com sucesso!\n";
 
     } catch (const std::ios_base::failure& e) {
         std::cerr << "Exceção de I/O: " << e.what() << std::endl;
@@ -163,7 +187,6 @@ void Vendedor::listarAreasRegistradas() {
 }
 
 void Vendedor::registrarPlantio() {
-    // Abre o arquivo para leitura
     std::ifstream arquivoEntrada("AreaPlantio.txt");
     if (!arquivoEntrada) {
         throw std::runtime_error("Erro ao abrir o arquivo AreaPlantio.txt");
@@ -171,90 +194,72 @@ void Vendedor::registrarPlantio() {
 
     int ultimo_id, total_areas;
     arquivoEntrada >> ultimo_id >> total_areas;
-    arquivoEntrada.ignore(); // Ignora a quebra de linha após a leitura de inteiros
+    arquivoEntrada.ignore();
 
     std::vector<std::string> todas_areas;
-    std::vector<int> areas_em_uso;  // Lista para áreas em uso
+    std::vector<int> areas_disponiveis;
     std::string linha;
 
     todas_areas.push_back(std::to_string(ultimo_id) + " " + std::to_string(total_areas));
 
     std::cout << "\n=== Áreas Disponíveis ===\n";
 
-    // Lê o arquivo e lista apenas áreas disponíveis
+    // Listar e validar áreas disponíveis
     while (std::getline(arquivoEntrada, linha)) {
         std::stringstream ss(linha);
         int id_area;
-        std::string status;
+        std::string status_completo;
 
-        ss >> id_area; 
-        std::getline(ss, status, '+'); // Leitura do status após o ID da área
+        ss >> id_area;
+        std::getline(ss, status_completo, '+');
 
-        // Verifica se o status da área é 'Disponível'
-        if (status == " Disponível") {
-            areas_em_uso.push_back(id_area);
-            std::cout << "ID: " << id_area << " - Status: " << status << "\n";
+        if (status_completo.find("Disponível") != std::string::npos) {
+            areas_disponiveis.push_back(id_area);
+            std::cout << "ID: " << id_area << "\n";
         }
 
-        todas_areas.push_back(linha);  // Armazena todas as linhas
+        todas_areas.push_back(linha);
     }
     arquivoEntrada.close();
 
-    if (areas_em_uso.empty()) {
-        std::cout << "Não há áreas disponíveis para liberar.\n";
+    if (areas_disponiveis.empty()) {
+        std::cout << "Não há áreas disponíveis para plantio.\n";
         return;
     }
 
-    // Solicita o ID da área a ser liberada
     int id_area;
-    std::cout << "\nDigite o ID da área que deseja registrar: ";
+    std::cout << "\nDigite o ID da área para plantio: ";
     std::cin >> id_area;
 
-    AreaPlantio area(id_area);
-
-    // Verifica se o ID existe na lista de áreas em uso
-    bool found = false;
-    for (int area_id : areas_em_uso) {
-        if (area_id == id_area) {
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
-        std::cout << "Área com ID " << id_area << " não encontrada ou já está disponível.\n";
+    auto it = std::find(areas_disponiveis.begin(), areas_disponiveis.end(), id_area);
+    if (it == areas_disponiveis.end()) {
+        std::cout << "Área inválida ou não disponível.\n";
         return;
     }
 
-    area.set_status("Em uso");
-
-    // Atualiza o status da área no vetor de linhas
-    for (auto& linha : todas_areas) {
-        std::stringstream ss(linha);
-        std::string status, nome, id_lote, estado, tipo_plantio, clima, tamanho;
+    // Atualizar status da área
+    for (size_t i = 1; i < todas_areas.size(); ++i) {
+        std::stringstream ss(todas_areas[i]);
         int id_lido;
+        std::string resto;
 
-        // Lê todos os campos da linha
         ss >> id_lido;
-        std::getline(ss, status, '+');
-        std::getline(ss, nome, '+');
-        std::getline(ss, id_lote, '+');
-        std::getline(ss, estado, '+');
-        std::getline(ss, tipo_plantio, '+');
-        std::getline(ss, clima, '+');
-        std::getline(ss, tamanho, '+');
+        std::getline(ss, resto);
 
-        // Verifica e atualiza o status da área
         if (id_lido == id_area) {
-            linha = std::to_string(id_lido) + " Em uso+" + nome + "+" + id_lote + "+" + estado + "+" + tipo_plantio + "+" + clima + "+" + tamanho;
+            // Replace first status with "Em uso"
+            size_t pos_primeiro_mais = resto.find('+');
+            if (pos_primeiro_mais != std::string::npos) {
+                todas_areas[i] = std::to_string(id_lido) + " Em uso" + resto.substr(pos_primeiro_mais);
+            }
             break;
         }
     }
 
-    // Reescreve o arquivo com as atualizações
+    // Reescrever arquivo
     std::ofstream arquivoSaida("AreaPlantio.txt", std::ios::trunc);
     if (!arquivoSaida) {
-        throw std::runtime_error("Erro ao abrir o arquivo AreaPlantio.txt para escrita.");
+        throw std::runtime_error("Erro ao abrir arquivo para escrita");
     }
 
     for (const auto& linha : todas_areas) {
@@ -262,12 +267,11 @@ void Vendedor::registrarPlantio() {
     }
     arquivoSaida.close();
 
-    std::cout << "Área " << id_area << " foi liberada com sucesso. Status atualizado para 'Em uso'.\n";
+    std::cout << "Área " << id_area << " registrada para plantio.\n";
 }
 
 
 void Vendedor::liberarArea() {
-    // Abre o arquivo para leitura
     std::ifstream arquivoEntrada("AreaPlantio.txt");
     if (!arquivoEntrada) {
         throw std::runtime_error("Erro ao abrir o arquivo AreaPlantio.txt");
@@ -275,32 +279,32 @@ void Vendedor::liberarArea() {
 
     int ultimo_id, total_areas;
     arquivoEntrada >> ultimo_id >> total_areas;
-    arquivoEntrada.ignore();  // Ignora o '\n' após a leitura de inteiros
+    arquivoEntrada.ignore();
 
     std::vector<std::string> todas_areas;
-    std::vector<int> areas_em_uso;  // Lista para áreas em uso
+    std::vector<int> areas_em_uso;
     std::string linha;
 
     todas_areas.push_back(std::to_string(ultimo_id) + " " + std::to_string(total_areas));
 
     std::cout << "\n=== Áreas em Uso ===\n";
 
-    // Lê o arquivo e lista apenas áreas em uso
+    // Listar e validar áreas em uso
     while (std::getline(arquivoEntrada, linha)) {
         std::stringstream ss(linha);
         int id_area;
-        std::string status;
+        std::string status_completo;
 
-        ss >> id_area; 
-        std::getline(ss, status, '+');
+        ss >> id_area;
+        std::getline(ss, status_completo, '+');
 
-        // Exibe áreas que não estão disponíveis
-        if (status != " Disponível") {
+        // Verificar se não está disponível
+        if (status_completo.find("Disponível") == std::string::npos) {
             areas_em_uso.push_back(id_area);
-            std::cout << "ID: " << id_area << " - Status: " << status << "\n";
+            std::cout << "ID: " << id_area << " - Status: " << status_completo << "\n";
         }
 
-        todas_areas.push_back(linha);  // Armazena todas as linhas
+        todas_areas.push_back(linha);
     }
     arquivoEntrada.close();
 
@@ -309,52 +313,40 @@ void Vendedor::liberarArea() {
         return;
     }
 
-    // Solicita o ID da área a ser liberada
     int id_area;
-    std::cout << "\nDigite o ID da área que deseja liberar: ";
+    std::cout << "\nDigite o ID da área para liberar: ";
     std::cin >> id_area;
 
-    // Verifica se o ID existe na lista de áreas em uso
-    bool found = false;
-    for (int area_id : areas_em_uso) {
-        if (area_id == id_area) {
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
-        std::cout << "Área com ID " << id_area << " não encontrada ou já está disponível.\n";
+    // Validar área selecionada
+    auto it = std::find(areas_em_uso.begin(), areas_em_uso.end(), id_area);
+    if (it == areas_em_uso.end()) {
+        std::cout << "Área inválida ou já disponível.\n";
         return;
     }
 
-    // Atualiza o status da área no vetor de linhas
-    for (auto& linha : todas_areas) {
-        std::stringstream ss(linha);
-        std::string status, nome, id_lote, estado, tipo_plantio, clima, tamanho;
+    // Atualizar status da área (pulando a primeira linha)
+    for (size_t i = 1; i < todas_areas.size(); ++i) {
+        std::stringstream ss(todas_areas[i]);
         int id_lido;
+        std::string resto;
 
-        // Lê todos os campos da linha
         ss >> id_lido;
-        std::getline(ss, status, '+');
-        std::getline(ss, nome, '+');
-        std::getline(ss, id_lote, '+');
-        std::getline(ss, estado, '+');
-        std::getline(ss, tipo_plantio, '+');
-        std::getline(ss, clima, '+');
-        std::getline(ss, tamanho);
+        std::getline(ss, resto);
 
-        // Verifica e atualiza o status da área
         if (id_lido == id_area) {
-            linha = std::to_string(id_lido) + " Disponível+" + nome + "+" + id_lote + "+" + estado + "+" + tipo_plantio + "+" + clima + "+" + tamanho;
+            // Reescreve o status "Disponível"
+            size_t pos_primeiro_mais = resto.find('+');
+            if (pos_primeiro_mais != std::string::npos) {
+                todas_areas[i] = std::to_string(id_lido) + " Disponível" + resto.substr(pos_primeiro_mais);
+            }
             break;
         }
     }
 
-    // Reescreve o arquivo com as atualizações
+    // Reescrever arquivo
     std::ofstream arquivoSaida("AreaPlantio.txt", std::ios::trunc);
     if (!arquivoSaida) {
-        throw std::runtime_error("Erro ao abrir o arquivo AreaPlantio.txt para escrita.");
+        throw std::runtime_error("Erro ao abrir arquivo para escrita");
     }
 
     for (const auto& linha : todas_areas) {
@@ -362,13 +354,13 @@ void Vendedor::liberarArea() {
     }
     arquivoSaida.close();
 
-    std::cout << "Área " << id_area << " foi liberada com sucesso. Status atualizado para 'Disponível'.\n";
+     std::cout << "Área " << id_area << " liberada com sucesso.\n";
 }
 
-void Vendedor::buscar_lotes_dessa_semente(int id_semente_busca) {
+/*void Vendedor::buscar_lotes_dessa_semente(int id_semente_busca) {
     std::ifstream arquivoLotes("Lotes.txt");
     if (!arquivoLotes)
-        throw std::ios_base::failure("Erro ao abrir arquivo Lotes.txt");
+        std::cerr << "Erro ao abrir arquivo Lotes.txt";
 
     int quant_lotes;
     arquivoLotes >> quant_lotes; 
@@ -378,81 +370,26 @@ void Vendedor::buscar_lotes_dessa_semente(int id_semente_busca) {
     int id_lote;
     int id_semente_lido;
     std::string linha;
-
-    int idSementeAssociada,id;
-    float quantidadeDisponivel,precoEstimado;
-    std::string statusDisponibilidade,nomeCientifico,geneIntroduzido,metodoProducao,dataProducao,paisOrigem;
+    Lote *lote_teste;
 
     for (int i = 0; i < quant_lotes; i++) {
         arquivoLotes >> id_semente_lido;
-        if(arquivoLotes.fail())
-            throw std::ios_base::failure("Erro ao ler ID da semente associada ao lote!");
 
         if (id_semente_lido == id_semente_busca) {
             arquivoLotes.ignore();
             arquivoLotes >> id_lote;
-            arquivoLotes.ignore();
-        std::getline(arquivoLotes,statusDisponibilidade,'+');
-        std::getline(arquivoLotes,nomeCientifico,'+');
-        std::getline(arquivoLotes,geneIntroduzido,'+');
-        std::getline(arquivoLotes,metodoProducao,'+');
-        std::getline(arquivoLotes,dataProducao,'+');
-        std::getline(arquivoLotes,paisOrigem,'+');
-        arquivoLotes>>quantidadeDisponivel;                  arquivoLotes.ignore();
-        arquivoLotes>>precoEstimado;
-        if(arquivoLotes.fail())
-            throw std::ios_base::failure("Erro ao ler ID da semente associada ao lote!");
-
-
-        //imprimir
-        std::cout<<"Dados do lote:\nID :"<<id_lote<<"\nNome cientifico: "<<nomeCientifico<<"\nGene introduzido: "<<
-        geneIntroduzido<<"\nMetodo de producao: "<<metodoProducao<<"\nData de producao: "<<dataProducao<<"\nPais de origem: "<<
-        paisOrigem<<"\nQuantidade disponivel no lote: "<<quantidadeDisponivel<<" kg\nPreco estimado: RS"<<precoEstimado<<"/kg de semente\n\n\n\n";
-        }  
+            lote_teste = new Lote(id_lote);
+            delete lote_teste;
+        }   
         std::getline(arquivoLotes, linha);
-
     }
     arquivoLotes.close();
 }
 
-
 void Vendedor::compatibilidade_semente() {
-    int id_buscado;
-
-    std::cout<<"Deseja verificar a compatibilidade de qual Área de plantio? ID: ";
-    std::cin>>id_buscado;
-    while(id_buscado<=0){
-        std::cout<<"Entrada de ID inválida. Digite novamente o id da Area de plantio: ";
-        std::cin>>id_buscado;
-    }
-
-    //----buscando dados sobre a Area de plantio--//
-    std::ifstream arquivoArea("AreaPlantio.txt");
-    if (!arquivoArea) {
-        throw std::ios_base::failure("Erro ao abrir arquivo AreaPlantio.txt");
-    }
-
-    int id;
-    std::string solo,clima;
-    std::string buffer;
-
-    while(std::getline(arquivoArea,buffer)){
-
-        //guardadno clima e solo da area de plantio
-
-        arquivoArea>>id;        arquivoArea.ignore();
-        std::getline(arquivoArea, buffer, '+');
-        std::getline(arquivoArea, buffer, '+');
-        std::getline(arquivoArea, buffer, '+');
-        std::getline(arquivoArea, buffer, '+');
-        std::getline(arquivoArea, solo, '+');
-        std::getline(arquivoArea, clima, '+');
-    }
-    arquivoArea.close();
-
     std::ifstream arquivoSementes("Sementes.txt");
     if (!arquivoSementes) {
-        throw std::ios_base::failure("Erro ao abrir arquivo Sementes.txt");
+        std::cerr << "Erro ao abrir arquivo Sementes.txt";
     }
     int quant_sementes;
     arquivoSementes >> quant_sementes; 
@@ -460,25 +397,24 @@ void Vendedor::compatibilidade_semente() {
     arquivoSementes >> quant_sementes;
 
     int id_semente;
+    std::string linha;
     std::string solo_semente;
     std::string clima_semente;
 
     for (int i = 0; i < quant_sementes; i++) {
         arquivoSementes >> id_semente;
-        if(arquivoSementes.fail())
-            throw std::ios_base:: failure("Erro ao ler ID da semente.\n");
         arquivoSementes.ignore();
         std::getline(arquivoSementes, solo_semente, '+');
         std::getline(arquivoSementes, clima_semente, '+');
 
-        if (solo_semente == solo && clima_semente == clima) {
+        if (solo_semente == get_tipo_solo() && clima_semente == _clima) {
             buscar_lotes_dessa_semente(id_semente);
         }   
-        std::getline(arquivoSementes, buffer);
+        std::getline(arquivoSementes, linha);
     }
 
     arquivoSementes.close();
-} 
+} */
 
 void Vendedor::excluirArea() {
     std::fstream arquivoArea("AreaPlantio.txt", std::ios::in | std::ios::out);
@@ -625,7 +561,7 @@ void Vendedor::registrarNegociacao() {
     std::cin.ignore();
 
     while (true) {
-        std::cout << "Quantidade de Sementes Negociadas: ";
+        std::cout << "Quantidade de Sementes Negociadas(kg): ";
         if (std::cin >> quantidade_semente && quantidade_semente > 0) break;
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -670,132 +606,127 @@ void Vendedor::registrarNegociacao() {
     salvarNegociacao(novaNegociacao);
 }
 
-
 void Vendedor::salvarNegociacao(Negociacao& neg) {
-    int cont_id = 0, cont_registros = 0;
-
+    int cont_id, cont_registros;
     try {
-        std::fstream arquivo("Negociacao.txt", std::ios::in | std::ios::out | std::ios::app);
+        std::fstream arquivo("Negociacao.txt", std::ios::in | std::ios::out);
         if (!arquivo.is_open()) {
-            throw std::ios_base::failure("Erro ao abrir o arquivo Negociacao.txt.");
+            throw std::ios_base::failure("Erro ao abrir o arquivo para registro.");
         }
 
-        // Ler e atualizar contadores
-        arquivo.seekg(0, std::ios::beg);
-        if (!(arquivo >> cont_id >> cont_registros)) {
-            cont_id = 0;
-            cont_registros = 0;
-        }
+        // Le os contadores
+        arquivo >> cont_id >> cont_registros;
         cont_id++;
         cont_registros++;
 
-        // Registrar negociação no final do arquivo
         arquivo.seekp(0, std::ios::end);
+        
+        // Write negotiation details
         arquivo << cont_id << " " 
-                << neg.get_id_lote() << "+" 
+                << neg.get_id_lote() << "+"
                 << neg.get_id_area() << "+"
                 << neg.get_status() << "+"
                 << neg.get_data_negociacao() << "+"
                 << std::fixed << std::setprecision(2) << neg.get_valor_negociado() << "+"
-                << neg.get_quantidade_semente_negociada() 
-                << "\n";
+                << neg.get_quantidade_semente_negociada() << "\n";
 
-        // Atualiza os contadores no início do arquivo
+        // Atualiza contadores
         arquivo.seekp(0, std::ios::beg);
         arquivo << cont_id << " " << cont_registros << std::endl;
 
         std::cout << "Negociação registrada com sucesso! ID: " << cont_id << std::endl;
-
         arquivo.close();
+
     } catch (const std::ios_base::failure& e) {
         std::cerr << "Exceção de I/O: " << e.what() << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Exceção geral: " << e.what() << std::endl;
     }
 }
+
 void Vendedor::finalizarNegociacao() {
-    // Abre o arquivo para leitura
     std::ifstream arquivoEntrada("Negociacao.txt");
     if (!arquivoEntrada) {
         throw std::runtime_error("Erro ao abrir o arquivo Negociacao.txt");
     }
 
-    int ultimo_id, total_negociacoes;
-    arquivoEntrada >> ultimo_id >> total_negociacoes;
-    arquivoEntrada.ignore(); // Ignora a quebra de linha após a leitura de inteiros
-
     std::vector<std::string> todas_negociacoes;
-    std::vector<int> negociacoes_pendentes;  // Lista para negociações pendentes
+    std::vector<int> negociacoes_pendentes;
     std::string linha;
 
-    todas_negociacoes.push_back(std::to_string(ultimo_id) + " " + std::to_string(total_negociacoes));
-
-    std::cout << "\n=== Negociações Pendentes ===\n";
-
-    // Lê o arquivo e lista apenas negociações com status "Pendente"
+    // Lê todo o conteúdo do arquivo
     while (std::getline(arquivoEntrada, linha)) {
-        std::stringstream ss(linha);
-        int id_negociacao;
-        std::string status, id_lote, id_area;
-
-        ss >> id_negociacao;
-        std::getline(ss, id_lote, '+');
-        std::getline(ss, id_area, '+');
-        std::getline(ss, status, '+');  // Lê o status após o ID da negociação
-
-        // Verifica se o status da negociação é "Pendente"
-        if (status == "Pendente") {
-            negociacoes_pendentes.push_back(id_negociacao);
-            std::cout << "ID: " << id_negociacao << " - Status: " << status << "\n";
-        }
-
-        todas_negociacoes.push_back(linha);  // Armazena todas as linhas
+        todas_negociacoes.push_back(linha);
     }
     arquivoEntrada.close();
 
-    if (negociacoes_pendentes.empty()) {
-        std::cout << "Não há negociações pendentes para finalizar.\n";
-        return;
-    }
+    std::cout << "\n=== Negociações Pendentes ===\n";
 
-    // Solicita o ID da negociação a ser finalizada
-    int id_negociacao;
-    std::cout << "\nDigite o ID da negociação que deseja finalizar: ";
-    std::cin >> id_negociacao;
-
-    // Verifica se o ID existe na lista de negociações pendentes
-    if (std::find(negociacoes_pendentes.begin(), negociacoes_pendentes.end(), id_negociacao) == negociacoes_pendentes.end()) {
-        std::cout << "Negociação com ID " << id_negociacao << " não encontrada ou já foi finalizada.\n";
-        return;
-    }
-
-    // Atualiza o status da negociação para "Finalizada"
-    for (auto& linha : todas_negociacoes) {
+    // Listar e validar negociações pendentes
+    for (const auto& linha : todas_negociacoes) {
         std::stringstream ss(linha);
-        int id_lido;
-        std::string status, id_lote, id_area, data_negociacao, valor_negociado, quantidade_semente_negociada;
+        int id_negociacao;
+        std::string id_lote, id_area, status, data_negociacao, valor_negociado, quantidade;
 
-        // Lê todos os campos da linha
-        ss >> id_lido;
+        // Extrai os valores da linha
+        ss >> id_negociacao;
+        ss.ignore(); // Ignora o espaço após o ID
         std::getline(ss, id_lote, '+');
         std::getline(ss, id_area, '+');
         std::getline(ss, status, '+');
         std::getline(ss, data_negociacao, '+');
         std::getline(ss, valor_negociado, '+');
-        std::getline(ss, quantidade_semente_negociada);
+        std::getline(ss, quantidade);
 
-        // Verifica e atualiza o status da negociação
+        if (status == "Pendente") {
+            negociacoes_pendentes.push_back(id_negociacao);
+            std::cout << "ID: " << id_negociacao << "\n";
+        }
+    }
+
+    if (negociacoes_pendentes.empty()) {
+        std::cout << "Não há negociações pendentes.\n";
+        return;
+    }
+
+    int id_negociacao;
+    std::cout << "\nDigite o ID da negociação para finalizar: ";
+    std::cin >> id_negociacao;
+
+    // Verifica se o ID inserido está na lista de pendentes
+    auto it = std::find(negociacoes_pendentes.begin(), negociacoes_pendentes.end(), id_negociacao);
+    if (it == negociacoes_pendentes.end()) {
+        std::cout << "Negociação inválida ou já finalizada.\n";
+        return;
+    }
+
+    // Atualiza o status da negociação
+    bool atualizado = false;
+    for (auto& linha : todas_negociacoes) {
+        std::stringstream ss(linha);
+        int id_lido;
+        ss >> id_lido;
+
         if (id_lido == id_negociacao) {
-            // Atualiza a linha com o status "Finalizada"
-            linha = std::to_string(id_lido) + id_lote + "+" + id_area + "+" + "Finalizada" + "+" + data_negociacao + "+" + valor_negociado + "+" + quantidade_semente_negociada;
+            // Substitui "Pendente" por "Finalizada"
+            size_t pos_pendente = linha.find("Pendente");
+            if (pos_pendente != std::string::npos) {
+                linha.replace(pos_pendente, 8, "Finalizada");
+                atualizado = true;
+            }
             break;
         }
     }
 
-    // Reescreve o arquivo com as negociações atualizadas
+    if (!atualizado) {
+        std::cout << "Erro ao atualizar o status da negociação.\n";
+        return;
+    }
+
+    // Reescreve o arquivo com as atualizações
     std::ofstream arquivoSaida("Negociacao.txt", std::ios::trunc);
     if (!arquivoSaida) {
-        throw std::runtime_error("Erro ao abrir o arquivo Negociacao.txt para escrita.");
+        throw std::runtime_error("Erro ao abrir arquivo para escrita");
     }
 
     for (const auto& linha : todas_negociacoes) {
@@ -803,7 +734,7 @@ void Vendedor::finalizarNegociacao() {
     }
     arquivoSaida.close();
 
-    std::cout << "Negociação " << id_negociacao << " foi finalizada com sucesso. Status atualizado para 'Finalizada'.\n";
+    std::cout << "Negociação " << id_negociacao << " finalizada com sucesso.\n";
 }
 
 
@@ -849,7 +780,7 @@ void Vendedor::listarNegociacoesRegistradas() {
         std::cout << "Status: " << status << "\n";
         std::cout << "Data da Negociação: " << data_negociacao << "\n";
         std::cout << "Valor Negociado: R$" << std::fixed << std::setprecision(2) << valor_negociado << "\n";
-        std::cout << "Quantidade de Sementes Negociadas: " << quantidade_semente_negociada << "\n";
+        std::cout << "Quantidade de Sementes Negociadas: " << quantidade_semente_negociada << "kgs\n";
         std::cout << "-----------------------------\n";
     }
 
