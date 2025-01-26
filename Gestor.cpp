@@ -3,11 +3,13 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <stdexcept>
 #include "Gestor.hpp"
 #include "Vendedor.hpp"
 #include "Analista.hpp"
 
 Gestor::Gestor(){};
+Gestor::~Gestor(){};
 
 void Gestor::cadastrarUsuario() {
     std::string nome, email, tipo, senha;
@@ -221,7 +223,7 @@ void Gestor::registrarSemente() {
         arquivoSementes.close();
 
 
-        std::cout << "Insira os detalhes da semente:\n";
+        std::cout << "Insira os detalhes da semente:\n";            std::cin.ignore();
         std::cout << "Clima ideal: ";                               std::getline(std::cin, clima); 
         std::cout << "Solo ideal: ";                                std::getline(std::cin, solo);
         std::cout << "Irrigacao ideal (em mm/dia): ";               std::cin >> irrigacaoIdeal;
@@ -232,6 +234,7 @@ void Gestor::registrarSemente() {
 
         //se produz frutos? e se sim de quanto em quanto tempo?
         char resp;
+        std::cin.ignore();
         std::cout<<"Produz frutos? (S/N) ";   std::cin>>resp;
         if(resp=='s'||resp=='s'){
             novaSemente.set_produz_frutos(true);
@@ -361,10 +364,10 @@ void Gestor::salvarLote(const Lote& lote) {
         std::cout << "Lote registrado com sucesso!\n";
     } catch (const std::ios_base::failure& e) {
         std::cerr << "Excecao de I/O: " << e.what() << "\n";
-    } catch (const std::exception& e) {
-        std::cerr << "Excecao: " << e.what() << "\n";
     }catch (const std::invalid_argument& e) {
         std::cerr << "Excecao de argumento invalido: " << e.what() << std::endl;
+    }catch (const std::exception& e) {
+        std::cerr << "Excecao: " << e.what() << "\n";
     }
 }
 
@@ -668,14 +671,13 @@ int Gestor::acessarInterface() {
             gerarRelatorio();
         }catch(const std::exception& e){
             std::cerr<<"Erro: "<<e.what()<<std::endl;
-        }catch(...){
-            std::cerr<<"Erro desconhecido!"<<std::endl;
         }
+
     }
     else if(opcao_selecionada==8){
         return 0;
     }
-    
+    return 0;
 }
 
 void Gestor::gerarRelatorio() {
