@@ -586,19 +586,20 @@ void Gestor::visualizar_lote_especifico(){
     }
 }
 
-void Gestor:: acessarInterface(){
+void Gestor::acessarInterface() {
     int opcao_selecionada;
 
-    std::cout << "-------------------------MENU DO GESTOR--------------------------\n";
-    std::cout << "1- Registrar uma nova semente\n2- Visualizar dados de uma semente\n";
-    std::cout << "3- Excluir uma semente\n4- Registrar um novo lote\n";
-    std::cout << "5-Visualizar dados de um lote\n6- Excluir um lote\n";
-    std::cout << "7-Visualizar relatórios\n8- Sair do programa\n";
-    std::cout << "------------------------------------------------------------------\n";
+    while (true) {
+        std::cout << "|-------------------------MENU DO GESTOR--------------------------|\n";
+        std::cout << "|1|- Registrar uma nova semente\n|2|- Visualizar dados de uma semente\n";
+        std::cout << "|3|- Excluir uma semente\n|4|- Registrar um novo lote\n";
+        std::cout << "|5|- Visualizar dados de um lote\n|6|- Excluir um lote\n";
+        std::cout << "|7|- Visualizar relatórios\n|8|- Sair do programa\n";
+        std::cout << "|------------------------------------------------------------------|\n";
+        std::cout << "|Escolha uma opção: ";
+        
+        std::cin >> opcao_selecionada;
 
-    std::cin >> opcao_selecionada;
-
-    while(true){
         switch (opcao_selecionada) {
             case 1:
                 try {
@@ -671,15 +672,16 @@ void Gestor:: acessarInterface(){
                 break;
             
             case 8:
-                break;
+                std::cout << "Encerrando o programa...\n";
+                return;
             
             default:
-                std::cerr << "Opção inválida!" << std::endl;
+                std::cerr << "Opção inválida! Tente novamente.\n";
                 break;
         }
-        break;
     }
 }
+
 
 void Gestor::gerarRelatorio() {
     try {

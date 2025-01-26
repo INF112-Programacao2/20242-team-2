@@ -60,13 +60,14 @@ void Analista::registrarRelatorio(Relatorio &relatorio){
 void Analista::acessarInterface() {
     int opcao_menu;
 
-    while (true){
-    std::cout << "-------------------------MENU DO ANALISTA--------------------------\n";
-    std::cout << "1- Registrar um novo relatorio\n2- Gerar relatório\n";
-    std::cout << "3- Atualizar status de um lote\n4- Sair do programa\n";
-    std::cout << "------------------------------------------------------------------\n";
+    while (true) {
+        std::cout << "|-------------------------MENU DO ANALISTA--------------------------|\n";
+        std::cout << "|1|- Registrar um novo relatório\n|2|- Gerar relatório\n";
+        std::cout << "|3|- Atualizar status de um lote\n|4|- Sair do programa\n";
+        std::cout << "|------------------------------------------------------------------|\n";
 
-    std::cin >> opcao_menu;
+        std::cout << "Escolha uma opção: ";
+        std::cin >> opcao_menu;
 
         switch (opcao_menu) {
             case 1:
@@ -78,19 +79,20 @@ void Analista::acessarInterface() {
                 break;
 
             case 3:
-                return;  // Para sair da função sem precisar de um `return 0;`
-                break;
+                atualizarStatusDoLote();
+                break;  // Corrigido para não sair do menu
 
             case 4:
-                return;  // Para sair do programa ou da função
-                break;
+                std::cout << "Saindo do menu do analista...\n";
+                return;  // Sai corretamente da função (eu acho denovo...)
 
             default:
-                throw std::invalid_argument("Opção de menu inválida!\n");
+                std::cout << "Opção de menu inválida! Tente novamente.\n";
+                break;
         }
-        break;
     }
 }
+
 
 
 void Analista::gerarRelatorio(){

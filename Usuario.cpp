@@ -29,57 +29,66 @@ Usuario* Usuario::realizarLogin() {
         return nullptr;
     }
 
-    Usuario *usuario;
-
+    Usuario* usuario = nullptr;
     std::string emailInput, senhaInput;
-    std::cout << "Insira o email: ";
-    std::getline(std::cin, emailInput);
-    std::cout << "Insira a senha: ";
-    std::getline(std::cin, senhaInput);
+    bool loginBemSucedido = false;
 
-    // Verifica se as credenciais inseridas são as do gestor padrão
-    if (emailInput == "gestor@empresa.com" && senhaInput == "senha123") {
-        std::cout << "Login como Gestor padrão realizado com sucesso!" << std::endl;
-        acessarInterface(); // Acessa a interface do gestor diretamente
-        fin.close();
-        usuario=new Gestor();
-        return usuario;
-    }
+    while (!loginBemSucedido) {
+        std::cout << "Insira o email: ";
+        std::getline(std::cin >> std::ws, emailInput); // Remove espaços em branco iniciais
 
-    std::string linha, acharEmail, acharSenha, tipoUsuario, nome;
-    bool usuarioEncontrado = false;
+        std::cout << "Insira a senha: ";
+        std::getline(std::cin, senhaInput);
 
-    while (std::getline(fin, nome) &&       // Lê o nome
-           std::getline(fin, acharEmail) && // Lê o email
-           std::getline(fin, tipoUsuario) && // Lê o tipo de usuário
-           std::getline(fin, acharSenha)) {  // Lê a senha
-
-        // Verifica se email e senha coincidem com algum usuário registrado
-        if (acharEmail == emailInput && acharSenha == senhaInput) {
-            usuarioEncontrado = true;
-
-            if (tipoUsuario == "Gestor") {
-                usuario = new Gestor();
-                std::cout << "Login como Gestor realizado com sucesso!" << std::endl;
-            }
-            else if (tipoUsuario == "Vendedor") {
-                usuario = new Vendedor();
-                std::cout << "Login como Vendedor realizado com sucesso!" << std::endl;
-            }
-            else if (tipoUsuario == "Analista") {
-                usuario = new Analista();
-                std::cout << "Login como Analista realizado com sucesso!" << std::endl;
-            }
+        // Verifica se as credenciais inseridas são as do gestor padrão
+        if (emailInput == "gestor@empresa.com" && senhaInput == "senha123") {
+            std::cout << "Login como Gestor padrão realizado com sucesso!" << std::endl;
+            usuario = new Gestor();
+            loginBemSucedido = true;
+            acessarInterface();
             break;
+        }
+
+        std::string linha, acharEmail, acharSenha, tipoUsuario, nome;
+        bool usuarioEncontrado = false;
+
+        // Reiniciar a posição do arquivo para recomeçar a leitura
+        fin.clear();
+        fin.seekg(0, std::ios::beg);
+
+        while (std::getline(fin, nome) &&       
+               std::getline(fin, acharEmail) && 
+               std::getline(fin, tipoUsuario) && 
+               std::getline(fin, acharSenha)) {  
+
+            if (acharEmail == emailInput && acharSenha == senhaInput) {
+                usuarioEncontrado = true;
+                loginBemSucedido = true;
+
+                if (tipoUsuario == "Gestor") {
+                    usuario = new Gestor();
+                    std::cout << "Login como Gestor realizado com sucesso!" << std::endl;
+                } 
+                else if (tipoUsuario == "Vendedor") {
+                    usuario = new Vendedor();
+                    std::cout << "Login como Vendedor realizado com sucesso!" << std::endl;
+                } 
+                else if (tipoUsuario == "Analista") {
+                    usuario = new Analista();
+                    std::cout << "Login como Analista realizado com sucesso!" << std::endl;
+                }
+                break;
+            }
+        }
+
+        if (!usuarioEncontrado) {
+            std::cout << "Email ou senha incorretos! Tente novamente.\n";
         }
     }
     fin.close();
     return usuario;
-
-    if (!usuarioEncontrado) {
-        std::cout << "Email ou senha incorretos!" << std::endl;
-    }
 }
+
 
   
 Usuario::Usuario() : _id(0), _nome(""), _email(""), _tipoUsuario(""), _senha("") {}

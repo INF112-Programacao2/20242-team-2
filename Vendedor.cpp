@@ -1111,67 +1111,69 @@ void Vendedor::acessarInterface() {
 
     int opcao_selecionada;
 
-        while (true) {
-            std::cout << "-----------------------MENU DO VENDEDOR------------------------\n";
-            std::cout << "1- Registrar uma nova área\n";
-            std::cout << "2- Listar áreas registradas\n";
-            std::cout << "3- Liberar uma área\n";
-            std::cout << "4- Excluir uma área\n";
-            std::cout << "5- Registrar plantio\n";
-            std::cout << "6- Registrar uma nova negociação\n";
-            std::cout << "7- Listar negociações registradas\n";
-            std::cout << "8- Finalizar uma negociação\n";
-            std::cout << "9- Excluir uma negociação\n";
-            std::cout << "10- Atualizar preço da semente\n";
-            std::cout << "11- Verificar compatibilidade\n";
-            std::cout << "12- Visualizar Relatórios\n";
-            std:: cout << "13- Sair \n";
+    while (true) {
+        std::cout << "|-----------------------MENU DO VENDEDOR------------------------|\n";
+        std::cout << "|01|- Registrar uma nova área\n";
+        std::cout << "|02|- Listar áreas registradas\n";
+        std::cout << "|03|- Liberar uma área\n";
+        std::cout << "|04|- Excluir uma área\n";
+        std::cout << "|05|- Registrar plantio\n";
+        std::cout << "|06|- Registrar uma nova negociação\n";
+        std::cout << "|07|- Listar negociações registradas\n";
+        std::cout << "|08|- Finalizar uma negociação\n";
+        std::cout << "|09|- Excluir uma negociação\n";
+        std::cout << "|10|- Atualizar preço da semente\n";
+        std::cout << "|11|- Verificar compatibilidade\n";
+        std::cout << "|12|- Visualizar Relatórios\n";
+        std::cout << "|13|- Sair\n";
+        std::cout << "|---------------------------------------------------------------|\n";
+        std::cout << "|Escolha uma opção: ";
+        std::cin >> opcao_selecionada;
 
-            std::cout << "---------------------------------------------------------------\n";
-            std::cout << "Escolha uma opção: ";
-            std::cin >> opcao_selecionada;
-
-            switch (opcao_selecionada) {
-                case 1:
-                    registrarArea();
-                    break;
-                case 2:
-                    listarAreasRegistradas();
-                    break;
-                case 3:
-                    liberarArea();
-                    break;
-                case 4:
-                    excluirArea();
-                    break;
-                case 5:
-                    registrarPlantio();
-                    break;
-                case 6:
-                    registrarNegociacao();
-                    break;
-                case 7:
-                    listarNegociacoesRegistradas();
-                    break;
-                case 8:
-                    finalizarNegociacao();
-                    break;
-                case 9:
-                    excluirNegociacao();
-                    break;
-                case 10:
-                    atualizarPrecoDaSemente();
-                    break;
-                case 11:
-                    compatibilidade_semente();
-                case 12:
-                    gerarRelatorio();
-                case 13:
-                    std::cout << "Saindo do menu do vendedor.\n";
-                    break; // Encerra o menu
-                default:
-                    std::cout << "Opção inválida, tente novamente.\n";
-            }
-            break;
+        switch (opcao_selecionada) {
+            case 1:
+                registrarArea();
+                break;
+            case 2:
+                listarAreasRegistradas();
+                break;
+            case 3:
+                liberarArea();
+                break;
+            case 4:
+                excluirArea();
+                break;
+            case 5:
+                registrarPlantio();
+                break;
+            case 6:
+                registrarNegociacao();
+                break;
+            case 7:
+                listarNegociacoesRegistradas();
+                break;
+            case 8:
+                finalizarNegociacao();
+                break;
+            case 9:
+                excluirNegociacao();
+                break;
+            case 10:
+                atualizarPrecoDaSemente();
+                break;
+            case 11:
+                compatibilidade_semente();
+                break;  // Corrigido para evitar queda em outros cases
+            case 12:
+                gerarRelatorio();
+                break;  // Corrigido para evitar queda em outros cases
+            case 13:
+                std::cout << "Saindo do menu do vendedor.\n";
+                return;  // Sai da função corretamente (eu acho, tem que testar)
+            default:
+                std::cout << "Opção inválida, tente novamente.\n";
+                break;
         }
+    }
 }
+
