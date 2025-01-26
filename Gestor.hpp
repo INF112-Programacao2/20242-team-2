@@ -33,7 +33,7 @@ class Gestor: public Usuario{
         virtual void gerarRelatorio();
 
     public:
-        virtual int acessarInterface();                  //atualizado
+        virtual void acessarInterface();                  //atualizado
         Gestor();
         virtual ~Gestor();
 
