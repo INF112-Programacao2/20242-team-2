@@ -701,6 +701,7 @@ void Vendedor::salvarNegociacao(Negociacao& neg) {
 }
 
 void Vendedor::finalizarNegociacao() {
+
     std::ifstream arquivoEntrada("Negociacao.txt");
     if (!arquivoEntrada) {
         throw std::runtime_error("Erro ao abrir o arquivo Negociacao.txt");
@@ -745,54 +746,53 @@ void Vendedor::finalizarNegociacao() {
         return;
     }
 
-    int id_negociacao;
-    std::cout << "\nDigite o ID da negociação para finalizar: ";
-    std::cin >> id_negociacao;
+    //alterando status no arquivo txt
 
-    // Verifica se o ID inserido está na lista de pendentes
-    auto it = std::find(negociacoes_pendentes.begin(), negociacoes_pendentes.end(), id_negociacao);
+    int id_buscado = 0;
+    std::cout << "Deseja finalizar qual negociacao? ID da negociacao: ";
+    std::cin >> id_buscado;
+    while (id_buscado <= 0) {
+        std::cout << "ID inválido. Digite novamente o ID da negociacao: ";
+        std::cin >> id_buscado;
+    }
+     // Verifica se o ID inserido está na lista de pendentes
+    auto it = std::find(negociacoes_pendentes.begin(), negociacoes_pendentes.end(), id_buscado);
     if (it == negociacoes_pendentes.end()) {
         std::cout << "Negociação inválida ou já finalizada.\n";
         return;
     }
 
-    // Atualiza o status da negociação
-    bool atualizado = false;
-    for (auto& linha : todas_negociacoes) {
-        std::stringstream ss(linha);
-        int id_lido;
-        ss >> id_lido;
+    std::fstream arquivoNeg("Negociacao.txt");
+    if (!arquivoNeg)
+        throw std::runtime_error("Erro na abertura do arquivo Negociacao.txt");
 
-        if (id_lido == id_negociacao) {
-            // Substitui "Pendente" por "Finalizada"
-            size_t pos_pendente = linha.find("Pendente");
-            if (pos_pendente != std::string::npos) {
-                linha.replace(pos_pendente, 8, "Finalizada");
-                atualizado = true;
-            }
-            break;
+    std::string linhasModificadas;
+
+    // Ler todo o arquivo e modificar a linha desejada
+    while (std::getline(arquivoNeg, linha)) {
+        std::istringstream iss(linha);
+        int id;
+        iss >> id;
+
+        if (id == id_buscado && linha.find("Pendente") != std::string::npos) {
+            size_t pos = linha.find("Pendente");
+            linha.replace(pos, 8, "Finalizada");
         }
+        linhasModificadas += linha + "\n";
     }
 
-    if (!atualizado) {
-        std::cout << "Erro ao atualizar o status da negociação.\n";
-        return;
-    }
+    // Reabrir o arquivo para escrita
+    arquivoNeg.close();
+    arquivoNeg.open("Negociacao.txt", std::ios::out | std::ios::trunc);
+    if (!arquivoNeg)
+        throw std::runtime_error("Erro na abertura do arquivo Negociacao.txt");
 
-    // Reescreve o arquivo com as atualizações
-    std::ofstream arquivoSaida("Negociacao.txt", std::ios::trunc);
-    if (!arquivoSaida) {
-        throw std::runtime_error("Erro ao abrir arquivo para escrita");
-    }
+    arquivoNeg << linhasModificadas;
+    arquivoNeg.close();
 
-    for (const auto& linha : todas_negociacoes) {
-        arquivoSaida << linha << "\n";
-    }
-    arquivoSaida.close();
+    std::cout <<"Negociacao finalizada com sucesso!\n" ;
 
-    std::cout << "Negociação " << id_negociacao << " finalizada com sucesso.\n";
 }
-
 
 void Vendedor::listarNegociacoesRegistradas() {
     std::ifstream arquivoNegociacao("Negociacao.txt");
