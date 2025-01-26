@@ -586,98 +586,99 @@ void Gestor::visualizar_lote_especifico(){
     }
 }
 
-int Gestor::acessarInterface() {
-   int opcao_selecionada;
+void Gestor:: acessarInterface(){
+    int opcao_selecionada;
 
-   std::cout<<"-------------------------MENU DO GESTOR--------------------------\n";
-   std::cout<<"1- Registrar uma nova semente\n2- Visualizar dados de uma semente\n";
-   std::cout<<"3- Excluir uma semente\n4- Registrar um novo lote\n";
-   std::cout<<"5-Visualizar dados de um lote\n6- Excluir um lote\n";
-   std::cout<<"7-Visualizar relatórios\n8- Sair do programa\n";
-   std::cout<<"------------------------------------------------------------------\n";
+    std::cout << "-------------------------MENU DO GESTOR--------------------------\n";
+    std::cout << "1- Registrar uma nova semente\n2- Visualizar dados de uma semente\n";
+    std::cout << "3- Excluir uma semente\n4- Registrar um novo lote\n";
+    std::cout << "5-Visualizar dados de um lote\n6- Excluir um lote\n";
+    std::cout << "7-Visualizar relatórios\n8- Sair do programa\n";
+    std::cout << "------------------------------------------------------------------\n";
 
-   std::cin>>opcao_selecionada;
-   if(opcao_selecionada!=1&&opcao_selecionada!=2&&opcao_selecionada!=3
-       &&opcao_selecionada!=4&&opcao_selecionada!=5&&opcao_selecionada!=6
-       &&opcao_selecionada!=7&&opcao_selecionada!=8){
-       throw std::invalid_argument("Opção inválida! Por favor, selecione uma opção válida.");
-   }
-    if(opcao_selecionada==1){
-        //registrar uma nova semente
-        try {
-            registrarSemente();
-        
-        }catch (const std::bad_alloc& e) {
-            std::cerr << "Erro de alocação de memória. " << e.what() << std::endl;
-        }catch (const std::exception& e) {
-            std::cerr << "Erro: " << e.what() << std::endl;
-        }catch (...) {
-            std::cerr << "Erro desconhecido!" << std::endl;
-        }
-    }
-    else if(opcao_selecionada==2){
-        //visualizar dados de uma semente especifica
-        try{
-        visualizar_semente_especifica();
-        }catch(const std::exception& e){
-            std::cerr<<"Erro: "<<e.what()<<std::endl;
-        }catch(...){
-            std::cerr<<"Erro desconhecido!"<<std::endl;
-        }
-    }
-   else if(opcao_selecionada==3){
-        //excluir uma semente
-        try{
-            excluirSemente();
-        }catch(const std::exception& e){
-            std::cerr<<"Erro: "<<e.what()<<std::endl;
-        }catch(...){
-            std::cerr<<"Erro desconhecido!"<<std::endl;
-        }
-   }
-    else if(opcao_selecionada==4){
-        //registrar um novo lote
-        try{
-            registrarLote();
-        }catch(const std::exception& e){
-            std::cerr<<"Erro: "<<e.what()<<std::endl;
-        }catch(...){
-            std::cerr<<"Erro desconhecido!"<<std::endl;
-        }
-    }
-    else if(opcao_selecionada==5){
-        //visualizar dados de um lote em especifico
-        try{
-            visualizar_lote_especifico();
-        }catch(const std::exception& e){
-            std::cerr<<"Erro: "<<e.what()<<std::endl;
-        }catch(...){
-            std::cerr<<"Erro desconhecido!"<<std::endl;
-        }
-    }
-    else if(opcao_selecionada==6){
-        try{
-            excluirLote();
-        }catch(const std::exception& e){
-            std::cerr<<"Erro: "<<e.what()<<std::endl;
-        }catch(...){
-            std::cerr<<"Erro desconhecido!"<<std::endl;
-        }
-    }
-    else if(opcao_selecionada==7){
-        // funcao pra visualizar relatorio;
-         // funcao pra visualizar relatorio;
-        try{
-            gerarRelatorio();
-        }catch(const std::exception& e){
-            std::cerr<<"Erro: "<<e.what()<<std::endl;
-        }
+    std::cin >> opcao_selecionada;
 
+    while(true){
+        switch (opcao_selecionada) {
+            case 1:
+                try {
+                    registrarSemente();
+                } catch (const std::bad_alloc& e) {
+                    std::cerr << "Erro de alocação de memória. " << e.what() << std::endl;
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+            
+            case 2:
+                try {
+                    visualizar_semente_especifica();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+            
+            case 3:
+                try {
+                    excluirSemente();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+            
+            case 4:
+                try {
+                    registrarLote();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+            
+            case 5:
+                try {
+                    visualizar_lote_especifico();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+            
+            case 6:
+                try {
+                    excluirLote();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+            
+            case 7:
+                try {
+                    gerarRelatorio();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
+                break;
+            
+            case 8:
+                break;
+            
+            default:
+                std::cerr << "Opção inválida!" << std::endl;
+                break;
+        }
+        break;
     }
-    else if(opcao_selecionada==8){
-        return 0;
-    }
-    return 0;
 }
 
 void Gestor::gerarRelatorio() {
