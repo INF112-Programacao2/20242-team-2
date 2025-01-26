@@ -13,7 +13,7 @@ class Analista: public Usuario{
 
         void atualizarStatusDaSemente();
         void visualizarRelatorio();
-        virtual void acessarInterface();
+        virtual int acessarInterface();
 
     private:
         void elaborarRelatorio();
