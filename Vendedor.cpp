@@ -1061,35 +1061,47 @@ void Vendedor::gerarRelatorio(){
         std::cout<<"Relatorio gerado com sucesso!\n";
 }
 
-      
+    //_____________________________________________________________________________________________________
 
-void Vendedor::registrar_relatorio_area(AreaPlantio area){
-    std::ofstream relatorioGerado("RelatorioVendedor.txt",std::ios::app);
-    if(!relatorioGerado)
-        throw std::runtime_error("Erro ao gerar/abrir arquivo RelatorioVendedor.txt\n");
+void Vendedor::atualizarPrecoDaSemente(){
+    std::cout<<"Dejesa atualizar o preco de qual lote de sementes? ID do lote: ";
+    int id_lote=0;
+    std::cin>>id_lote;
+
+    while(id_lote<=0){
+        std::cout<<"ID inválido. Digite novamente o ID do lote: ";
+        std::cin>>id_lote;
+    }
+
+    std::fstream arquivoLotes("Lotes.txt");
+    if(!arquivoLotes)
+        throw std::runtime_error("Erro ao abrir arquivo Lotes.txt");
     
-    relatorioGerado<<"Área de plantio de ID: "<<area.get_id_area()<<"\nStatus da propriedade: "<<area.get_status()<<
-    "\nNome do proprietário: "<<area.get_nome_proprietario()<<"\nCNPJ do proprietário: "<<area.get_cnpj_proprietario()<<
-    "\nLocalização: "<<area.get_localizacao()<<"\nSolo da área: "<<area.get_tipo_solo()<<"\nClima da região: "<<
-    area.get_clima()<<"Tamanho da área: "<<area.get_tamanho()<<" hec\n\n\n";
+    int cont_registros,id;
+    std::string linha;
+    float preco;
 
-    relatorioGerado.close();
+    arquivoLotes>>cont_registros>>cont_registros;       arquivoLotes.ignore();  //ignorando controle de id
+    for(int i=0;i<cont_registros;i++){
+        arquivoLotes>>id;
+        if(id_lote==id){
+            for(int i=0;i<9;i++)  //9 parametros entre id e preco
+                std::getline(arquivoLotes,linha,'+');
+            int pos=arquivoLotes.tellg();
+            arquivoLotes>>preco;
+            std::cout<<"O preco por kg atual do lote é de RS "<<preco<<"\nInsira o novo valor: ";
+            std::cin>>preco;
+            if(preco<=0){
+                throw std::invalid_argument("Nao é possivel por um preco menor ou igual a 0!\n");
+            }
+            arquivoLotes.seekp(pos);
+            arquivoLotes<<std::fixed<<std::setprecision(2)<<preco<<std::endl;
+            break;
+        }
+    }
+    arquivoLotes.close();
+
 }
-
-void Vendedor::registrar_relatorio_neg(Negociacao neg){
-
-    std::ofstream relatorioGerado("RelatorioVendedor.txt",std::ios::app);
-    if(!relatorioGerado)
-        throw std::runtime_error("Erro ao gerar/abrir arquivo RelatorioVendedor.txt\n");
-
-    relatorioGerado<<"Negociação de ID: "<<neg.get_id_negociacao()<<"\nID do lote da negociação: "<<neg.get_id_lote()<<
-    "\nID da Área de plantio: "<<neg.get_id_area()<<"\nStatus da negociação: "<<neg.get_status()<<"\nData da negociação: "<<
-    neg.get_data_negociacao()<<"\nValor negociado: RS"<<neg.get_valor_negociado()<<"\nQuantidade de sementes negociada: "<<
-    neg.get_quantidade_semente_negociada()<<" KG\n\n\n";
-
-    relatorioGerado.close();
-}
-
 int Vendedor::acessarInterface() {
 
     int opcao_selecionada;
@@ -1143,7 +1155,7 @@ int Vendedor::acessarInterface() {
                     excluirNegociacao();
                     break;
                 case 10:
-                    //atualizarPrecoDaSemente();
+                    atualizarPrecoDaSemente();
                     break;
                 case 11:
                     compatibilidade_semente();

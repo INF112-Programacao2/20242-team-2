@@ -596,7 +596,7 @@ int Gestor::acessarInterface() {
    std::cin>>opcao_selecionada;
    if(opcao_selecionada!=1&&opcao_selecionada!=2&&opcao_selecionada!=3
        &&opcao_selecionada!=4&&opcao_selecionada!=5&&opcao_selecionada!=6
-       %%opcao_selecioana!=7&&opcao_selecionada!-8){
+       &&opcao_selecionada!=7&&opcao_selecionada!=8){
        throw std::invalid_argument("Opção inválida! Por favor, selecione uma opção válida.");
    }
     if(opcao_selecionada==1){
