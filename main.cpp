@@ -33,41 +33,9 @@ int main() {
 
 int main(){
     //Realizando login
-    Usuario *usuario=new Usuario();
-    int tipo_de_usuario;
-    tipo_de_usuario=usuario->acessarInterface();     //realiza o login e retorna um inteiro pra identificar o tipo de usuario (PODE MUDAR SE QUISER!!!)
-    //----------------------------------------------------//
-
-    //selecionando menu referente a cada tipo de usuario
-
-    if(tipo_de_usuario==1){
-        delete usuario;
-        usuario=new Gestor();
-    }
-    else if(tipo_de_usuario==2){
-        delete usuario;
-        usuario=new Vendedor();
-    }
-    else if(tipo_de_usuario==3){
-        delete usuario;
-        usuario=new Analista();
-    }
-    else{
-    //tratar excessao
-   }
-
-   // cada usuario deve levar a um acessarInterface() e a um atividade() personalizados
-   int menu_selecionado;
-   menu_selecionado=usuario->acessarInterface();   //polimorfismo
-
-
-
-
-
-  
-
-
-  
+    Usuario *usuario = usuario->realizarLogin();
+    usuario->acessarInterface();
+    
    return 0;
 }
-
+ 
