@@ -1101,7 +1101,7 @@ void Vendedor::atualizarPrecoDaSemente(){
     }
     arquivoLotes.close();
     if(arquivoLotes.fail()){
-        throw std::runtime_error("Erro ao atualizar preco!\n")
+        throw std::runtime_error("Erro ao atualizar preco!\n");
     std::cout<<"Preco atualizado com sucesso!\n";
     }
 
