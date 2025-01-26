@@ -16,6 +16,8 @@ private:
     bool validarData(std::string& data);                    //ok
     void salvarNegociacao(Negociacao& neg);                 //ok
     void buscar_lotes_dessa_semente(int id_semente_busca);  //ok
+    void registrar_relatorio_area(AreaPlantio area);
+    void registrar_relatorio_neg(Negociacao neg);
 
     //metodos para area de plantio
     void registrarArea();                                   //ok
