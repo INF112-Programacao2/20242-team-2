@@ -1106,7 +1106,8 @@ void Vendedor::atualizarPrecoDaSemente(){
     }
 
 }
-int Vendedor::acessarInterface() {
+
+void Vendedor::acessarInterface() {
 
     int opcao_selecionada;
 
@@ -1167,9 +1168,10 @@ int Vendedor::acessarInterface() {
                     gerarRelatorio();
                 case 13:
                     std::cout << "Saindo do menu do vendedor.\n";
-                    return 0; // Encerra o menu
+                    break; // Encerra o menu
                 default:
                     std::cout << "Opção inválida, tente novamente.\n";
             }
+            break;
         }
 }
