@@ -32,9 +32,11 @@ int main() {
 
 
 int main(){
+
     //Realizando login
     Usuario *usuario = usuario->realizarLogin();
     usuario->acessarInterface();
+    delete usuario;
     
    return 0;
 }
