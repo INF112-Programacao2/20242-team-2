@@ -924,7 +924,6 @@ void Vendedor::excluirNegociacao() {
     arquivoSaida.close();
     std::cout << "Negociação " << id_excluir << " excluída com sucesso!\n";
 }
-
 void Vendedor::gerarRelatorio(){
 
         std::cout<<"Gerando relatorio:\n";
@@ -934,30 +933,43 @@ void Vendedor::gerarRelatorio(){
         if (!arquivoArea) 
             throw std::runtime_error("Erro ao abrir arquivo Negociacao.txt para escrita.");
         
-        int inteiro;
+        int inteiro,contArea,contNeg;
         float decimal;
         std::string texto;
 
-        while(std::getline(arquivoArea,texto)){
+        arquivoArea>>contArea>>contArea;         arquivoArea.ignore();
+
+        std::ofstream relatorioGerado("RelatorioVendedor.txt");
+        if(!relatorioGerado)
+            throw std::runtime_error("Erro ao gerar/abrir arquivo RelatorioVendedor.txt\n");
+
+        for (int i=0;i<contArea;i++){
+            if(arquivoArea.eof())
+                break;
             AreaPlantio area;
             arquivoArea>>inteiro;                      area.set_id_area(inteiro);     arquivoArea.ignore();
             std::getline(arquivoArea,texto,'+');       area.set_status(texto);
+            std::getline(arquivoArea,texto,'+');       area.set_nome_proprietario(texto);
             std::getline(arquivoArea,texto,'+');       area.set_cnpj_proprietario(texto);
             std::getline(arquivoArea,texto,'+');       area.set_localizacao(texto);
             std::getline(arquivoArea,texto,'+');       area.set_tipo_solo(texto);
             std::getline(arquivoArea,texto,'+');       area.set_clima(texto);
-            arquivoArea>>decimal;                      area.set_tamanho(decimal);
+            arquivoArea>>decimal;                      area.set_tamanho(decimal);     
 
-            registrar_relatorio_area(area);
+            relatorioGerado<<"Área de plantio de ID: "<<area.get_id_area()<<"\nStatus da propriedade: "<<area.get_status()<<
+                            "\nNome do proprietário: "<<area.get_nome_proprietario()<<"\nCNPJ do proprietário: "<<area.get_cnpj_proprietario()<<
+                            "\nLocalização: "<<area.get_localizacao()<<"\nSolo da área: "<<area.get_tipo_solo()<<"\nClima da região: "<<
+                            area.get_clima()<<"\nTamanho da área: "<<area.get_tamanho()<<" hec\n\n\n";
         }
         arquivoArea.close();
 
         std::ifstream arquivoNeg("Negociacao.txt");
         if (!arquivoNeg) 
             throw std::runtime_error("Erro ao abrir arquivo Negociacao.txt para escrita.\n");
+        arquivoNeg>>contNeg>>contNeg;             
 
 
-        while(std::getline(arquivoNeg,texto)){
+        for(int i=0;i<contNeg;i++){
             Negociacao neg;
             arquivoNeg>>inteiro;                       neg.set_id_negociacao(inteiro);                      arquivoNeg.ignore();
             arquivoNeg>>inteiro;                       neg.set_id_lote(inteiro);                            arquivoNeg.ignore();
@@ -965,12 +977,20 @@ void Vendedor::gerarRelatorio(){
             std::getline(arquivoNeg,texto,'+');        neg.set_status(texto);               
             std::getline(arquivoNeg,texto,'+');        neg.set_data_negociacao(texto);      
             arquivoNeg>>decimal;                       neg.set_valor_negociado(decimal);                    arquivoNeg.ignore();
-            arquivoNeg>>decimal;                          neg.set_quantidade_semente_negociada(decimal);
+            arquivoNeg>>decimal;                       neg.set_quantidade_semente_negociada(decimal);       
 
-            registrar_relatorio_neg(neg);
+            relatorioGerado<<"Negociação de ID: "<<neg.get_id_negociacao()<<"\nID do lote da negociação: "<<neg.get_id_lote()<<
+                        "\nID da Área de plantio: "<<neg.get_id_area()<<"\nStatus da negociação: "<<neg.get_status()<<"\nData da negociação: "<<
+                        neg.get_data_negociacao()<<"\nValor negociado: RS"<<neg.get_valor_negociado()<<"\nQuantidade de sementes negociada: "<<
+                        neg.get_quantidade_semente_negociada()<<" KG\n\n\n";
+    
         }
-    std::cout<<"Relatorio gerado com sucesso!\n";
+        arquivoNeg.close();
+        relatorioGerado.close();
+        std::cout<<"Relatorio gerado com sucesso!\n";
 }
+
+      
 
 void Vendedor::registrar_relatorio_area(AreaPlantio area){
     std::ofstream relatorioGerado("RelatorioVendedor.txt",std::ios::app);
