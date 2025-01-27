@@ -311,21 +311,75 @@ void Gestor::registrarSemente() {
             throw std::invalid_argument("Opção de solo inválida.");
     }
 
-    // Coleta de outros dados
-    std::cout << "Irrigacao ideal (em mm/dia): ";
-    std::cin >> irrigacaoIdeal;
+     // Coleta de dados
+          try {
+        // Irrigação ideal
+        while (true) {
+            std::cout << "Irrigacao ideal (em milímetros, por dia): ";
+            std::cin >> irrigacaoIdeal;
+            if (std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Entrada inválida para irrigação ideal! Tente novamente.\n";
+            } else {
+                break;
+            }
+        }
 
-    std::cout << "Expectativa de resistência a pragas (%): ";
-    std::cin >> expectativaIncidenciaPragasDoencas;
+        // Expectativa de resistência a pragas
+        while (true) {
+            std::cout << "Expectativa de resistência a pragas (%): ";
+            std::cin >> expectativaIncidenciaPragasDoencas;
+            if (std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Entrada inválida para expectativa de resistência a pragas! Tente novamente.\n";
+            } else {
+                break;
+            }
+        }
 
-    std::cout << "Expectativa de crescimento (%): ";
-    std::cin >> expectativaCrescimento;
+        // Expectativa de crescimento
+        while (true) {
+            std::cout << "Expectativa de crescimento (%): ";
+            std::cin >> expectativaCrescimento;
+            if (std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Entrada inválida para expectativa de crescimento! Tente novamente.\n";
+            } else {
+                break;
+            }
+        }
 
-    std::cout << "Expectativa de taxa de germinação (%): ";
-    std::cin >> expectativaTaxaGerminacao;
+        // Expectativa de taxa de germinação
+        while (true) {
+            std::cout << "Expectativa de taxa de germinação (%): ";
+            std::cin >> expectativaTaxaGerminacao;
+            if (std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Entrada inválida para expectativa de taxa de germinação! Tente novamente.\n";
+            } else {
+                break;
+            }
+        }
 
-    std::cout << "Expectativa de taxa de sobrevivência (%): ";
-    std::cin >> expectativaTaxaSobrevivencia;
+        // Expectativa de taxa de sobrevivência
+        while (true) {
+            std::cout << "Expectativa de taxa de sobrevivência (%): ";
+            std::cin >> expectativaTaxaSobrevivencia;
+            if (std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Entrada inválida para expectativa de taxa de sobrevivência! Tente novamente.\n";
+            } else {
+                break;
+            }
+        }
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Erro: " << e.what() << std::endl;
+    }
 
     // Pergunta sobre produção de frutos
     char resp;
