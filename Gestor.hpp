@@ -30,10 +30,10 @@ class Gestor: public Usuario{
         void excluirUsuario();                          //ok
 
         //relatorio
-        virtual void gerarRelatorio();
+        virtual void gerarRelatorio()override;
 
     public:
-        virtual void acessarInterface();                  //atualizado
+        virtual void acessarInterface() override;                  //atualizado
         Gestor();
         ~Gestor() override;
 
