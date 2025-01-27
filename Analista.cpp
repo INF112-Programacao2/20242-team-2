@@ -204,8 +204,8 @@ void Analista::atualizarStatusDoLote() {
     std::cin >> id_lote;
 
     while(id_lote <= 0) {
-        std::string comando = "espeak -v pt-br -s 120 \"ID invalido. Digite novamente\"";
-    system(comando.c_str());
+        comando = "espeak -v pt-br -s 120 \"ID invalido. Digite novamente\"";
+        system(comando.c_str());
         std::cout << "ID de lote inválido. Digite novamente: ";
         std::cin >> id_lote;
     }

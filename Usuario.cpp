@@ -34,8 +34,15 @@ Usuario* Usuario::realizarLogin() {
     bool loginBemSucedido = false;
 
     while (!loginBemSucedido) {
-        std::cout << "Insira o email: ";
+        std::cout << "Insira o email (ou digite 'sair' para encerrar): ";
         std::getline(std::cin >> std::ws, emailInput); // Remove espaços em branco iniciais
+
+        // Verifica se o usuário digitou 'sair'
+        if (emailInput == "sair") {
+            std::cout << "Saindo do sistema...\n";
+            fin.close();  // Fecha o arquivo antes de sair
+            return nullptr;
+        }
 
         std::cout << "Insira a senha: ";
         std::getline(std::cin, senhaInput);
@@ -45,7 +52,6 @@ Usuario* Usuario::realizarLogin() {
             std::cout << "Login como Gestor padrão realizado com sucesso!" << std::endl;
             usuario = new Gestor();
             loginBemSucedido = true;
-            acessarInterface();
             break;
         }
 
@@ -88,6 +94,8 @@ Usuario* Usuario::realizarLogin() {
     fin.close();
     return usuario;
 }
+
+
 
 
   
