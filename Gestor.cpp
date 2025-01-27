@@ -155,6 +155,15 @@ std::string emailParaExcluir;
         return;
     }
 
+    char confirmacao;
+    std::cout << "Tem certeza que deseja excluir o usuario " << emailParaExcluir << "? (S/N): ";
+    std::cin >> confirmacao;
+
+    if (toupper(confirmacao) != 'S') {
+        std::cout << "Operação cancelada.\n";
+        return;
+    }
+
     // Salva os usuários restantes de volta no arquivo
     std::ofstream fout("usuarios.txt", std::ios::trunc); // Sobrescreve o arquivo
     if (!fout.is_open()) {
