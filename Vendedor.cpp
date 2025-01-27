@@ -11,6 +11,104 @@
 
 //_________________________________________Métodos para Area de Plantio_________________________________________________________________
 
+Vendedor::~Vendedor(){};
+void Vendedor::registrarArea() {
+    AreaPlantio novaArea;
+    int id = 0;
+    std::string nome, cnpj, localizacao, tipo_solo, clima, status;
+    float tamanho;
+
+    // Lê o último ID do arquivo
+    std::ifstream arquivoAreas("AreaPlantio.txt");
+    if (arquivoAreas.is_open()) {
+        arquivoAreas >> id; // Lê o ID atual
+        arquivoAreas.close();
+    }
+
+    id++; // Incrementa o ID para a nova área
+
+    // Coleta os dados da nova área
+    std::cout << "Insira os detalhes da área:\n";
+    std::cin.ignore();
+    std::cout << "Nome do Proprietário: ";
+    std::getline(std::cin, nome);
+    std::cout << "CNPJ do Proprietário: ";
+    std::getline(std::cin, cnpj);
+    std::cout << "Tamanho da Área (hectares): ";
+    std::cin >> tamanho;
+    std::cin.ignore();
+    std::cout << "Localização: ";
+    std::getline(std::cin, localizacao);
+
+    // Menu de seleção de tipo de solo
+    std::cout << "\nEscolha o tipo de solo da área:\n";
+    std::cout << "1. Arenoso\n";
+    std::cout << "2. Argiloso\n";
+    std::cout << "3. Franco\n";
+    std::cout << "4. Siltoso\n";
+    int escolha_solo;
+    std::cout << "Digite o número da opção: ";
+    std::cin >> escolha_solo;
+
+    switch (escolha_solo) {
+        case 1: tipo_solo = "Arenoso"; break;
+        case 2: tipo_solo = "Argiloso"; break;
+        case 3: tipo_solo = "Franco"; break;
+        case 4: tipo_solo = "Siltoso"; break;
+        default:
+            throw std::invalid_argument("Opcao de solo inválida˜\n");
+            tipo_solo = "";
+            break;
+    }
+
+    // Menu de seleção de clima
+    std::cout << "\nEscolha o clima da área:\n";
+    std::cout << "1. Temperado\n";
+    std::cout << "2. Tropical\n";
+    std::cout << "3. Litorâneo\n";
+    std::cout << "4. Semiarido\n";
+    std::cout << "5. Equatorial\n";
+    int escolha_clima;
+    std::cout << "Digite o número da opção: ";
+    std::cin >> escolha_clima;
+
+    switch (escolha_clima) {
+        case 1: clima = "Temperado"; break;
+        case 2: clima = "Tropical"; break;
+        case 3: clima = "Litorâneo"; break;
+        case 4: clima = "Semiarido"; break;
+        case 5: clima = "Equatorial"; break;
+        default:
+            throw std::invalid_argument("Opcao de clima inválido\n");
+            clima = "";
+            break;
+    }
+
+    status = "Disponível";  // Definindo o status da área como "Disponível"
+
+    // Validação dos inputs
+    if (nome.empty() || cnpj.empty() || tamanho <= 0 ||
+        localizacao.empty() || tipo_solo.empty() || clima.empty()) {
+        throw std::invalid_argument("Dados inválidos para registro de área.");
+    }
+
+    // Configura os dados da nova área
+    novaArea.set_id_area(id);
+    novaArea.set_nome_proprietario(nome);
+    novaArea.set_cnpj_proprietario(cnpj);
+    novaArea.set_tamanho(tamanho);
+    novaArea.set_localizacao(localizacao);
+    novaArea.set_tipo_solo(tipo_solo);
+    novaArea.set_clima(clima);
+    novaArea.set_status(status);
+
+    // Registra a nova área na memória e no arquivo
+    areasRegistradas.push_back(novaArea);
+    salvarArea(novaArea);
+
+    std::cout << "Área registrada com sucesso!\n";
+}
+
 void Vendedor::salvarArea(AreaPlantio area) {
     int cont_id = 0, cont_registros = 0;
     std::vector<std::string> linhas;
@@ -86,6 +184,7 @@ void Vendedor::salvarArea(AreaPlantio area) {
         std::cerr << "Exceção geral: " << e.what() << std::endl;
     }
 }
+
 
 void Vendedor::listarAreasRegistradas() {
     std::ifstream arquivoAreas("AreaPlantio.txt");
