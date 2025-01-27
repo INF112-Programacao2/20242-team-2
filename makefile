@@ -10,6 +10,10 @@ SOURCES = Usuario.cpp Gestor.cpp Vendedor.cpp Analista.cpp classeSemente.cpp cla
 
 # Gerando os arquivos objetos a partir dos fontes
 OBJECTS = $(SOURCES:.cpp=.o)
+EXEC = programa
+
+# Regra padrão
+all: $(EXEC)
 
 # Regra principal para compilar o projeto
 $(TARGET): $(OBJECTS)
@@ -18,6 +22,10 @@ $(TARGET): $(OBJECTS)
 # Como compilar os arquivos .cpp para .o
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Regra para compilar e rodar
+makerun: all
+	./$(EXEC)
 
 # Regra para rodar o Valgrind
 valgrind: $(TARGET)
