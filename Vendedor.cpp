@@ -736,12 +736,16 @@ void Vendedor::registrarNegociacao() {
     }
     std::cin.ignore();
 
-    std::cout << "Data da Negociação (DD/MM/AAAA, deixe em branco para data atual): ";
-    std::getline(std::cin, data);
-    if (data.empty()) {
-        data = getCurrentDate();
-    } else if (!validarData(data)) {
-        throw std::invalid_argument("Data inválida.");
+    while(true){
+        std::cout << "Data da Negociação (DD/MM/AAAA, deixe em branco para data atual): ";
+        std::getline(std::cin, data);
+        if (data.empty()) {
+            data = getCurrentDate();
+            break;
+        } else if (!validarData(data)) {
+            std::cerr<<"Data inválida.\n";
+        }
+        if(validarData(data)) break;
     }
 
     while (true) {
@@ -1142,7 +1146,7 @@ void Vendedor::atualizarPrecoDaSemente() {
         
         std::getline(ss, texto, '+');  // Ignorando 
         std::getline(ss, texto, '+');  
-        id = std::stoi(ttexto);  // Converte para inteiro
+        id = std::stoi(texto);  // Converte para inteiro
 
         
         if (id_lote == id) {
@@ -1208,40 +1212,88 @@ void Vendedor::acessarInterface() {
 
         switch (opcao_selecionada) {
             case 1:
-                registrarArea();
+                try {
+                 registrarArea();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 2:
-                listarAreasRegistradas();
+                try {
+                 listarAreasRegistradas();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }            
                 break;
             case 3:
-                liberarArea();
+                try {
+                 liberarArea();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 4:
-                excluirArea();
+                try {
+                 excluirArea();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 5:
-                registrarPlantio();
+                try {
+                   registrarPlantio();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 6:
-                registrarNegociacao();
+                try {
+                    registrarNegociacao();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 7:
-                listarNegociacoesRegistradas();
+                try {
+                 listarNegociacoesRegistradas();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 8:
-                finalizarNegociacao();
+                try {
+                 finalizarNegociacao();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 9:
-                excluirNegociacao();
+                try {
+                 excluirNegociacao();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 10:
-                atualizarPrecoDaSemente();
+                try {
+                 atualizarPrecoDaSemente();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;
             case 11:
-                compatibilidade_semente();
+                try {
+                   compatibilidade_semente();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;  // Corrigido para evitar queda em outros cases
             case 12:
-                gerarRelatorio();
+                try {
+                    gerarRelatorio();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                }
                 break;  // Corrigido para evitar queda em outros cases
             case 13:
                 std::cout << "Saindo do menu do vendedor.\n";
