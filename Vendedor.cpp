@@ -421,7 +421,6 @@ void Vendedor::buscar_lotes_dessa_semente(int id_semente_busca) {
     int id_semente_lido;
     std::string linha;
 
-    int idSementeAssociada,id;
     float quantidadeDisponivel,precoEstimado;
     std::string statusDisponibilidade,nomeCientifico,geneIntroduzido,metodoProducao,dataProducao,paisOrigem;
 
