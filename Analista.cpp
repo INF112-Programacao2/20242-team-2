@@ -12,6 +12,10 @@ void Analista::elaborarRelatorio(){
 
     int id_semente;
     std::cin>>id_semente;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
     while(id_semente<=0){
         std::cout<<"ID inválido. Digite novamente o ID da semente: ";
         comando="espeak -v pt-br -s 120 \"ID invalido. Digite novamente o ID da semente: \"";
@@ -30,27 +34,57 @@ void Analista::elaborarRelatorio(){
 
     std::cout << "Irrigacao ideal (em mm/dia): ";  comando="espeak -v pt-br -s 120 \"Irrigacao ideal, em milimetros por dia \"";
     system(comando.c_str());      
-    std::cin >> texto;          relatorio.set_irrigacao(texto);    
+    std::cin >> texto;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }          
+    relatorio.set_irrigacao(texto);    
 
     std::cout << "Taxa de incidencia de pragas e doencas (%): "; comando="espeak -v pt-br -s 120 \"Taxa de incidencia de pragas e doencas, em porcentagem \"";
     system(comando.c_str());      
-    std::cin >> texto;          relatorio.set_pragasDoencas(texto);
+    std::cin >> texto;          
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
+    relatorio.set_pragasDoencas(texto);
 
     std::cout << "Taxa de crescimento (%): ";                    comando="espeak -v pt-br -s 120 \"Taxa de crescimento, em porcentagem \"";
     system(comando.c_str());
-    std::cin >> texto;          relatorio.set_crescimento(texto);
+    std::cin >> texto;          
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
+    relatorio.set_crescimento(texto);
 
     std::cout << "Taxa de germinação (%): ";                     comando="espeak -v pt-br -s 120 \"Taxa de germinacao, em porcentagem \"";
     system(comando.c_str());
-    std::cin >> texto;          relatorio.set_geminacao(texto);
+    std::cin >> texto;          
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
+    relatorio.set_geminacao(texto);
     
     std::cout << "Taxa de sobrevivência (%): ";                  comando="espeak -v pt-br -s 120 \"Taxa de sobrevivencia, em porcentagem \"";
     system(comando.c_str());
-    std::cin >> texto;          relatorio.set_sobrevivencia(texto);
+    std::cin >> texto;          
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
+    relatorio.set_sobrevivencia(texto);
 
     std::cout << "Tempo de colheita em dias: ";                   comando="espeak -v pt-br -s 120 \"Tempo de colheita, em dias \"";
     system(comando.c_str());
-    std::cin >> texto;          relatorio.set_tempo_colheita(texto);
+    std::cin >> texto;          
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
+    relatorio.set_tempo_colheita(texto);
     
     registrarRelatorio(relatorio);
 
@@ -202,6 +236,10 @@ void Analista::atualizarStatusDoLote() {
 
     std::cout << "Atualizar como 'Plantado' status do lote de ID: ";
     std::cin >> id_lote;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
 
     while(id_lote <= 0) {
         comando = "espeak -v pt-br -s 120 \"ID invalido. Digite novamente\"";
