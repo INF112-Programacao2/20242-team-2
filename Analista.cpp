@@ -195,49 +195,59 @@ void Analista::gerarRelatorio(){
     std::cout<<"Relatorio completo em: RelatorioAnalista.txt\n";
 }
 
-void Analista::atualizarStatusDoLote(){
-    
-    int id_lote=0;
-    std::string comando = "espeak -v pt-br -s 120 \"Digite o ID do lote que deseja atualizar o status como plantado\"";
-        system(comando.c_str());
-    std::cout<<"Atualizar como 'Plantado' status do lote de ID: ";
-    std::cin>>id_lote;
+void Analista::atualizarStatusDoLote() {
+    int id_lote = 0;
+    std::string comando = "espeak -v pt-br -s 120 \"Digite o ID do lote que atualizado como plantado\"";
+    system(comando.c_str());
 
-    while(id_lote<=0){
-        std::cout<<"ID de lote inválido. Digite novamente: ";
-        std::string comando = "espeak -v pt-br -s 120 \"ID de lote inválido. Digite novamente\"";
-        system(comando.c_str());
-        std::cin>>id_lote;
+    std::cout << "Atualizar como 'Plantado' status do lote de ID: ";
+    std::cin >> id_lote;
+
+    while(id_lote <= 0) {
+        std::string comando = "espeak -v pt-br -s 120 \"ID invalido. Digite novamente\"";
+    system(comando.c_str());
+        std::cout << "ID de lote inválido. Digite novamente: ";
+        std::cin >> id_lote;
     }
 
-    std::fstream arquivoLote("Lotes.txt");
-    if(!arquivoLote)
-        throw std::runtime_error("Erro: Não foi possível abrir o arquivo 'Sementes.txt'");
+    std::fstream arquivoLote("Lotes.txt", std::ios::in | std::ios::out);
+    if(!arquivoLote) {
+        throw std::runtime_error("Erro: Não foi possível abrir o arquivo 'Lotes.txt'");
+    }
 
     std::string linha;
-    std::getline(arquivoLote,linha); //ignorando primeira linha do txt
-    int id_lido;
-    
-    while(true){
-        arquivoLote>>id_lido; arquivoLote.ignore();      //ignorando id semente e caracter +
-        arquivoLote>>id_lido;
+    std::getline(arquivoLote, linha); // Guarda os contadores
+    std::string contadores = linha;
+    std::string novoConteudo;
+    bool encontrado = false;
 
-        if(id_lido==id_lote)
-            break;
-        else{
-            std::getline(arquivoLote,linha);
-            if(arquivoLote.fail())
-                throw std::ios_base::failure("ID nao encontrado!");
+    while(std::getline(arquivoLote, linha)) {
+        size_t pos1 = linha.find('+');
+        std::string id_semente = linha.substr(0, pos1);
+        
+        size_t pos2 = linha.find('+', pos1 + 1);
+        std::string id = linha.substr(pos1 + 1, pos2 - pos1 - 1);
+        
+        if(std::stoi(id) == id_lote) {
+            encontrado = true;
+            novoConteudo += id_semente + "+" + id + "+Plantado+" + 
+                           linha.substr(linha.find('+', pos2 + 1) + 1) + "\n";
+        } else {
+            novoConteudo += linha + "\n";
         }
     }
-    Lote lote_alterado(id_lote);
-    arquivoLote.seekp(arquivoLote.tellg());
-    arquivoLote<<"+Plantado";
 
+    if(!encontrado) {
+        throw std::runtime_error("ID não encontrado!");
+    }
+
+    arquivoLote.clear();
+    arquivoLote.seekp(0);
+    arquivoLote << contadores << "\n" << novoConteudo;
     arquivoLote.close();
 
-    comando="espeak -v pt-br -s 120 \"Status atualizado com sucesso\"";
+    std::string comando = "espeak -v pt-br -s 120 \"Status atualizado com sucesso\"";
     system(comando.c_str());
-    std::cout<<"Status atualizado com sucesso!\n";
 
+    std::cout << "Status atualizado com sucesso!\n";
 }
