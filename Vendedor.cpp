@@ -1106,48 +1106,81 @@ void Vendedor::gerarRelatorio(){
 
     //_____________________________________________________________________________________________________
 
-void Vendedor::atualizarPrecoDaSemente(){
-    std::cout<<"Dejesa atualizar o preco de qual lote de sementes? ID do lote: ";
-    int id_lote=0;
-    std::cin>>id_lote;
+void Vendedor::atualizarPrecoDaSemente() {
+    std::cout << "Deseja atualizar o preço de qual lote de sementes? ID do lote: ";
+    int id_lote = 0;
+    std::cin >> id_lote;
 
-    while(id_lote<=0){
-        std::cout<<"ID inválido. Digite novamente o ID do lote: ";
-        std::cin>>id_lote;
+    while (id_lote <= 0) {
+        std::cout << "ID inválido. Digite novamente o ID do lote: ";
+        std::cin >> id_lote;
     }
 
-    std::fstream arquivoLotes("Lotes.txt");
-    if(!arquivoLotes)
+    std::fstream arquivoLotes("Lotes.txt", std::ios::in | std::ios::out);
+    if (!arquivoLotes) {
         throw std::runtime_error("Erro ao abrir arquivo Lotes.txt");
-    
-    int cont_registros,id;
+    }
+
+    int cont_registros, id;
     std::string linha;
     float preco;
 
-    arquivoLotes>>cont_registros>>cont_registros;       arquivoLotes.ignore();  //ignorando controle de id
-    for(int i=0;i<cont_registros;i++){
-        arquivoLotes>>id;
-        if(id_lote==id){
-            for(int i=0;i<9;i++)  //9 parametros entre id e preco
-                std::getline(arquivoLotes,linha,'+');
-            int pos=arquivoLotes.tellg();
-            arquivoLotes>>preco;
-            std::cout<<"O preco por kg atual do lote é de RS "<<preco<<"\nInsira o novo valor: ";
-            std::cin>>preco;
-            if(preco<=0){
-                throw std::invalid_argument("Nao é possivel por um preco menor ou igual a 0!\n");
+    arquivoLotes >> cont_registros;  // Lê o número de registros
+    arquivoLotes.ignore();  // Ignora a quebra de linha após o contador de registros
+
+    bool loteEncontrado = false;
+    std::streampos posicaoAtual;
+
+    // Loop para ler todos os lotes
+    for (int i = 0; i < cont_registros; i++) {
+        posicaoAtual = arquivoLotes.tellg();  // Marca a posição no arquivo
+        std::getline(arquivoLotes, linha);  // Lê uma linha inteira
+
+        std::stringstream ss(linha);
+        // Lê os dados separados por '+'
+        std::string texto;
+        
+        std::getline(ss, texto, '+');  // Ignorando 
+        std::getline(ss, texto, '+');  
+        id = std::stoi(ttexto);  // Converte para inteiro
+
+        
+        if (id_lote == id) {
+            loteEncontrado = true;
+
+            // Ignora os 7 valores entre ID e preço
+            for (int j = 0; j < 7; ++j) {
+                std::getline(ss, texto, '+');
             }
-            arquivoLotes.seekp(pos);
-            arquivoLotes<<std::fixed<<std::setprecision(2)<<preco<<std::endl;
+
+            // Lê o preço (último campo)
+            std::getline(ss, texto, '+');
+            preco = std::stof(texto);  // funcao q converte para float
+
+            std::cout << "O preço por kg atual do lote é de R$ " << preco
+                      << "\nInsira o novo valor: ";
+            std::cin >> preco;
+
+            if (preco <= 0) {
+                throw std::invalid_argument("Não é possível por um preço menor ou igual a 0!\n");
+            }
+
+            // Reposiciona o ponteiro para o início do lote
+            arquivoLotes.seekp(posicaoAtual);
+            arquivoLotes << linha.substr(0, linha.rfind('+') + 1)  // Escreve tudo até o preço
+                        << std::fixed << std::setprecision(2) << preco  
+                        << std::endl;  
+
+            std::cout << "Preço atualizado com sucesso!\n";
             break;
         }
     }
-    arquivoLotes.close();
-    if(arquivoLotes.fail()){
-        throw std::runtime_error("Erro ao atualizar preco!\n");
-    std::cout<<"Preco atualizado com sucesso!\n";
+
+    if (!loteEncontrado) {
+        std::cout << "Lote com o ID " << id_lote << " não encontrado.\n";
     }
 
+    arquivoLotes.close();
 }
 
 void Vendedor::acessarInterface() {
