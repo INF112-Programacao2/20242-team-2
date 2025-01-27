@@ -207,12 +207,12 @@ void Gestor::salvarSemente(Semente& semente) {
 
         arquivo.seekp(0,std::ios::end);
         // Caso todos os valores estejam válidos, escreve no arquivo
-        arquivo << semente.get_id_tipo() << "+" << semente.get_solo_ideal() << "+"
-                << semente.get_clima_ideal() << "+" << "+"
+        arquivo <<"\n"<< semente.get_id_tipo() << "+" << semente.get_solo_ideal() << "+"
+                << semente.get_clima_ideal() << "+"
                 << semente.get_expectativaIncidenciaPragasDoencas()<<"+"<<semente.get_irrigacao_ideal()  << "+"
                 << semente.get_expectativaCrescimento() << "+" << semente.get_expectativaTaxaDeGerminacao() << "+"
                 << semente.get_expectativaTaxaDeSobrevivencia() << "+" << semente.get_produz_frutos() <<"+"
-                << semente.get_tempo_colheita()<<"\n";
+                << semente.get_tempo_colheita();
 
         //atualizando contador de id e de sementes registradas
         arquivo.seekg(0,std::ios::beg);        //leva o apontador até a posicao do contador do arquivo
@@ -592,19 +592,22 @@ void Gestor::visualizar_semente_especifica(){
         }
     }
     arquivoSementes.ignore();                                           
-    getline(arquivoSementes, linha, '+');                       semente_vizualizada.set_clima_ideal(linha);
-    getline(arquivoSementes, linha, '+');                       semente_vizualizada.set_solo_ideal(linha);                                      
+    getline(arquivoSementes, linha, '+');                       semente_vizualizada.set_solo_ideal(linha);
+    getline(arquivoSementes, linha, '+');                       semente_vizualizada.set_clima_ideal(linha);                                      
     arquivoSementes >> valor_lido;                              semente_vizualizada.set_expectativaIncidenciaPragasDoencas(valor_lido);
     arquivoSementes >> valor_lido;                              semente_vizualizada.set_irrigacao_ideal(valor_lido);           
-    arquivoSementes >> valor_lido;                              semente_vizualizada.set_expectativaTaxaDeSobrevivencia(valor_lido);          
+    arquivoSementes >> valor_lido;                              semente_vizualizada.set_expectativaCrescimento(valor_lido);          
     arquivoSementes >> valor_lido;                              semente_vizualizada.set_expectativaTaxaDeGerminacao(valor_lido);
-    arquivoSementes >> valor_lido;                              semente_vizualizada.set_expectativaCrescimento(valor_lido);
+    arquivoSementes >> valor_lido;                              semente_vizualizada.set_expectativaTaxaDeSobrevivencia(valor_lido);
     arquivoSementes >>valor_lido;                            
     if(valor_lido==1){
         semente_vizualizada.set_produz_frutos(true);
         arquivoSementes>>valor_lido;              semente_vizualizada.set_tempo_colheita(valor_lido);
     }
-
+    else{
+        semente_vizualizada.set_produz_frutos(false);
+        arquivoSementes>>valor_lido;              semente_vizualizada.set_tempo_colheita(valor_lido);
+    }
 
     arquivoSementes.close();
     //------------------------------------------------
@@ -614,7 +617,7 @@ void Gestor::visualizar_semente_especifica(){
     std::cout<<"Dados da semente:\nID :"<<semente_vizualizada.get_id_tipo()<<"\nSolo ideal: "<<semente_vizualizada.get_solo_ideal()<<"\nClima ideal: "<<
     semente_vizualizada.get_clima_ideal()<<"\nIrrigacao ideal: "<<semente_vizualizada.get_irrigacao_ideal()<<" cmˆ3 agua/cmˆ3 solo\nTaxa de germinacao: "<<
     semente_vizualizada.get_expectativaTaxaDeGerminacao()<<" %\nTaxa de sobrevivencia: "<<semente_vizualizada.get_expectativaTaxaDeSobrevivencia()<<" %\nTaxa de crescimento: "<<
-    semente_vizualizada.get_expectativaTaxaDeSobrevivencia()<<" %\nTaxa de incidencia de Pragas e doencas: "<<semente_vizualizada.get_expectativaIncidenciaPragasDoencas()<<" %\n";
+    semente_vizualizada.get_expectativaCrescimento()<<" %\nTaxa de incidencia de Pragas e doencas: "<<semente_vizualizada.get_expectativaIncidenciaPragasDoencas()<<" %\n";
     if(semente_vizualizada.get_produz_frutos())
         std::cout<<"Produz frutos com um tempo de colheita de: "<<semente_vizualizada.get_tempo_colheita()<<" meses\n";
 
