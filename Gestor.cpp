@@ -188,10 +188,11 @@ void Gestor::salvarSemente(Semente& semente) {
         arquivo.seekp(0,std::ios::end);
         // Caso todos os valores estejam válidos, escreve no arquivo
         arquivo << semente.get_id_tipo() << "+" << semente.get_solo_ideal() << "+"
-                << semente.get_clima_ideal() << "+" << semente.get_tempo_colheita() << "+"
-                << semente.get_irrigacao_ideal() << "+" << semente.get_expectativaIncidenciaPragasDoencas() << "+"
+                << semente.get_clima_ideal() << "+" << "+"
+                << semente.get_expectativaIncidenciaPragasDoencas()<<"+"<<semente.get_irrigacao_ideal()  << "+"
                 << semente.get_expectativaCrescimento() << "+" << semente.get_expectativaTaxaDeGerminacao() << "+"
-                << semente.get_expectativaTaxaDeSobrevivencia() << "+" << semente.get_produz_frutos() << "\n";
+                << semente.get_expectativaTaxaDeSobrevivencia() << "+" << semente.get_produz_frutos() <<"+"
+                << semente.get_tempo_colheita()<<"\n";
 
         //atualizando contador de id e de sementes registradas
         arquivo.seekg(0,std::ios::beg);        //leva o apontador até a posicao do contador do arquivo
@@ -209,73 +210,146 @@ void Gestor::salvarSemente(Semente& semente) {
     }
 }
 
+
 void Gestor::registrarSemente() {
 
-        Semente novaSemente;
+    Semente novaSemente;
+    float tempoColheita = 0, irrigacaoIdeal = 0, expectativaIncidenciaPragasDoencas = 0, expectativaCrescimento = 0;
+    bool produzFrutos = false;
+    float expectativaTaxaGerminacao = 0, expectativaTaxaSobrevivencia = 0;
+    int id = 0;
 
-        std::string clima, solo;
-        float tempoColheita, irrigacaoIdeal, expectativaIncidenciaPragasDoencas, expectativaCrescimento;
-        bool produzFrutos;
-        float expectativaTaxaGerminacao, expectativaTaxaSobrevivencia;
-        int id;
+    std::string clima, solo;
 
-        std::ifstream arquivoSementes("Sementes.txt");
-        if (!arquivoSementes.is_open()) {
-            throw std::ios_base::failure("Erro ao abrir o arquivo Sementes.txt para escrita");
+    // Lê o ID da semente a partir do arquivo
+    std::ifstream arquivoSementes("Sementes.txt");
+    if (!arquivoSementes.is_open()) {
+        throw std::ios_base::failure("Erro ao abrir o arquivo Sementes.txt para leitura");
+    }
+    arquivoSementes >> id;  // Lê o ID atual de sementes e incrementa
+    id++;
+    arquivoSementes.close();
+
+    // Coleta informações da semente
+    std::cout << "Insira os detalhes da semente:\n";
+    
+    // Menu para selecionar clima
+    std::cout << "Escolha o clima ideal da semente:\n";
+    std::cout << "1. Tropical\n";
+    std::cout << "2. Temperado\n";
+    std::cout << "3. Equatorial\n";
+    std::cout << "4. Semiarido\n";
+    std::cout << "5. Litoraneo\n";
+    std::cout << "Digite o número correspondente ao clima: ";
+    int opcaoClima;
+    std::cin >> opcaoClima;
+    std::cin.ignore();  // Limpa o buffer de entrada
+    switch (opcaoClima) {
+        case 1:
+            clima = "Tropical";
+            break;
+        case 2:
+            clima = "Temperado";
+            break;
+        case 3:
+            clima = "Equatorial";
+            break;
+        case 4:
+            clima="Semiarido";
+            break;
+        case 5:
+            clima="Litoraneo";
+            break;
+        default:
+            throw std::invalid_argument("Opção de clima inválida.");
+    }
+
+    // Menu para selecionar solo
+    std::cout << "Escolha o tipo de solo ideal da semente:\n";
+    std::cout << "1. Arenoso\n";
+    std::cout << "2. Argiloso\n";
+    std::cout << "3. Franco\n";
+    std::cout << "4. Siltoso\n";
+    std::cout << "Digite o número correspondente ao solo: ";
+    int opcaoSolo;
+    std::cin >> opcaoSolo;
+    std::cin.ignore();  // Limpa o buffer de entrada
+    switch (opcaoSolo) {
+        case 1:
+            solo = "Arenoso";
+            break;
+        case 2:
+            solo = "Argiloso";
+            break;
+        case 3:
+            solo = "Franco";
+            break;
+        case 4:
+            solo="Siltoso";
+            break;
+        default:
+            throw std::invalid_argument("Opção de solo inválida.");
+    }
+
+    // Coleta de outros dados
+    std::cout << "Irrigacao ideal (em mm/dia): ";
+    std::cin >> irrigacaoIdeal;
+
+    std::cout << "Expectativa de resistência a pragas (%): ";
+    std::cin >> expectativaIncidenciaPragasDoencas;
+
+    std::cout << "Expectativa de crescimento (%): ";
+    std::cin >> expectativaCrescimento;
+
+    std::cout << "Expectativa de taxa de germinação (%): ";
+    std::cin >> expectativaTaxaGerminacao;
+
+    std::cout << "Expectativa de taxa de sobrevivência (%): ";
+    std::cin >> expectativaTaxaSobrevivencia;
+
+    // Pergunta sobre produção de frutos
+    char resp;
+    std::cin.ignore();  // Limpar o buffer de entrada após os floats
+    std::cout << "Produz frutos? (S/N): ";
+    std::cin >> resp;
+
+    if (resp == 's' || resp == 'S') {
+        novaSemente.set_produz_frutos(true);
+
+        // Pergunta sobre o tempo de colheita
+        std::cout << "Tempo de colheita (meses): ";
+        std::cin >> tempoColheita;
+
+        // Validando a entrada de tempo de colheita
+        if (std::cin.fail()) {
+            throw std::invalid_argument("Entrada inválida para o tempo de colheita.");
         }
-        arquivoSementes>>id; id++;         //le o contador de tipos e calcula o ID
-        arquivoSementes.close();
-
-
-        std::cout << "Insira os detalhes da semente:\n";            std::cin.ignore();
-        std::cout << "Clima ideal: ";                               std::getline(std::cin, clima); 
-        std::cout << "Solo ideal: ";                                std::getline(std::cin, solo);
-        std::cout << "Irrigacao ideal (em mm/dia): ";               std::cin >> irrigacaoIdeal;
-        std::cout << "Expectativa de resistência a pragas (%): ";   std::cin >> expectativaIncidenciaPragasDoencas;
-        std::cout << "Expectativa de crescimento (%): ";            std::cin >> expectativaCrescimento;
-        std::cout << "Expectativa de taxa de germinação (%): ";     std::cin >> expectativaTaxaGerminacao;
-        std::cout << "Expectativa de taxa de sobrevivência (%): ";   std::cin >> expectativaTaxaSobrevivencia;
-
-        //se produz frutos? e se sim de quanto em quanto tempo?
-        char resp;
-        std::cin.ignore();
-        std::cout<<"Produz frutos? (S/N) ";   std::cin>>resp;
-        if(resp=='s'||resp=='s'){
-            novaSemente.set_produz_frutos(true);
-            std::cout<<"Tempo de colheita (meses): ";     
-            std::cin>>tempoColheita;
-            novaSemente.set_tempo_colheita(tempoColheita); 
-
-            if (std::cin.fail()) {
-                throw std::invalid_argument("Entrada inválida para o tempo de colheita.");
-            }
-        std::cin.ignore();          
-        }
-
-        else if(resp=='n'||resp=='N'){
-            novaSemente.set_produz_frutos(false);
-            novaSemente.set_tempo_colheita(0);
-        }
-        //tratando respostas diferentes de sim ou nao
-        else
-            throw std::invalid_argument("Resposta inválida para 'Produz frutos?'");
-        
-        novaSemente.set_id_tipo(id);
-        novaSemente.set_clima_ideal(clima);
-        novaSemente.set_solo_ideal(solo);
         novaSemente.set_tempo_colheita(tempoColheita);
-        novaSemente.set_irrigacao_ideal(irrigacaoIdeal);
-        novaSemente.set_expectativaIncidenciaPragasDoencas(expectativaIncidenciaPragasDoencas);
-        novaSemente.set_expectativaCrescimento(expectativaCrescimento);
-        novaSemente.set_expectativaTaxaDeGerminacao(expectativaTaxaGerminacao);
-        novaSemente.set_expectativaTaxaDeSobrevivencia(expectativaTaxaSobrevivencia);
-        novaSemente.set_produz_frutos(produzFrutos);
+    } else if (resp == 'n' || resp == 'N') {
+        novaSemente.set_produz_frutos(false);
+        novaSemente.set_tempo_colheita(0);  // Semente não produz frutos, então o tempo de colheita é 0
+    } else {
+        throw std::invalid_argument("Resposta inválida para 'Produz frutos?'");
+    }
 
-        // Registra a nova semente no contêiner
-        sementesRegistradas.push_back(novaSemente);
+    // Setando os outros atributos da nova semente
+    novaSemente.set_id_tipo(id);
+    novaSemente.set_clima_ideal(clima);
+    novaSemente.set_solo_ideal(solo);
+    novaSemente.set_irrigacao_ideal(irrigacaoIdeal);
+    novaSemente.set_expectativaIncidenciaPragasDoencas(expectativaIncidenciaPragasDoencas);
+    novaSemente.set_expectativaCrescimento(expectativaCrescimento);
+    novaSemente.set_expectativaTaxaDeGerminacao(expectativaTaxaGerminacao);
+    novaSemente.set_expectativaTaxaDeSobrevivencia(expectativaTaxaSobrevivencia);
 
-        salvarSemente(novaSemente);
+    // Registrando a nova semente no contêiner
+    std::vector<Semente> sementesRegistradas;
+    sementesRegistradas.push_back(novaSemente);
+
+    // Salvando a semente no arquivo (ou qualquer outro local de armazenamento)
+    salvarSemente(novaSemente);
 }
+
 
 void Gestor::excluirSemente() {
     int idParaExcluir;
