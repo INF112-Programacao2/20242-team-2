@@ -31,9 +31,6 @@ class Lote{
         Lote(int id_semente);             //katrine provavelmente vai ter que adaptar o codigo quando eu apagar isso
         ~Lote(); //destrutor              //vazio por em quanto!!
     
-        //funcao que vai pro vendedor
-        void consumirSementes(int _id_lote,int quantidadeConsumida); //diminuir ou zerar a quantidade disponivel no lote
-    
     
         //-----------------------gets e sets----------------//           //ok
         int getIdLote() const;
