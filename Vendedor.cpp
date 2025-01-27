@@ -12,6 +12,18 @@
 //_________________________________________Métodos para Area de Plantio_________________________________________________________________
 
 Vendedor::~Vendedor(){};
+
+#include <iostream>
+#include <string>
+#include <regex>
+
+bool Vendedor:: validarFormatoCNPJ(const std::string& cnpj) {
+    // Verifica se o formato é válido (com pontuação ou apenas números)
+    std::regex regexCNPJ(R"(^(\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}|\d{14})$)");
+    return std::regex_match(cnpj, regexCNPJ);
+}
+
+
 void Vendedor::registrarArea() {
     AreaPlantio novaArea;
     int id = 0;
@@ -32,8 +44,16 @@ void Vendedor::registrarArea() {
     std::cin.ignore();
     std::cout << "Nome do Proprietário: ";
     std::getline(std::cin, nome);
-    std::cout << "CNPJ do Proprietário: ";
-    std::getline(std::cin, cnpj);
+
+    while(true){
+        std::cout << "CNPJ do Proprietário (XX.XXX.XXX/XXXX-XX ou XXXXXXXXXXXXXX): ";
+        std::getline(std::cin, cnpj);
+        if (!validarFormatoCNPJ(cnpj)) {
+            std::cerr<<"CNPJ no formato inválido.\n";
+        }
+        if(validarFormatoCNPJ(cnpj)) break;
+    }
+
     std::cout << "Tamanho da Área (hectares): ";
     std::cin >> tamanho;
     if (std::cin.fail()) {
@@ -47,48 +67,52 @@ void Vendedor::registrarArea() {
     std::cout << "Localização: ";
     std::getline(std::cin, localizacao);
 
-    // Menu de seleção de tipo de solo
-    std::cout << "\nEscolha o tipo de solo da área:\n";
-    std::cout << "1. Arenoso\n";
-    std::cout << "2. Argiloso\n";
-    std::cout << "3. Franco\n";
-    std::cout << "4. Siltoso\n";
-    int escolha_solo;
-    std::cout << "Digite o número da opção: ";
-    std::cin >> escolha_solo;
+    // Loop para a seleção do tipo de solo
+    while (true) {
+        std::cout << "\nEscolha o tipo de solo da área:\n";
+        std::cout << "1. Arenoso\n";
+        std::cout << "2. Argiloso\n";
+        std::cout << "3. Franco\n";
+        std::cout << "4. Siltoso\n";
+        int escolha_solo;
+        std::cout << "Digite o número da opção: ";
+        std::cin >> escolha_solo;
 
-    switch (escolha_solo) {
-        case 1: tipo_solo = "Arenoso"; break;
-        case 2: tipo_solo = "Argiloso"; break;
-        case 3: tipo_solo = "Franco"; break;
-        case 4: tipo_solo = "Siltoso"; break;
-        default:
-            throw std::invalid_argument("Opcao de solo inválida˜\n");
-            tipo_solo = "";
-            break;
+        switch (escolha_solo) {
+            case 1: tipo_solo = "Arenoso"; break;
+            case 2: tipo_solo = "Argiloso"; break;
+            case 3: tipo_solo = "Franco"; break;
+            case 4: tipo_solo = "Siltoso"; break;
+            default:
+                std::cout << "Opção de solo inválida. Tente novamente.\n";
+                continue; // Volta para o início do loop
+        }
+        break; // Sai do loop se a opção for válida
     }
 
-    // Menu de seleção de clima
-    std::cout << "\nEscolha o clima da área:\n";
-    std::cout << "1. Temperado\n";
-    std::cout << "2. Tropical\n";
-    std::cout << "3. Litorâneo\n";
-    std::cout << "4. Semiarido\n";
-    std::cout << "5. Equatorial\n";
-    int escolha_clima;
-    std::cout << "Digite o número da opção: ";
-    std::cin >> escolha_clima;
+    // Loop para a seleção do clima
+    while (true) {
+        std::cout << "\nEscolha o clima da área:\n";
+        std::cout << "1. Temperado\n";
+        std::cout << "2. Tropical\n";
+        std::cout << "3. Litorâneo\n";
+        std::cout << "4. Semiarido\n";
+        std::cout << "5. Equatorial\n";
+        int escolha_clima;
+        std::cout << "Digite o número da opção: ";
+        std::cin >> escolha_clima;
 
-    switch (escolha_clima) {
-        case 1: clima = "Temperado"; break;
-        case 2: clima = "Tropical"; break;
-        case 3: clima = "Litorâneo"; break;
-        case 4: clima = "Semiarido"; break;
-        case 5: clima = "Equatorial"; break;
-        default:
-            throw std::invalid_argument("Opcao de clima inválido\n");
-            clima = "";
-            break;
+        switch (escolha_clima) {
+            case 1: clima = "Temperado"; break;
+            case 2: clima = "Tropical"; break;
+            case 3: clima = "Litorâneo"; break;
+            case 4: clima = "Semiarido"; break;
+            case 5: clima = "Equatorial"; break;
+            default:
+                std::cout << "Opção de clima inválida. Tente novamente.\n";
+                continue; // Volta para o início do loop
+        }
+        break; // Sai do loop se a opção for válida
     }
 
     status = "Disponível";  // Definindo o status da área como "Disponível"

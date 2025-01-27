@@ -14,6 +14,7 @@ private:
     void salvarArea(AreaPlantio area);                       //ok
     std::string getCurrentDate();                            //ok
     bool validarData(std::string& data);                    //ok
+    bool validarFormatoCNPJ(const std::string& cnpj);
     void salvarNegociacao(Negociacao& neg);                 //ok
     void buscar_lotes_dessa_semente(int id_semente_busca);  //ok
     void registrar_relatorio_area(AreaPlantio area);
