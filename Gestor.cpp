@@ -261,6 +261,10 @@ void Gestor::registrarSemente() {
     std::cout << "4. Semiarido\n";
     std::cout << "5. Litoraneo\n";
     std::cout << "Digite o número correspondente ao clima: ";
+    if(std::cin.fail()){
+        throw std::invalid_argument("Entrada inválida");
+        std::cin.clear();
+    }
     int opcaoClima;
     std::cin >> opcaoClima;
     std::cin.ignore();  // Limpa o buffer de entrada
@@ -281,7 +285,8 @@ void Gestor::registrarSemente() {
             clima="Litoraneo";
             break;
         default:
-            throw std::invalid_argument("Opção de clima inválida.");
+            throw std::invalid_argument("Opção de clima inválida.\n");
+            std::cin.clear();
     }
 
     // Menu para selecionar solo
@@ -309,6 +314,7 @@ void Gestor::registrarSemente() {
             break;
         default:
             throw std::invalid_argument("Opção de solo inválida.");
+            std::cin.clear();
     }
 
      // Coleta de dados
@@ -429,6 +435,11 @@ void Gestor::excluirSemente() {
     int idParaExcluir;
     std::cout << "Insira o ID da semente que deseja excluir: ";
     std::cin >> idParaExcluir;
+    if(std::cin.fail()){
+        throw std::invalid_argument("Entrada inválida");
+        std::cin.clear();
+    }
+    
     std::cin.ignore(); // Limpa o buffer de entrada
 
     std::ifstream arquivoEntrada("Sementes.txt");
@@ -542,6 +553,10 @@ void Gestor::registrarLote() {
         
 
         std::cout << "ID da semente associada: ";                                std::cin >> idSementeAssociada;
+        if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+        }
         std::cin.ignore();
         std::cout << "Status de disponibilidade (Estoque/Vendido/Plantado): ";   std::getline(std::cin, statusDisponibilidade);
         std::cout << "Nome cientifico: ";                                        std::getline(std::cin, nomeCientifico);
@@ -550,7 +565,15 @@ void Gestor::registrarLote() {
         std::cout << "Data de producao (DD/MM/AA): ";                            std::getline(std::cin, dataProducao);
         std::cout << "Pais de origem: ";                                         std::getline(std::cin, paisOrigem);
         std::cout << "Quantidade disponivel (kg): ";                             std::cin >> quantidadeDisponivel;
+        if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+        }
         std::cout << "Preco estimado por kg de semente: ";                       std::cin >> precoEstimado;
+        if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+        }
 
         novoLote.setIdSementeAssociada(idSementeAssociada);
         novoLote.setIdLote(id);
@@ -572,6 +595,10 @@ void Gestor::excluirLote() {
     int idParaExcluir;
     std::cout << "Insira o ID do lote que deseja excluir: ";
     std::cin >> idParaExcluir;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
     std::cin.ignore();
 
     std::ifstream arquivoEntrada("Lotes.txt");
@@ -687,6 +714,10 @@ void Gestor::visualizar_lote_especifico(){
 
     std::cout<<"Deseja visualizar os dados de qual lote? ID: ";
     std::cin>>id;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
     if(id<=0)
         throw std::invalid_argument("Valor de id invalido");
     //____________________________________________//
