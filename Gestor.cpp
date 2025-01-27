@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <stdexcept>
+#include <limits>
 #include "Gestor.hpp"
 #include "Vendedor.hpp"
 #include "Analista.hpp"
@@ -16,14 +17,17 @@ void Gestor::cadastrarUsuario() {
 
     // Solicita as informações do usuário
     std::cout << "Insira o nome do usuario: ";
+    std::cin.ignore();
     std::getline(std::cin, nome);
-    std::cout << "Insira o email do usuario: ";
-    std::getline(std::cin, email);
+
+    while(true){
+        std::cout << "Insira o email do usuario: ";
+        std::getline(std::cin, email);
 
     // Valida o email
-    if (email.find('@') == std::string::npos) {
-        std::cerr << "Erro: O email deve conter o caractere '@'!" << std::endl;
-        return;
+        if (email.find('@') == std::string::npos) {
+            std::cerr << "Erro: O email deve conter o caractere '@'!" << std::endl;
+        } else break;
     }
 
     // Verifica se o email já existe no arquivo
@@ -49,13 +53,15 @@ void Gestor::cadastrarUsuario() {
     // Solicita o tipo e senha
     std::cout << "Insira o tipo de usuario: ";
     std::getline(std::cin, tipo);
-    std::cout << "Insira a nova senha do usuario: ";
-    std::getline(std::cin, senha);
 
-    // Valida a senha
-    if (senha.length() < 5) {
-        std::cerr << "Erro: A senha deve conter pelo menos 5 caracteres!" << std::endl;
-        return;
+    while(true){
+        std::cout << "Insira a nova senha do usuario: ";
+        std::getline(std::cin, senha);
+
+        // Valida a senha
+        if (senha.length() < 5) {
+            std::cerr << "Erro: A senha deve conter pelo menos 5 caracteres!" << std::endl;
+        } else break;
     }
 
     // Atualiza ID e grava os dados no arquivo
@@ -65,8 +71,7 @@ void Gestor::cadastrarUsuario() {
         throw std::ios_base::failure("Erro ao abrir o arquivo usuarios.txt");
     }
 
-    fout << id << std::endl
-         << nome << std::endl
+    fout << nome << std::endl
          << email << std::endl
          << tipo << std::endl
          << senha << std::endl;
@@ -84,19 +89,18 @@ void Gestor::listarUsuarios() {
     std::string linha;
     std::cout << "Lista de usuarios cadastrados:" << std::endl;
     while (std::getline(fin, linha)) {
-        int id = std::stoi(linha); // Primeiro, lê o ID
         std::getline(fin, linha);
-        std::string nome = linha; // Depois, lê o nome
+        std::string nome = linha; // Lê o nome
+        std:: getline(fin, linha);
+        std::string email=linha;  //Depois, lê o email
         std::getline(fin, linha);
         std::string tipo = linha; // Depois, lê o tipo
-        std::getline(fin, linha);
-        std::string senha = linha; // Depois, lê a senha
+        std::getline(fin, linha); //lê a senha
 
         // Exibe os dados de forma organizada
-        std::cout << "ID: " << id 
-                  << ", Nome: " << nome 
-                  << ", Tipo: " << tipo     
-                  << std::endl;
+        std::cout << " Nome: " << nome 
+                  << ", Tipo: " << tipo 
+                  << ", Email: " << email << std::endl;
     }
     fin.close();
 }
@@ -462,7 +466,8 @@ void Gestor::registrarLote() {
     id++; // Increment ID
     //---------------------------------------//
 
-        int idSementeAssociada,quantidadeDisponivel,precoEstimado;
+        int idSementeAssociada;
+        float quantidadeDisponivel,precoEstimado;
         std::string statusDisponibilidade,nomeCientifico,geneIntroduzido,metodoProducao,dataProducao,paisOrigem;
         
 
@@ -668,15 +673,30 @@ void Gestor::acessarInterface() {
     int opcao_selecionada;
 
     while (true) {
+        int opcao_selecionada;
         std::cout << "|-------------------------MENU DO GESTOR--------------------------|\n";
-        std::cout << "|1|- Registrar uma nova semente\n|2|- Visualizar dados de uma semente\n";
-        std::cout << "|3|- Excluir uma semente\n|4|- Registrar um novo lote\n";
-        std::cout << "|5|- Visualizar dados de um lote\n|6|- Excluir um lote\n";
-        std::cout << "|7|- Visualizar relatórios\n|8|- Sair do programa\n";
+        std::cout << "|1|- Registrar uma nova semente\n";
+        std::cout << "|2|- Visualizar dados de uma semente\n";
+        std::cout << "|3|- Excluir uma semente\n";
+        std::cout << "|4|- Registrar um novo lote\n";
+        std::cout << "|5|- Visualizar dados de um lote\n";
+        std::cout << "|6|- Excluir um lote\n";
+        std::cout << "|7|- Cadastrar um novo usuário\n";
+        std::cout << "|8|- Listar usuários cadastrados\n";
+        std::cout << "|9|- Excluir um usuário\n";
+        std::cout << "|10|- Visualizar relatórios\n";
+        std::cout << "|11|- Sair do programa\n";
         std::cout << "|------------------------------------------------------------------|\n";
         std::cout << "|Escolha uma opção: ";
         
         std::cin >> opcao_selecionada;
+                // Verifica se a entrada é inválida (ex.: usuário digitou uma string ou caractere inválido)
+        if (std::cin.fail()) {
+            std::cin.clear(); // Limpa o estado de erro do cin
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignora o restante da entrada inválida
+            std::cerr << "Entrada inválida! Por favor, insira um número correspondente a uma opção do menu.\n";
+            continue;
+        }
 
         switch (opcao_selecionada) {
             case 1:
@@ -741,18 +761,48 @@ void Gestor::acessarInterface() {
                 }
                 break;
             
-            case 7:
+                        case 7:
+                try {
+                    cadastrarUsuario();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+
+            case 8:
+                try {
+                    listarUsuarios();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+
+            case 9:
+                try {
+                    excluirUsuario();
+                } catch (const std::exception& e) {
+                    std::cerr << "Erro: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Erro desconhecido!" << std::endl;
+                }
+                break;
+
+            case 10:
                 try {
                     gerarRelatorio();
                 } catch (const std::exception& e) {
                     std::cerr << "Erro: " << e.what() << std::endl;
                 }
                 break;
-            
-            case 8:
+
+            case 11:
                 std::cout << "Encerrando o programa...\n";
                 return;
-            
+
             default:
                 std::cerr << "Opção inválida! Tente novamente.\n";
                 break;
