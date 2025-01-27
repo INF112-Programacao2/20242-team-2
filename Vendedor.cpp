@@ -11,58 +11,80 @@
 
 //_________________________________________Métodos para Area de Plantio_________________________________________________________________
 
-void Vendedor::registrarArea() {
-    AreaPlantio novaArea;
-    int id = 0;
-    std::string nome, cnpj, localizacao, tipo_solo, clima, status;
-    float tamanho;
+void Vendedor::salvarArea(AreaPlantio area) {
+    int cont_id = 0, cont_registros = 0;
+    std::vector<std::string> linhas;
 
-    // Lê o último ID do arquivo
-    std::ifstream arquivoAreas("AreaPlantio.txt");
-    if (arquivoAreas.is_open()) {
-        arquivoAreas >> id; // Lê o ID atual
-        arquivoAreas.close();
+    try {
+        // Abrir arquivo em modo leitura
+        std::ifstream arquivoEntrada("AreaPlantio.txt");
+        if (arquivoEntrada.is_open()) {
+            std::string linha;
+
+            // Ler o primeiro ID e o número de registros
+            if (std::getline(arquivoEntrada, linha)) {
+                std::stringstream ss(linha);
+                ss >> cont_id >> cont_registros;
+            }
+
+            // Carregar as demais linhas
+            while (std::getline(arquivoEntrada, linha)) {
+                linhas.push_back(linha);
+            }
+
+            arquivoEntrada.close();
+        }
+
+        // Incrementar contadores
+        cont_id++;
+        cont_registros++;
+
+        // Adicionar a nova área no vetor de linhas
+        std::ostringstream novaLinha;
+        novaLinha << area.get_id_area() << " "
+                  << area.get_status() << "+"
+                  << area.get_nome_proprietario() << "+"
+                  << area.get_cnpj_proprietario() << "+"
+                  << area.get_localizacao() << "+"
+                  << area.get_tipo_solo() << "+"
+                  << area.get_clima() << "+"
+                  << std::fixed << std::setprecision(2) << area.get_tamanho();
+
+        // Adicionar sementes, se houver
+        std::vector<int> sementes = area.get_sementes_plantadas();
+        if (!sementes.empty()) {
+            novaLinha << "+";
+            for (size_t i = 0; i < sementes.size(); ++i) {
+                novaLinha << sementes[i];
+                if (i < sementes.size() - 1) novaLinha << ",";
+            }
+        }
+
+        linhas.push_back(novaLinha.str());
+
+        // Reescrever o arquivo com os novos dados
+        std::ofstream arquivoSaida("AreaPlantio.txt", std::ios::trunc);
+        if (!arquivoSaida.is_open()) {
+            throw std::ios_base::failure("Erro ao abrir o arquivo para escrita.");
+        }
+
+        // Escrever contadores atualizados
+        arquivoSaida << cont_id << " " << cont_registros << "\n";
+
+        // Escrever as linhas restantes
+        for (const auto& linha : linhas) {
+            arquivoSaida << linha << "\n";
+        }
+
+        arquivoSaida.close();
+
+        std::cout << "Área registrada com sucesso!\n";
+
+    } catch (const std::ios_base::failure& e) {
+        std::cerr << "Exceção de I/O: " << e.what() << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exceção geral: " << e.what() << std::endl;
     }
-
-    id++; // Incrementa o ID para a nova área
-
-    // Coleta os dados da nova área
-    std::cout << "Insira os detalhes da área:\n";
-    std::cin.ignore();
-    std::cout << "Nome do Proprietário: ";
-    std::getline(std::cin, nome);
-    std::cout << "CNPJ do Proprietário: ";
-    std::getline(std::cin, cnpj);
-    std::cout << "Tamanho da Área (hectares): ";
-    std::cin >> tamanho;
-    std::cin.ignore();
-    std::cout << "Localização: ";
-    std::getline(std::cin, localizacao);
-    std::cout << "Tipo de Solo: ";
-    std::getline(std::cin, tipo_solo);
-    std::cout << "Clima: ";
-    std::getline(std::cin, clima);
-    status = "Disponível";
-
-    // Validação dos inputs
-    if (nome.empty() || cnpj.empty() || tamanho <= 0 ||
-        localizacao.empty() || tipo_solo.empty() || clima.empty()) {
-        throw std::invalid_argument("Dados inválidos para registro de área.");
-    }
-
-    // Configura os dados da nova área
-    novaArea.set_id_area(id);
-    novaArea.set_nome_proprietario(nome);
-    novaArea.set_cnpj_proprietario(cnpj);
-    novaArea.set_tamanho(tamanho);
-    novaArea.set_localizacao(localizacao);
-    novaArea.set_tipo_solo(tipo_solo);
-    novaArea.set_clima(clima);
-    novaArea.set_status(status);
-
-    // Registra a nova área na memória e no arquivo
-    areasRegistradas.push_back(novaArea);
-    salvarArea(novaArea);
 }
 
 void Vendedor::salvarArea(AreaPlantio area) {
