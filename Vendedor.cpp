@@ -436,47 +436,54 @@ void Vendedor::buscar_lotes_dessa_semente(int id_semente_busca) {
     if (!arquivoLotes)
         throw std::ios_base::failure("Erro ao abrir arquivo Lotes.txt");
 
-    int quant_lotes;
-    arquivoLotes >> quant_lotes; 
-    arquivoLotes.ignore(); 
-    arquivoLotes >> quant_lotes; 
-
-    int id_lote;
-    int id_semente_lido;
     std::string linha;
+    std::getline(arquivoLotes, linha); // Pula linha dos contadores
+    
+    bool encontrouAlgum = false;
+    std::string statusDisponibilidade, nomeCientifico, geneIntroduzido;
+    std::string metodoProducao, dataProducao, paisOrigem;
+    float quantidadeDisponivel, precoEstimado;
+    int id_semente, id_lote;
 
-    float quantidadeDisponivel,precoEstimado;
-    std::string statusDisponibilidade,nomeCientifico,geneIntroduzido,metodoProducao,dataProducao,paisOrigem;
-
-    for (int i = 0; i < quant_lotes; i++) {
-        arquivoLotes >> id_semente_lido;
-        if(arquivoLotes.fail())
-            throw std::ios_base::failure("Erro ao ler ID da semente associada ao lote!");
-
-        if (id_semente_lido == id_semente_busca) {
-            arquivoLotes.ignore();
+    while(arquivoLotes >> id_semente) {
+        arquivoLotes.ignore(); // Ignora o +
+        
+        if(id_semente == id_semente_busca) {
+            encontrouAlgum = true;
+            
             arquivoLotes >> id_lote;
-            arquivoLotes.ignore();
-        std::getline(arquivoLotes,statusDisponibilidade,'+');
-        std::getline(arquivoLotes,nomeCientifico,'+');
-        std::getline(arquivoLotes,geneIntroduzido,'+');
-        std::getline(arquivoLotes,metodoProducao,'+');
-        std::getline(arquivoLotes,dataProducao,'+');
-        std::getline(arquivoLotes,paisOrigem,'+');
-        arquivoLotes>>quantidadeDisponivel;                  arquivoLotes.ignore();
-        arquivoLotes>>precoEstimado;
-        if(arquivoLotes.fail())
-            throw std::ios_base::failure("Erro ao ler ID da semente associada ao lote!");
+            arquivoLotes.ignore(); // Ignora o +
+            
+            std::getline(arquivoLotes, statusDisponibilidade, '+');
+            std::getline(arquivoLotes, nomeCientifico, '+');
+            std::getline(arquivoLotes, geneIntroduzido, '+');
+            std::getline(arquivoLotes, metodoProducao, '+');
+            std::getline(arquivoLotes, dataProducao, '+');
+            std::getline(arquivoLotes, paisOrigem, '+');
+            arquivoLotes >> quantidadeDisponivel;
+            arquivoLotes.ignore(); // Ignora o +
+            arquivoLotes >> precoEstimado;
+            arquivoLotes.ignore(); // Ignora o \n
 
-
-        //imprimir
-        std::cout<<"Dados do lote:\nID :"<<id_lote<<"\nNome cientifico: "<<nomeCientifico<<"\nGene introduzido: "<<
-        geneIntroduzido<<"\nMetodo de producao: "<<metodoProducao<<"\nData de producao: "<<dataProducao<<"\nPais de origem: "<<
-        paisOrigem<<"\nQuantidade disponivel no lote: "<<quantidadeDisponivel<<" kg\nPreco estimado: RS"<<precoEstimado<<"/kg de semente\n\n\n\n";
-        }  
-        std::getline(arquivoLotes, linha);
-
+            std::cout << "Dados do lote:\n"
+                     << "ID: " << id_lote << "\n"
+                     << "Status: " << statusDisponibilidade << "\n"
+                     << "Nome cientifico: " << nomeCientifico << "\n"
+                     << "Gene introduzido: " << geneIntroduzido << "\n"
+                     << "Metodo de producao: " << metodoProducao << "\n"
+                     << "Data de producao: " << dataProducao << "\n"
+                     << "Pais de origem: " << paisOrigem << "\n"
+                     << "Quantidade disponivel no lote: " << quantidadeDisponivel << " kg\n"
+                     << "Preco estimado: R$" << std::fixed << std::setprecision(2) << precoEstimado << "/kg de semente\n\n";
+        } else {
+            std::getline(arquivoLotes, linha); // Pula para próxima linha
+        }
     }
+    
+    if (!encontrouAlgum) {
+        std::cout << "Nenhum lote encontrado para a semente de ID " << id_semente_busca << std::endl;
+    }
+    
     arquivoLotes.close();
 }
 
