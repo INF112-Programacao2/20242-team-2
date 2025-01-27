@@ -10,7 +10,7 @@
 ## 📦 Pré-requisitos
 - Compilador C++ com suporte a C++11 ou superior
 - Make
-- esSeak (para funcionalidade de texto para fala)
+- eSpeak (para funcionalidade de texto para fala)
 
 ### 🛠️ Instalação do eSpeak
 
