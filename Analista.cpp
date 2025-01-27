@@ -5,8 +5,8 @@ Analista::Analista(){};
 Analista::~Analista(){};
 
 void Analista::elaborarRelatorio(){
-    std::string comando="espeak -v pt-br -s 120 \"Elaboracao do relatorio de analise de sementes\"";
-    std::cout<<"Elaboração do relatório de analise das sementes"<<
+    std::string comando="espeak -v pt-br -s 120 \"Elaboracao do relatorio de análise de sementes. Deseja realizar o relatorio de qual semente? ID: \"";
+    std::cout<<"Elaboração do relatório de análise das sementes"<<
     "\n\nDeseja realizar o relatorio de qual semente? ID: ";
     system(comando.c_str());
 
