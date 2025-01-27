@@ -89,7 +89,6 @@ void Gestor::listarUsuarios() {
     std::string linha;
     std::cout << "Lista de usuarios cadastrados:" << std::endl;
     while (std::getline(fin, linha)) {
-        std::getline(fin, linha);
         std::string nome = linha; // Lê o nome
         std:: getline(fin, linha);
         std::string email=linha;  //Depois, lê o email
@@ -108,10 +107,10 @@ void Gestor::listarUsuarios() {
 void Gestor::excluirUsuario() {
     listarUsuarios();
 
-    int idParaExcluir;
-    std::cout << std::endl << "Insira o ID do usuario que deseja excluir: ";
-    std::cin >> idParaExcluir;
-    std::cin.ignore(); // Limpa o buffer para evitar problemas ao ler strings depois
+std::string emailParaExcluir;
+    std::cout << "\nInsira o email do usuário que deseja excluir: ";
+    std::cin >> emailParaExcluir;
+    std::cin.ignore(); // Limpa o buffer para evitar problemas ao ler strings depois.
 
     std::ifstream fin("usuarios.txt");
     if (!fin.is_open()) {
@@ -124,44 +123,52 @@ void Gestor::excluirUsuario() {
 
     // Lê os usuários e armazena aqueles que não devem ser excluídos
     while (std::getline(fin, linha)) {
-        std::stringstream ss(linha);
-        int idAtual;
-        ss >> idAtual;
+        std::string nome = linha; // Lê o nome
 
-        // Verifica se este é o ID a ser excluído
-        if (idAtual == idParaExcluir) {
+        if (!std::getline(fin, linha)) break;
+        std::string email = linha; // Lê o email
+
+        if (!std::getline(fin, linha)) break;
+        std::string tipo = linha; // Lê o tipo
+
+        if (!std::getline(fin, linha)) break;
+        std::string senha = linha; // Lê a senha
+
+        // Verifica se este é o email a ser excluído
+        if (email == emailParaExcluir) {
             usuarioEncontrado = true;
-            // Ignora as próximas 3 linhas (nome, tipo, senha)
-            std::getline(fin, linha); // Nome
-            std::getline(fin, linha); // Tipo
-            std::getline(fin, linha); // Senha
-        } else {
-            // Mantém os dados do usuário atual
-            usuariosRestantes.push_back(std::to_string(idAtual));
-            std::getline(fin, linha); usuariosRestantes.push_back(linha); // Nome
-            std::getline(fin, linha); usuariosRestantes.push_back(linha); // Tipo
-            std::getline(fin, linha); usuariosRestantes.push_back(linha); // Senha
+            // Usuário encontrado, então não o adiciona à lista de usuários restantes
+            continue;
         }
+
+        // Mantém os dados do usuário atual
+        usuariosRestantes.push_back(nome);
+        usuariosRestantes.push_back(email);
+        usuariosRestantes.push_back(tipo);
+        usuariosRestantes.push_back(senha);
     }
+
     fin.close();
 
     if (!usuarioEncontrado) {
-        std::cout << "Usuario com ID " << idParaExcluir << " nao encontrado." << std::endl;
+        std::cerr << "Erro: Usuário com email " << emailParaExcluir << " não encontrado.\n";
         return;
     }
 
-    // Reescreve o arquivo com os usuários restantes
-    std::ofstream fout("usuarios.txt");
+    // Salva os usuários restantes de volta no arquivo
+    std::ofstream fout("usuarios.txt", std::ios::trunc); // Sobrescreve o arquivo
     if (!fout.is_open()) {
         throw std::ios_base::failure("Erro ao abrir o arquivo usuarios.txt para escrita");
     }
 
-    for (size_t i = 0; i < usuariosRestantes.size(); i++) {
-        fout << usuariosRestantes[i] << std::endl;
+    for (const auto& usuario : usuariosRestantes) {
+        fout << usuario << "\n";
     }
+
     fout.close();
 
-    std::cout << "Usuario com ID " << idParaExcluir << " excluido com sucesso." << std::endl;
+    std::cout << "Usuário com email " << emailParaExcluir << " excluído com sucesso.\n";
+
 }
 
 void Gestor::salvarSemente(Semente& semente) {
