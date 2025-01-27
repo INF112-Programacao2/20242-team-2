@@ -5,7 +5,7 @@ Analista::Analista(){};
 Analista::~Analista(){};
 
 void Analista::elaborarRelatorio(){
-    std::string comando="espeak -v pt-br -s 120 \Elaboracao do relatorio de analise de sementes\"";
+    std::string comando="espeak -v pt-br -s 120 \"Elaboracao do relatorio de analise de sementes\"";
     std::cout<<"Elaboração do relatório de analise das sementes"<<
     "\n\nDeseja realizar o relatorio de qual semente? ID: ";
     system(comando.c_str());
@@ -37,6 +37,7 @@ void Analista::elaborarRelatorio(){
     std::cin >> texto;          relatorio.set_pragasDoencas(texto);
 
     std::cout << "Taxa de crescimento (%): ";                    comando="espeak -v pt-br -s 120 \"Taxa de incidencia de pragas e doencas, em porcentagem \"";
+    system(comando.c_str());
     std::cin >> texto;          relatorio.set_crescimento(texto);
 
     std::cout << "Taxa de germinação (%): ";                     comando="espeak -v pt-br -s 120 \"Taxa de germinacao, em porcentagem \"";
@@ -48,6 +49,7 @@ void Analista::elaborarRelatorio(){
     std::cin >> texto;          relatorio.set_sobrevivencia(texto);
 
     std::cout << "Tempo de colheira em dias: ";                   comando="espeak -v pt-br -s 120 \"Tempo de colheita, em dias \"";
+    system(comando.c_str());
     std::cin >> texto;          relatorio.set_tempo_colheita(texto);
     
     registrarRelatorio(relatorio);
@@ -77,7 +79,7 @@ void Analista::registrarRelatorio(Relatorio &relatorio){
     arquivoRelatorio.close();
 
     std::cout<<"Relatorio registrado com sucesso!\n";
-    std::string comando="espeak -v pt-br -s 120 \"Taxa de incidencia de pragas e doencas, em porcentagem \"";
+    std::string comando="espeak -v pt-br -s 120 \"Relatorio registrado com sucesso! \"";
     system(comando.c_str());
 
 }
