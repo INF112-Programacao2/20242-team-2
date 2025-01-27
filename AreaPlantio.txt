@@ -6,5 +6,5 @@
 5 Disponível+Carlos+1234+Belo Horizonte+Argiloso+Equatorial+1.75
 6 Em uso+Ana+9876+Uberaba+Arenoso+Tropical+850.00
 7 Disponível+Lucas+5432+Juiz de Fora+Argiloso+Semiarido+950.50
-8 Disponível+Mariana+1122+Governador Valadares+Siltoso+Temperado+620.00
+8 Disponível+Mariana+1122+Governador Valadares+Siltoso+Semiarido+620.00
 
