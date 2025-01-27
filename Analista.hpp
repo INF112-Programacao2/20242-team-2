@@ -9,7 +9,7 @@ class Analista: public Usuario{
     public:
 
         Analista();
-        ~Analista();
+        ~Analista() override;
 
         void atualizarStatusDoLote();
         void visualizarRelatorio();

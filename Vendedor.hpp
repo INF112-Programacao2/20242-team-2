@@ -40,6 +40,7 @@ private:
 public:
     virtual void acessarInterface()override;                 //abre o menu dos vendedores
     virtual void gerarRelatorio() override;                         //julia esta desenvolvendo
+    ~Vendedor() override;
     
 };
 #endif

@@ -35,7 +35,7 @@ class Gestor: public Usuario{
     public:
         virtual void acessarInterface();                  //atualizado
         Gestor();
-        virtual ~Gestor();
+        ~Gestor() override;
 
         // Impedir cópia e atribuição
         Gestor(const Gestor&) = delete;
