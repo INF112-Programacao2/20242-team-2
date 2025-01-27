@@ -246,7 +246,7 @@ void Analista::atualizarStatusDoLote() {
     arquivoLote << contadores << "\n" << novoConteudo;
     arquivoLote.close();
 
-    std::string comando = "espeak -v pt-br -s 120 \"Status atualizado com sucesso\"";
+    comando = "espeak -v pt-br -s 120 \"Status atualizado com sucesso\"";
     system(comando.c_str());
 
     std::cout << "Status atualizado com sucesso!\n";
