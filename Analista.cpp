@@ -147,7 +147,7 @@ void Analista::gerarRelatorio(){
         if (!relatorioGerado) {
             throw std::runtime_error("Erro: Não foi possível abrir o arquivo 'Sementes.txt'");
         }
-        relatorioGerado << "------------------------------------------------DADOS DAS ANALISES DE PLANTIO--------------------------------------------------\n";
+        relatorioGerado << "------------------------------------------------DADOS DOS RELATORIOS--------------------------------------------------\n";
     
 
         std::string linha;
@@ -179,7 +179,7 @@ void Analista::gerarRelatorio(){
                             <<"\nTaxa de incidência de pragas e doenças: (%) "<<relatorio.get_pragasDoencas();
 
             if(relatorio.get_tempo_colheita()!=0){
-                relatorioGerado<<"Observou-se um tempo de colheira médio, em dias, de: "<<relatorio.get_tempo_colheita();
+                relatorioGerado<<"\nObservou-se um tempo de colheira médio, em dias, de: "<<relatorio.get_tempo_colheita();
             }
                             
         } 
