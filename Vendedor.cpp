@@ -105,8 +105,6 @@ void Vendedor::registrarArea() {
     // Registra a nova área na memória e no arquivo
     areasRegistradas.push_back(novaArea);
     salvarArea(novaArea);
-
-    std::cout << "Área registrada com sucesso!\n";
 }
 
 void Vendedor::salvarArea(AreaPlantio area) {
@@ -758,6 +756,7 @@ void Vendedor::registrarNegociacao() {
     // Calcular valor negociado
     Lote lote(lote_id);
     float valor_estimado = lote.getPrecoEstimado();
+    std:: cout << valor_estimado;
     if (valor_estimado <= 0) {
         throw std::runtime_error("Erro: preço estimado inválido para o lote informado.");
     }

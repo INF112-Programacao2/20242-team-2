@@ -1,2 +1,10 @@
-1 1
-1 Disponível+julia+4343+ipatinga+arenoso+tropical+44
+8 8
+1 Disponível+Gustavo+4578+Ubá+Argiloso+Equatorial+2.00
+2 Disponível+Julia+7856-00+Ipatinga+Argiloso+Tropical+750.00
+3 Em uso+Katrine+78550+Montes Claros+Arenoso+Semiarido+560.00
+4 Em uso+Pedro+89645+Viçosa+Siltoso+Temperado+560.50
+5 Disponível+Carlos+1234+Belo Horizonte+Argiloso+Equatorial+1.75
+6 Em uso+Ana+9876+Uberaba+Arenoso+Tropical+850.00
+7 Disponível+Lucas+5432+Juiz de Fora+Argiloso+Semiarido+950.50
+8 Disponível+Mariana+1122+Governador Valadares+Siltoso+Temperado+620.00
+
