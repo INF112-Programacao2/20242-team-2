@@ -36,7 +36,7 @@ void Analista::elaborarRelatorio(){
     system(comando.c_str());      
     std::cin >> texto;          relatorio.set_pragasDoencas(texto);
 
-    std::cout << "Taxa de crescimento (%): ";                    comando="espeak -v pt-br -s 120 \"Taxa de incidencia de pragas e doencas, em porcentagem \"";
+    std::cout << "Taxa de crescimento (%): ";                    comando="espeak -v pt-br -s 120 \"Taxa de crescimento, em porcentagem \"";
     system(comando.c_str());
     std::cin >> texto;          relatorio.set_crescimento(texto);
 
