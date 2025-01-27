@@ -44,6 +44,7 @@ void Vendedor::registrarArea() {
     std::cin.ignore();
     std::cout << "Nome do Proprietário: ";
     std::getline(std::cin, nome);
+    
 
     while(true){
         std::cout << "CNPJ do Proprietário (XX.XXX.XXX/XXXX-XX ou XXXXXXXXXXXXXX): ";
@@ -304,6 +305,10 @@ void Vendedor::registrarPlantio() {
     int id_area;
     std::cout << "\nDigite o ID da área para plantio: ";
     std::cin >> id_area;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
 
     auto it = std::find(areas_disponiveis.begin(), areas_disponiveis.end(), id_area);
     if (it == areas_disponiveis.end()) {
@@ -390,6 +395,10 @@ void Vendedor::liberarArea() {
     int id_area;
     std::cout << "\nDigite o ID da área para liberar: ";
     std::cin >> id_area;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
 
     // Validar área selecionada
     auto it = std::find(areas_em_uso.begin(), areas_em_uso.end(), id_area);
@@ -493,6 +502,11 @@ void Vendedor::compatibilidade_semente() {
 
     std::cout<<"Deseja verificar a compatibilidade de qual Área de plantio? ID: ";
     std::cin>>id_buscado;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
+
     while(id_buscado<=0){
         std::cout<<"Entrada de ID inválida. Digite novamente o id da Area de plantio: ";
         std::cin>>id_buscado;
@@ -578,6 +592,10 @@ void Vendedor::excluirArea() {
     int id_excluir;
     std::cout << "\nDigite o ID da área que deseja excluir: ";
     std::cin >> id_excluir;
+    if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+    }
 
     // Verifica se o ID existe
     for (const auto& area : todas_areas) {
@@ -599,6 +617,10 @@ void Vendedor::excluirArea() {
     char confirmacao;
     std::cout << "Tem certeza que deseja excluir a área " << id_excluir << "? (S/N): ";
     std::cin >> confirmacao;
+    if(std::cin.fail()){
+        throw std::invalid_argument("Entrada inválida");
+        std::cin.clear();
+    }
 
     if (toupper(confirmacao) != 'S') {
         std::cout << "Operação cancelada.\n";
@@ -748,6 +770,7 @@ void Vendedor::registrarNegociacao() {
 
     while (true) {
         std::cout << "ID do Lote: ";
+        
         if (std::cin >> lote_id && lote_id > 0) break;
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -906,9 +929,18 @@ void Vendedor::finalizarNegociacao() {
     int id_buscado = 0;
     std::cout << "Deseja finalizar qual negociacao? ID da negociacao: ";
     std::cin >> id_buscado;
+    if(std::cin.fail()){
+        throw std::invalid_argument("Entrada inválida");
+        std::cin.clear();
+    }
+
     while (id_buscado <= 0) {
         std::cout << "ID inválido. Digite novamente o ID da negociacao: ";
         std::cin >> id_buscado;
+        if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+        }
     }
      // Verifica se o ID inserido está na lista de pendentes
     auto it = std::find(negociacoes_pendentes.begin(), negociacoes_pendentes.end(), id_buscado);
@@ -1029,6 +1061,10 @@ void Vendedor::excluirNegociacao() {
     int id_excluir;
     std::cout << "\nDigite o ID da negociação que deseja excluir: ";
     std::cin >> id_excluir;
+    if(std::cin.fail()){
+        throw std::invalid_argument("Entrada inválida");
+        std::cin.clear();
+    }
 
     // Verifica se o ID existe
     for (size_t i = 1; i < todas_negociacoes.size(); i++) {
@@ -1050,6 +1086,10 @@ void Vendedor::excluirNegociacao() {
     char confirmacao;
     std::cout << "Tem certeza que deseja excluir a negociação " << id_excluir << "? (S/N): ";
     std::cin >> confirmacao;
+    if(std::cin.fail()){
+        throw std::invalid_argument("Entrada inválida");
+        std::cin.clear();
+    }
 
     if (toupper(confirmacao) != 'S') {
         std::cout << "Operação cancelada.\n";
@@ -1152,9 +1192,19 @@ void Vendedor::atualizarPrecoDaSemente() {
     int id_lote = 0;
     std::cin >> id_lote;
 
+    if(std::cin.fail()){
+        throw std::invalid_argument("Entrada inválida");
+        std::cin.clear();
+    }
+
     while (id_lote <= 0) {
         std::cout << "ID inválido. Digite novamente o ID do lote: ";
         std::cin >> id_lote;
+
+        if(std::cin.fail()){
+            throw std::invalid_argument("Entrada inválida");
+            std::cin.clear();
+        }
     }
 
     std::fstream arquivoLotes("Lotes.txt", std::ios::in | std::ios::out);
@@ -1201,10 +1251,18 @@ void Vendedor::atualizarPrecoDaSemente() {
             std::cout << "O preço por kg atual do lote é de R$ " << preco
                       << "\nInsira o novo valor: ";
             std::cin >> preco;
+            if(std::cin.fail()){
+                throw std::invalid_argument("Entrada inválida");
+                std::cin.clear();
+    }
 
              while (preco <= 0){
                  std::cout << "O novo preço deve ser maior que 0: ";
                  std::cin >> preco;
+                 if(std::cin.fail()){
+                    throw std::invalid_argument("Entrada inválida");
+                    std::cin.clear();
+                }
             }
 
             // Reposiciona o ponteiro para o início do lote
