@@ -12,29 +12,11 @@
 #include <iostream>
 #include <cstdlib> // Necessário para usar system()
 
-
-/*
-int main() {
-   // Texto que você quer que seja falado
-   std::string texto = "solo: arenoso, clima:tropical";
-
-
-   // Usando o comando system para chamar o espeak e falar o texto
-   std::string comando = "espeak -v pt \"" + texto + "\"";
-   system(comando.c_str());
-
-
-   return 0;
-}
-*/
-
-
-
-
 int main(){
 
     //Realizando login
     Usuario *usuario = usuario->realizarLogin();
+    if(usuario!=nullptr)
     usuario->acessarInterface();
     delete usuario;
     
