@@ -36,6 +36,13 @@ void Vendedor::registrarArea() {
     std::getline(std::cin, cnpj);
     std::cout << "Tamanho da Área (hectares): ";
     std::cin >> tamanho;
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Ignora o restante da linha no buffer
+        throw std::invalid_argument("Tamanho da área deve ser um número válido.");
+    }
+    
+    if(tamanho)
     std::cin.ignore();
     std::cout << "Localização: ";
     std::getline(std::cin, localizacao);
