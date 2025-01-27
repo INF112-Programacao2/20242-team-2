@@ -42,7 +42,7 @@ make
 ## 🎮 Como usar
 1. Execute o programa
  ```bash
-  ./programa
+  make make run
 ```
 3. Siga as instruções no terminal para acessar os recursos
 
