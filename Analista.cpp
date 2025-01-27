@@ -48,7 +48,7 @@ void Analista::elaborarRelatorio(){
     system(comando.c_str());
     std::cin >> texto;          relatorio.set_sobrevivencia(texto);
 
-    std::cout << "Tempo de colheira em dias: ";                   comando="espeak -v pt-br -s 120 \"Tempo de colheita, em dias \"";
+    std::cout << "Tempo de colheita em dias: ";                   comando="espeak -v pt-br -s 120 \"Tempo de colheita, em dias \"";
     system(comando.c_str());
     std::cin >> texto;          relatorio.set_tempo_colheita(texto);
     
