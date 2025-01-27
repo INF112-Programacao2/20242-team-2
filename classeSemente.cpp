@@ -1,18 +1,17 @@
 #include "classeSemente.hpp"
 #include <fstream>
 
-Semente::Semente(){
-    int _id_tipo=0;
-    bool _produz_frutos=false;
-    int _tempo_colheita=0;
-    std::string _clima_ideal="";
-    std::string _solo_ideal="";
-    float _irrigacao_ideal=0;
-    int _expectativaCrescimento=0; 
-    float _expectativaTaxaDeGerminacao=0; 
-    float _expectativaTaxaDeSobrevivencia=0; 
-    float _expectativaIncidenciaPragasDoencas=0; 
-}
+Semente::Semente(): _id_tipo(0),
+      _produz_frutos(false),
+      _tempo_colheita(0),
+      _clima_ideal(""),
+      _solo_ideal(""),
+      _irrigacao_ideal(0),
+      _expectativaCrescimento(0),
+      _expectativaTaxaDeGerminacao(0),
+      _expectativaTaxaDeSobrevivencia(0),
+      _expectativaIncidenciaPragasDoencas(0)
+{}
 
 Semente::Semente(int id){
     //____________________________________________//
