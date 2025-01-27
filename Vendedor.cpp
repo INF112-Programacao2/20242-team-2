@@ -1195,8 +1195,9 @@ void Vendedor::atualizarPrecoDaSemente() {
                       << "\nInsira o novo valor: ";
             std::cin >> preco;
 
-            if (preco <= 0) {
-                throw std::invalid_argument("Não é possível por um preço menor ou igual a 0!\n");
+             while (preco <= 0){
+                 std::cout << "O novo preço deve ser maior que 0: ";
+                 std::cin >> preco;
             }
 
             // Reposiciona o ponteiro para o início do lote
