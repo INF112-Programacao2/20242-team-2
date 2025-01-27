@@ -756,7 +756,6 @@ void Vendedor::registrarNegociacao() {
     // Calcular valor negociado
     Lote lote(lote_id);
     float valor_estimado = lote.getPrecoEstimado();
-    std:: cout << valor_estimado;
     if (valor_estimado <= 0) {
         throw std::runtime_error("Erro: preço estimado inválido para o lote informado.");
     }
