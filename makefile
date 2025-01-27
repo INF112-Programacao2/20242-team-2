@@ -1,12 +1,12 @@
-# Nome do arquivo executável (padrão a.out)
-TARGET = a.out
+# Nome do arquivo executável
+TARGET = programa
 
 # Definindo o compilador e as flags
 CXX = g++
 CXXFLAGS = -std=c++14 -Wall -g  # Adicionada a flag -g para depuração
 
 # Lista de arquivos .cpp
-SOURCES = Usuario.cpp Gestor.cpp Analista.cpp Vendedor.cpp classeSemente.cpp classeLote.cpp classeArea_Plantio.cpp classeNegociacao.cpp Relatorio.cpp main.cpp
+SOURCES = Usuario.cpp Gestor.cpp Vendedor.cpp Analista.cpp classeSemente.cpp classeLote.cpp classeArea_Plantio.cpp classeNegociacao.cpp Relatorio.cpp main.cpp
 
 # Gerando os arquivos objetos a partir dos fontes
 OBJECTS = $(SOURCES:.cpp=.o)
@@ -22,6 +22,10 @@ $(TARGET): $(OBJECTS)
 # Regra para rodar o Valgrind
 valgrind: $(TARGET)
 	valgrind --leak-check=full --show-leak-kinds=all ./$(TARGET)
+
+#Regra para conferir instalação do eSpeak
+eSpeak: $(TARGET)
+	espeak --version
 
 # Limpar os arquivos gerados (como .o e o executável)
 clean:
